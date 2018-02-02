@@ -8,6 +8,7 @@
  *******************************************************************************/
 package org.modeldriven.alf.uml;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface Namespace extends NamedElement {
@@ -25,7 +26,7 @@ public interface Namespace extends NamedElement {
 
 	public List<PackageableElement> getImportedMember();
 	
-    public List<String> getNamesOfMember(NamedElement member);
+    public Collection<String> getNamesOfMember(NamedElement member);
     
     public List<NamedElement> resolveInScope(String name, boolean classifierOnly);
 }

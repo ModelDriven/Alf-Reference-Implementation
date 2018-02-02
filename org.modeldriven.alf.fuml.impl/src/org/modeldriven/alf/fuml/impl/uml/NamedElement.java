@@ -9,6 +9,7 @@
 package org.modeldriven.alf.fuml.impl.uml;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public abstract class NamedElement extends Element implements
@@ -70,8 +71,8 @@ public abstract class NamedElement extends Element implements
             org.modeldriven.alf.uml.Namespace namespace) {
         if (this.getClass().isAssignableFrom(otherElement.getClass()) || 
                 otherElement.getClass().isAssignableFrom(this.getClass())) {
-            List<String> names = namespace.getNamesOfMember(this);
-            names.removeAll(namespace.getNamesOfMember(otherElement));
+            Collection<String> names = namespace.getNamesOfMember(this);
+            names.retainAll(namespace.getNamesOfMember(otherElement));
             return names.isEmpty();
         } else {
             return true;

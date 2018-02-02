@@ -116,7 +116,7 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
         List<Member> members = this.getTemplateParameterMembers();
         Namespace umlNamespace = this.getSelf().getUmlNamespace();
         for (NamedElement member: umlNamespace.getMember()) {
-            List<String> names = umlNamespace.getNamesOfMember(member);
+            Collection<String> names = umlNamespace.getNamesOfMember(member);
             if (names.isEmpty()) {
                 members.add(ImportedMemberImpl.makeImportedMember(
                         member.getName(), member, self));

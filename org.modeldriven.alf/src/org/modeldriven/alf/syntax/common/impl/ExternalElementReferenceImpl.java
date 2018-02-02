@@ -483,7 +483,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
         if (this.isClassifier()) {
             Classifier classifier = this.asClassifier();
             for (NamedElement element: classifier.inheritableMembers()) {
-                List<String> names = classifier.getNamesOfMember(element);
+                Collection<String> names = classifier.getNamesOfMember(element);
                 if (names.isEmpty()) {
                     names = Collections.singletonList(element.getName());
                 }
