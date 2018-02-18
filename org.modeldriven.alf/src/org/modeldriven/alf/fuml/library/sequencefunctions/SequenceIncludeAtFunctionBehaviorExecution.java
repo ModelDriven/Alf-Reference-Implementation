@@ -28,7 +28,7 @@ public class SequenceIncludeAtFunctionBehaviorExecution implements OpaqueBehavio
         final List<Value> result = new ArrayList<Value>();
         result.addAll(seq);
         
-        if (index >= 1 && index <= seq.size() + 1 && !optElement.isEmpty()) {
+        if (index >= 1 && index <= seq.size() && !optElement.isEmpty()) {
             final Value element = optElement.get(0);
             debug.println("[doBody] IncludeAt index = " + index);
             debug.println("[doBody] IncludeAt element = " + element);

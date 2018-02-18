@@ -27,7 +27,7 @@ public class SequenceExcludeAtFunctionBehaviorExecution implements OpaqueBehavio
         final List<Value> result = new ArrayList<Value>();
         result.addAll(seq);
         
-        if (index >= 1 && index <= seq.size() + 1) {
+        if (index >= 1 && index <= seq.size()) {
             debug.println("[doBody] ExcludeAt index = " + index);
             result.remove(index - 1);
         }
