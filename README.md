@@ -63,7 +63,7 @@ metamodel implementation (v5.2.0 or later). It depends on Eclipse plugins and mu
 	
 * `org.modeldriven.alf.eclipse.moka` - This project extends the 
 `org.modeldriven.alf.eclipse` project to allow compiled Alf text to be executed
-using the fUML execution engine from the [Moka framework] (http://wiki.eclipse.org/Papyrus/UserGuide/ModelExecution)
+using the fUML execution engine from the [Moka framework](http://wiki.eclipse.org/Papyrus/UserGuide/ModelExecution)
 for model execution in the [Eclipse Papyrus](http://www.eclipse.org/papyrus) modeling tool (v3.1.0 or later).
 It depends on Eclipse plugins and must be built in an Eclipse environment. (Note: This project was called
 `org.modeldriven.alf.eclipse.papyrus` in previous versions of the reference implementation.)
