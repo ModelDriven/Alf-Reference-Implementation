@@ -33,6 +33,8 @@ public class LocalNameDeclarationStatementImpl extends StatementImpl implements 
 	private Boolean hasMultiplicity = false;
 	private QualifiedName typeName = null;
 	private ElementReference type = null; // DERIVED
+	
+	private NamespaceDefinition currentScope = null;
 
 	public LocalNameDeclarationStatementImpl(LocalNameDeclarationStatement self) {
 		super(self);
@@ -263,8 +265,7 @@ public class LocalNameDeclarationStatementImpl extends StatementImpl implements 
         LocalNameDeclarationStatement self = this.getSelf();
         QualifiedName qualifiedName = 
                 new QualifiedName().getImpl().addName(self.getName());
-        qualifiedName.getImpl().setCurrentScope(
-                self.getTypeName().getImpl().getCurrentScope());
+        qualifiedName.getImpl().setCurrentScope(this.currentScope);
         return qualifiedName.getImpl().getParameterReferent();
     }
 
@@ -298,6 +299,7 @@ public class LocalNameDeclarationStatementImpl extends StatementImpl implements 
     }
 
     public void setCurrentScope(NamespaceDefinition currentScope) {
+        this.currentScope = currentScope;
         LocalNameDeclarationStatement self = this.getSelf();
         QualifiedName typeName = self.getTypeName();
         Expression expression = self.getExpression();

@@ -10,7 +10,7 @@ class Statements_Simple specializes Test {
 	@Create public run(in tester: Tester[0..1]) {
 		super(tester);
 
-	    this.test(i, last, collection, offer, money, members, properties, assets, point);
+	    this.test(i, last, collection, offer, money, members, properties, assets, point, s);
 	    
 	    AssertEqual("i", i, 1);
 	    AssertEqual("last", last, 2);
@@ -22,6 +22,7 @@ class Statements_Simple specializes Test {
 	    AssertList("properties.name", properties.name, assets.name);
 	    AssertEqual("point.x", point.x, 0);
 	    AssertEqual("point.y", point.y, 0);
+	    AssertEqual("s", s, "test");
 	
 	    this.done();
 	}
@@ -55,7 +56,7 @@ class Statements_Simple specializes Test {
 	test(out i: Integer, out last: Integer, out collection: Integer[*] sequence,
 	  out offer: Offer[0..1], out money: Money, out members: Member[*] sequence,
 	  out properties: RealProperty[*] sequence, out assets: RealProperty[*] sequence, 
-	  out point: Point) {
+	  out point: Point, out s: any) {
 	  
     // Setup
 	  e1 = 1;
@@ -84,6 +85,7 @@ class Statements_Simple specializes Test {
 	  RealProperty[] realProperties = (RealProperty)things;
 	  let fixedAssets: RealProperty[] = new { land, home, condominium };
 	  let origin : Point = new(0,0);
+	  let x: any = "test";
 	  
 	  offer = currentOffer;
 	  money = interest;
@@ -91,5 +93,6 @@ class Statements_Simple specializes Test {
 	  properties = realProperties; 
 	  assets = fixedAssets;
 	  point = origin;
+	  s = x;
 	}
 }
