@@ -1,6 +1,6 @@
 ### Current Release
 Base release: [Version 1.1.0](https://github.com/ModelDriven/Alf-Reference-Implementation/releases/tag/v1.1.0), conforming to [Alf 1.1](http://www.omg.org/spec/ALF/1.1)<br>
-Latest release: [Version 1.1.0a](https://github.com/ModelDriven/Alf-Reference-Implementation/releases/tag/v1.1.0a)
+Latest release: [Version 1.1.0b](https://github.com/ModelDriven/Alf-Reference-Implementation/releases/tag/v1.1.0b)
 
 ### What is Alf?
 
@@ -15,7 +15,7 @@ The Alf Reference Implementation is a complete, open source implementation of th
 * The [fUML Reference Implementation](http://fuml.modeldriven.org) execution engine
 * The fUML execution engine from the [Moka framework](http://wiki.eclipse.org/Papyrus/UserGuide/ModelExecution) for model execution in the [Eclipse Papyrus](http://www.eclipse.org/papyrus) tool.
 
-The implementation handles the full Alf syntax at the Extended compliance level, as given in Annex C (*Consolidated LL Grammar*) of the [Alf Specification](http://www.omg.org/spec/ALF/Current).
+The implementation handles the full Alf syntax at the Extended conformance level, as given in Annex C (*Consolidated LL Grammar*) of the [Alf Specification](http://www.omg.org/spec/ALF/Current).
 
 Static semantic checking is directly based on validating the constraints defined in the Alf abstract syntax metamodel, as given in the [Alf Specification](http://www.omg.org/spec/ALF/Current). However, as errors were discovered in these definitions, or inconsistencies with the informal semantic descriptions were identified, these were corrected in the implementation. All such issues have either been corrected in the latest version of the specification or have been reported to the [Alf Revision Task Force](http://issues.omg.org/issues/task-force/ALF11) for correction in a future version.
 
