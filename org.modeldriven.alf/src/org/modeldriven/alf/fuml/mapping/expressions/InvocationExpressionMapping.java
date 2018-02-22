@@ -18,6 +18,7 @@ import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.common.ElementReferenceMapping;
 import org.modeldriven.alf.fuml.mapping.expressions.ExpressionMapping;
 import org.modeldriven.alf.fuml.mapping.units.ActivityDefinitionMapping;
+import org.modeldriven.alf.fuml.mapping.units.ClassifierDefinitionMapping;
 import org.modeldriven.alf.fuml.mapping.units.OperationDefinitionMapping;
 import org.modeldriven.alf.fuml.mapping.units.PropertyDefinitionMapping;
 import org.modeldriven.alf.fuml.mapping.units.ReceptionDefinitionMapping;
@@ -331,7 +332,7 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
         return action;
     }
     
-    protected Element getSequenceFunctionFor(ElementReference referent) {
+    protected Element getSequenceFunctionFor(ElementReference referent) throws MappingError {
         String name = referent.getImpl().getName();
         if ("clear".equals(name)) {
             return this.create(LiteralNull.class);
@@ -349,9 +350,10 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
                     "replaceOne".equals(name)? "ReplacingOne":
                     "replaceAt".equals(name)? "ReplacingAt":
                     name.substring(0,1).toUpperCase() + name.substring(1, name.length());
-            return this.fumlMap(
-                    RootNamespace.getRootScope().getSequenceFunction(sequenceFunctionName)).
-                    getElement();
+            FumlMapping mapping = ((ElementReferenceMapping)this.fumlMap(
+                    RootNamespace.getRootScope().getSequenceFunction(sequenceFunctionName))).getMapping();
+            return !(mapping instanceof ClassifierDefinitionMapping)? null:
+                ((ClassifierDefinitionMapping)mapping).getClassifier();
         }
     }
 
