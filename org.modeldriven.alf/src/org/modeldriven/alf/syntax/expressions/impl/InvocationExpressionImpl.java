@@ -679,9 +679,10 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
         } else {
             // Note: This will work, even if the operation definition is not an
             // Alf unit.
-            ElementReference operation = 
-                    currentScope.getImpl().getReferent().getImpl().getSpecification();
-            if (!operation.getImpl().isConstructor() || this.enclosingBlock == null) {
+            ElementReference enclosingScope = currentScope.getImpl().getReferent();
+            ElementReference operation = enclosingScope == null? null: 
+                enclosingScope.getImpl().getSpecification();
+            if (operation == null || !operation.getImpl().isConstructor() || this.enclosingBlock == null) {
                 return false;
             } else {
                 List<Statement> statements = this.enclosingBlock.getStatement();
