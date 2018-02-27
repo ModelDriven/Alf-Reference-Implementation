@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2017 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2018 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -32,9 +32,9 @@ import org.modeldriven.alf.uml.Operation;
 import org.modeldriven.alf.uml.ValueSpecificationAction;
 import org.modeldriven.alf.uml.LoopNode;
 import org.modeldriven.alf.uml.StructuredActivityNode;
+import org.modeldriven.alf.uml.Type;
 import org.modeldriven.alf.uml.ExpansionRegion;
 import org.modeldriven.alf.uml.ActivityNode;
-import org.modeldriven.alf.uml.Classifier;
 import org.modeldriven.alf.uml.DataType;
 import org.modeldriven.alf.uml.Property;
 import org.modeldriven.alf.uml.Behavior;
@@ -489,9 +489,9 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
         } else {
             // Otherwise, create a node to iteratively add possibly 
             // multiple values to the property.
-            Classifier featuringClassifier = property.getFeaturingClassifier().get(0);
+            Type objectType = ActivityGraph.getObjectType(property);
             writeAction.setIsReplaceAll(false);
-            if (!(featuringClassifier instanceof DataType)) {
+            if (!(objectType instanceof DataType)) {
                 // If the property is a feature of a class, use an iterative
                 // expansion region.
                 ExpansionRegion region = graph.addExpansionRegion(
@@ -503,7 +503,7 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
 
                 InputPin objectInputPin = graph.createInputPin(
                         region.getName() + ".input(" + objectSource.getName() + ")", 
-                        featuringClassifier, 1, 1);
+                        objectType, 1, 1);
                 region.addStructuredNodeInput(objectInputPin);
                 region.addEdge(graph.createObjectFlow(
                         objectInputPin, writeAction.getObject()));
@@ -515,7 +515,7 @@ public class AssignmentExpressionMapping extends ExpressionMapping {
                 // a loop node to iteratively update the data value, rather than
                 // an expansion region.
                 InputPin objectInputPin = graph.createInputPin(
-                        objectSource.getName(), featuringClassifier, 1, 1);
+                        objectSource.getName(), objectType, 1, 1);
                 InputPin valueInputPin = graph.createInputPin(
                         "value", property.getType(), 0, -1);
                 LoopNode loopNode = graph.addLoopNode(
