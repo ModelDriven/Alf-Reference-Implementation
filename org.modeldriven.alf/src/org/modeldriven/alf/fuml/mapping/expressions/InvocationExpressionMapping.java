@@ -27,6 +27,7 @@ import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.ExternalElementReference;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.expressions.FeatureReference;
 import org.modeldriven.alf.syntax.expressions.InvocationExpression;
@@ -350,10 +351,16 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
                     "replaceOne".equals(name)? "ReplacingOne":
                     "replaceAt".equals(name)? "ReplacingAt":
                     name.substring(0,1).toUpperCase() + name.substring(1, name.length());
-            FumlMapping mapping = ((ElementReferenceMapping)this.fumlMap(
-                    RootNamespace.getRootScope().getSequenceFunction(sequenceFunctionName))).getMapping();
-            return !(mapping instanceof ClassifierDefinitionMapping)? null:
-                ((ClassifierDefinitionMapping)mapping).getClassifier();
+            ElementReference sequenceFunction = 
+                    RootNamespace.getRootScope().getSequenceFunction(sequenceFunctionName);
+            if (sequenceFunction instanceof ExternalElementReference) {
+                return sequenceFunction.getImpl().getUml();
+            } else {
+                FumlMapping mapping = 
+                        ((ElementReferenceMapping)this.fumlMap(sequenceFunction)).getMapping();
+                return !(mapping instanceof ClassifierDefinitionMapping)? null:
+                    ((ClassifierDefinitionMapping)mapping).getClassifier();
+            }
         }
     }
 
