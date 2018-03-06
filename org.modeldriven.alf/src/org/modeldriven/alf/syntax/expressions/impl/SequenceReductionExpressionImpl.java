@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2018 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -114,9 +114,12 @@ public class SequenceReductionExpressionImpl extends ExpressionImpl {
 	/**
 	 * A sequence reduction expression has a multiplicity lower bound of 1.
 	 **/
+	// Actually the multiplicity should be 0, unless the multiplicity lower
+	// bound of the primary is greater than 0.
+	// TODO: Update this in the specification.
     @Override
     protected Integer deriveLower() {
-        return 1;
+        return this.getSelf().getPrimary().getExpression().getLower() > 0? 1: 0;
     }
 	
 	/*
