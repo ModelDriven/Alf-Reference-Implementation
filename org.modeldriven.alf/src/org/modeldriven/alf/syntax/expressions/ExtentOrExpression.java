@@ -9,6 +9,7 @@
 
 package org.modeldriven.alf.syntax.expressions;
 
+import org.modeldriven.alf.parser.ParsedElement;
 import org.modeldriven.alf.parser.Parser;
 
 import org.modeldriven.alf.syntax.common.*;

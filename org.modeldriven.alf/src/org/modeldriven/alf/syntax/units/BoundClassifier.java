@@ -11,9 +11,9 @@ package org.modeldriven.alf.syntax.units;
 
 import java.util.List;
 
+import org.modeldriven.alf.parser.ParsedElement;
 import org.modeldriven.alf.parser.Parser;
 import org.modeldriven.alf.syntax.common.ElementReference;
-import org.modeldriven.alf.syntax.common.ParsedElement;
 import org.modeldriven.alf.syntax.units.impl.BoundClassifierImpl;
 
 /**

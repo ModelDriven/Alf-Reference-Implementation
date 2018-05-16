@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2013-2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2013-2018 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -47,9 +47,13 @@ public class RootNamespaceImpl extends ModelNamespaceImpl {
         return (RootNamespace)this.self;
     }
     
+    protected ModelNamespaceImpl createModelNamespaceImpl(ModelNamespace modelNamespace) {
+        return new ModelNamespaceImpl(modelNamespace);
+    }
+    
     public void resetModelNamespace() {
         ModelNamespace modelNamespace = new ModelNamespace();
-        modelNamespace.setImpl(new ModelNamespaceImpl(modelNamespace));
+        modelNamespace.setImpl(this.createModelNamespaceImpl(modelNamespace));
         modelNamespace.setName(MODEL_NAMESPACE_NAME);               
         this.setModelNamespace(modelNamespace);
         this.setMapping(null);

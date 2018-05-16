@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2018 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -12,7 +12,6 @@ import java.util.Collection;
 
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
-import org.modeldriven.alf.parser.AlfParser;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.units.RootNamespace;
@@ -157,17 +156,4 @@ public abstract class FumlMapping extends Mapping {
         return (FumlMapping) fumlFactory.getMapping(source);
     }
 
-    public static FumlMapping parseAndMap(String fileName) {
-        FumlMapping mapping = null;
-        
-        AlfParser.parseOptions("C");
-        parsedElement = AlfParser.parse(fileName);
-        
-        if (parsedElement != null && AlfParser.constraintsCheck()) {
-            mapping = getMapping(RootNamespace.getRootScope());
-        }
-        
-        return mapping;
-    }
-    
 }

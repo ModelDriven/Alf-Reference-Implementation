@@ -12,6 +12,7 @@ package org.modeldriven.alf.syntax.common;
 import java.util.Collection;
 import java.util.TreeSet;
 
+import org.modeldriven.alf.parser.ParsedElement;
 import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 
 /**

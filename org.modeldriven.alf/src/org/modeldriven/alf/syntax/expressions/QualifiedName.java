@@ -13,11 +13,11 @@ package org.modeldriven.alf.syntax.expressions;
 import java.util.Collection;
 import java.util.List;
 
+import org.modeldriven.alf.parser.ParsedElement;
 import org.modeldriven.alf.parser.Parser;
 import org.modeldriven.alf.syntax.common.ConstraintViolation;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.common.ExternalElementReference;
-import org.modeldriven.alf.syntax.common.ParsedElement;
 import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.expressions.impl.QualifiedNameImpl;
 

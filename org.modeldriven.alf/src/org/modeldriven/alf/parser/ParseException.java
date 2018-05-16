@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright (c) 2018 Data Access Technologies, Inc. (Model Driven Solutions)
  *  All rights reserved worldwide. This program and the accompanying materials
  *  are made available for use under the terms of the GNU General Public License 
  *  (GPL) version 3 that accompanies this distribution and is available at 
@@ -41,31 +41,27 @@ public class ParseException extends Exception {
                        )
   {
     super(initialise(currentTokenVal, expectedTokenSequencesVal, tokenImageVal));
-    this.setCurrentToken(currentTokenVal);;
+    this.setCurrentToken(currentTokenVal);
     expectedTokenSequences = expectedTokenSequencesVal;
     tokenImage = tokenImageVal;
   }
   
   private void setCurrentToken(Token currentTokenVal) {
-      currentToken = currentTokenVal;
-      beginLine = currentToken.next.beginLine;
-      beginColumn = currentToken.next.beginColumn;
-      endLine = currentToken.next.endLine;
-      endColumn = currentToken.next.endColumn;
+      if (currentTokenVal.next != null) {
+          currentTokenVal = currentTokenVal.next;
+      }
+      beginLine = currentTokenVal.beginLine;
+      beginColumn = currentTokenVal.beginColumn;
+      endLine = currentTokenVal.endLine;
+      endColumn = currentTokenVal.endColumn;
   }
-
-  /**
-   * The following constructors are for use by you for whatever
-   * purpose you can think of.  Constructing the exception in this
-   * manner makes the exception behave in the normal way - i.e., as
-   * documented in the class "Throwable".  The fields "errorToken",
-   * "expectedTokenSequences", and "tokenImage" do not contain
-   * relevant information.  The JavaCC generated code does not use
-   * these constructors.
-   */
 
   public ParseException() {
     super();
+  }
+  
+  public ParseException(String message) {
+    super(message);
   }
 
   /** Constructor with message. */
@@ -74,13 +70,6 @@ public class ParseException extends Exception {
     this.setCurrentToken(currentToken);
   }
 
-
-  /**
-   * This is the last token that has been consumed successfully.  If
-   * this object has been created due to a parse error, the token
-   * following this token will (therefore) be the first error token.
-   */
-  public Token currentToken;
 
   /**
    * Each entry in this array is an array of integers.  Each array
@@ -96,10 +85,10 @@ public class ParseException extends Exception {
    */
   public String[] tokenImage;
   
-  private int beginLine = 0;
-  private int beginColumn = 0;
-  private int endLine = 0;
-  private int endColumn = 0;
+  protected int beginLine = 0;
+  protected int beginColumn = 0;
+  protected int endLine = 0;
+  protected int endColumn = 0;
   
   public int getBeginLine() {
       return this.beginLine;
@@ -117,13 +106,6 @@ public class ParseException extends Exception {
       return this.endColumn;
   }
 
-  /**
-   * It uses "currentToken" and "expectedTokenSequences" to generate a parse
-   * error message and returns it.  If this object has been created
-   * due to a parse error, and you do not catch it (it gets thrown
-   * from the parser) the correct error message
-   * gets displayed.
-   */
   private static String initialise(Token currentToken,
                            int[][] expectedTokenSequences,
                            String[] tokenImage) {
@@ -162,7 +144,7 @@ public class ParseException extends Exception {
    * when these raw version cannot be used as part of an ASCII
    * string literal.
    */
-  static String add_escapes(String str) {
+  static protected String add_escapes(String str) {
       StringBuffer retval = new StringBuffer();
       char ch;
       for (int i = 0; i < str.length(); i++) {

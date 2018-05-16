@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2016-2018 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License
  * (GPL) version 3 that accompanies this distribution and is available at     
@@ -18,7 +18,7 @@ import org.modeldriven.alf.fuml.mapping.FumlMappingFactory;
 import org.modeldriven.alf.fuml.mapping.units.MemberMapping;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.parser.ParseException;
-import org.modeldriven.alf.parser.Parser;
+import org.modeldriven.alf.parser.ParserImpl;
 import org.modeldriven.alf.parser.TokenMgrError;
 import org.modeldriven.alf.syntax.common.ConstraintViolation;
 import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
@@ -111,7 +111,7 @@ public class AlfOpaqueBehaviorExecution extends
 		ElementReferenceImpl.clearTemplateBindings();
 		StereotypeApplication.clearStereotypeApplications();
 
-		Parser parser = new Parser(new StringReader(textualRepresentation));
+		ParserImpl parser = new ParserImpl(new StringReader(textualRepresentation));
 		parser.setFileName(behavior.name);
 
 		try {

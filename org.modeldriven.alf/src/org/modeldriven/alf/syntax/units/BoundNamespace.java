@@ -9,9 +9,9 @@
 
 package org.modeldriven.alf.syntax.units;
 
+import org.modeldriven.alf.parser.ParsedElement;
 import org.modeldriven.alf.parser.Parser;
 import org.modeldriven.alf.syntax.common.BoundElementReference;
-import org.modeldriven.alf.syntax.common.ParsedElement;
 import org.modeldriven.alf.syntax.units.impl.BoundNamespaceImpl;
 
 /**

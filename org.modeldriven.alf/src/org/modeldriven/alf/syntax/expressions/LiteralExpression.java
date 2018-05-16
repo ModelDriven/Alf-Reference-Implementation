@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2018 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -12,7 +12,6 @@ package org.modeldriven.alf.syntax.expressions;
 import java.util.Collection;
 
 import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
 import org.modeldriven.alf.syntax.common.ConstraintViolation;
 import org.modeldriven.alf.syntax.expressions.impl.LiteralExpressionImpl;
 
@@ -23,10 +22,7 @@ import org.modeldriven.alf.syntax.expressions.impl.LiteralExpressionImpl;
 public abstract class LiteralExpression extends Expression {
 
     protected void init(Parser parser) {
-        Token token = parser.getToken(0);
-        this.setParserInfo(parser.getFileName(), 
-                token.beginLine, token.beginColumn,
-                token.endLine, token.endColumn);        
+        parser.provideInfo(this, false);        
     }
     
 	@Override

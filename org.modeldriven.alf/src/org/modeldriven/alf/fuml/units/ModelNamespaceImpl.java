@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2016 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2018 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -8,12 +8,14 @@
  *******************************************************************************/
 package org.modeldriven.alf.fuml.units;
 
+import java.io.FileNotFoundException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.modeldriven.alf.parser.Parser;
+import org.modeldriven.alf.parser.ParserImpl;
 import org.modeldriven.alf.parser.ParseException;
+import org.modeldriven.alf.parser.Parser;
 import org.modeldriven.alf.parser.TokenMgrError;
 import org.modeldriven.alf.syntax.expressions.NameBinding;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
@@ -34,7 +36,7 @@ public class ModelNamespaceImpl extends
     protected boolean isVerbose = false;
     
     // Cache ensures that no unit is parsed more than once.
-    private Map<String, UnitDefinition> parsedUnitCache = 
+    protected Map<String, UnitDefinition> parsedUnitCache = 
             new HashMap<String, UnitDefinition>();
     
     public ModelNamespaceImpl(ModelNamespace self) {
@@ -56,6 +58,10 @@ public class ModelNamespaceImpl extends
     
     public void setIsVerbose(boolean isVerbose) {
         this.isVerbose = isVerbose;
+    }
+    
+    protected Parser createParser(String path) throws FileNotFoundException {
+        return new ParserImpl(path);
     }
     
     @Override
@@ -119,12 +125,12 @@ public class ModelNamespaceImpl extends
             throws java.io.FileNotFoundException {
         UnitDefinition unit = this.parsedUnitCache.get(path);
         if (unit != null) {
-            return unit;
+            return unit instanceof MissingUnit? null: unit;
         } else {
-            Parser parser = new Parser(path);
+            Parser parser = this.createParser(path);
     
             try {
-                unit = parser.UnitDefinition();
+                unit = parser.UnitDefinitionEOF();
                 if (isVerbose) {
                     System.out.println("Parsed " + path);
                 }
@@ -134,10 +140,12 @@ public class ModelNamespaceImpl extends
             } catch (TokenMgrError e) {
                 System.out.println("Parse failed: " + path);
                 System.out.println(e.getMessage());
+                this.parsedUnitCache.put(path, new MissingUnit(path));
                 return null;
             } catch (ParseException e) {
                 System.out.println("Parse failed: " + path);
                 System.out.println(e.getMessage());
+                this.parsedUnitCache.put(path, new MissingUnit(path));
                 return null;
             }
         }

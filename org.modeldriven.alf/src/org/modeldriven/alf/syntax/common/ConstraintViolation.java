@@ -18,6 +18,8 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.modeldriven.alf.parser.ParsedElement;
+
 public class ConstraintViolation implements Comparable<ConstraintViolation> {
     
     public static final String DEFAULT_ERROR_MESSAGE_FILE_DIRECTORY = "resources";

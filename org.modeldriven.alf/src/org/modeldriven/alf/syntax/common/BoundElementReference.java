@@ -11,6 +11,7 @@ package org.modeldriven.alf.syntax.common;
 
 import java.util.Collection;
 
+import org.modeldriven.alf.parser.ParsedElement;
 import org.modeldriven.alf.parser.Parser;
 import org.modeldriven.alf.syntax.common.impl.BoundElementReferenceImpl;
 

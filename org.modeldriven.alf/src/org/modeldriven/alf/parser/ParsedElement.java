@@ -1,15 +1,12 @@
 /*******************************************************************************
- * Copyright 2011, 2017 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2018 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
  * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
  * contact Model Driven Solutions.
  *******************************************************************************/
-package org.modeldriven.alf.syntax.common;
-
-import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.Token;
+package org.modeldriven.alf.parser;
 
 public abstract class ParsedElement {
     
@@ -20,13 +17,7 @@ public abstract class ParsedElement {
     private int endColumn = 0;
 
     protected void init(Parser parser) {
-        Token token = parser.getToken(0);
-        if (token.next != null) {
-            token = token.next;
-        }
-        this.setParserInfo(parser.getFileName(), 
-                token.beginLine, token.beginColumn,
-                token.endLine, token.endColumn);        
+        parser.provideInfo(this, true);        
     }
     
     protected void init(ParsedElement element) {
@@ -55,23 +46,20 @@ public abstract class ParsedElement {
         return this.endColumn;
     }
     
-    public void setBegin(Token token) {
-        this.beginLine = token.beginLine;
-        this.beginColumn = token.beginColumn;
+    public void setBegin(int beginLine, int beginColumn) {
+        this.beginLine = beginLine;
+        this.beginColumn = beginColumn;
     }
     
-    public void setEnd(Parser parser) {
-        Token token = parser.getToken(0);
-        this.endLine = token.endLine;
-        this.endColumn = token.endColumn;
+    public void setEnd(int endLine, int endColumn) {
+        this.endLine = endLine;
+        this.endColumn = endColumn;
     }
     
     public void setParserInfo(String fileName, int beginLine, int beginColumn, int endLine, int endColumn) {
         this.fileName = fileName;
-        this.beginLine = beginLine;
-        this.beginColumn = beginColumn;
-        this.endLine = endLine;
-        this.endColumn = endColumn;
+        this.setBegin(beginLine, beginColumn);
+        this.setEnd(endLine, endColumn);
     }
 
 }
