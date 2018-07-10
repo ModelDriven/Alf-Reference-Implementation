@@ -1,0 +1,46 @@
+private import Testing::*;
+/**
+ * Test use of the Map collection class.
+ */
+class Units_Map specializes Test {
+	
+	@Create public Units_Map() {
+	  this.run(null);
+	}
+
+	@Create public run(in tester: Tester[0..1]) {
+	  super(tester);
+	  this.test(listener);
+	  
+	  AssertEqual("listener.notifications", listener.notifications, 1);
+	  
+	  this.done();
+	}
+
+  public class Listener {
+    public name: String;
+    public notifications: Integer = 0;
+    
+    @Create
+    public Listener(in name: String) { this.name = name; }
+    
+    public notify() {
+      this.notifications = this.notifications + 1;
+    }
+    
+  }
+  
+  public listeners: Map<Integer, Listener> = new Map<Integer, Listener>();
+  
+  public register(in listener: Listener, in id: Integer) {
+    this.listeners.put(id, listener);
+  }
+   
+  public test(out listener: Listener[0..1]) {
+    listener = new Listener("Listener");
+    this.register(listener, 1);
+    listener = this.listeners.get(1);
+    listener.notify();
+  } 
+
+}

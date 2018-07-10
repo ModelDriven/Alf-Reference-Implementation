@@ -1,0 +1,40 @@
+private import Testing::*;
+/**
+ * Test indexed feature assignment expressions
+ **/
+class Expressions_Assignment_Feature_Indexed specializes Test {
+	
+	@Create public run(in tester : Tester[0..1]) {
+		super(tester);
+		this.test(c,self);
+		
+		AssertEqual("c.y[1]", c.y[1], 4);
+		
+		AssertEqual("self.y[1]", self.y[1], 4);
+		
+		this.done();
+	}
+
+	@Create public Expressions_Assignment_Feature_Indexed() {
+		this.run(null);
+	}
+
+    private y: Integer[*] sequence;
+    
+    private class C {
+        public y: Integer[*] sequence;
+    }
+    
+    public test(out c: C, out self: Expressions_Assignment_Feature_Indexed) {      
+      c = new C();
+      c.y = Integer[]{1,2,3};
+      c.y[2] = 4;
+      c.y[1] = null;
+      
+      this.y = Integer[]{1,2};
+      this.y[2] = 4;
+      this.y[1] = null;
+      self = this;
+	}
+}
+      

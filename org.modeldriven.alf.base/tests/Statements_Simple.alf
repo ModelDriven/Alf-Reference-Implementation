@@ -1,0 +1,87 @@
+private import Testing::*;
+/** 
+ * Test block, empty and local name declaration statements.
+ **/
+class Statements_Simple specializes Test {
+
+	@Create public Statements_Simple() {
+		this.run(null);
+	}
+
+	@Create public run(in tester: Tester[0..1]) {
+		super(tester);
+
+	    this.test(i, last, collection, offer, members, properties, assets, s);
+	    
+	    AssertEqual("i", i, 1);
+	    AssertEqual("last", last, 2);
+	    AssertList("collection", collection, Integer[]{1,2});
+	    
+	    AssertEqual("offer->size()", size(offer), 1);
+	    AssertList("members.name", members.name, String[]{"A","B", "C"});
+	    AssertList("properties.name", properties.name, assets.name);
+	    AssertEqual("s", s, "test");
+	
+	    this.done();
+	}
+
+    // Supporting declarations *************************************************
+    
+  	private offers: Offer[*] = new Offer();
+  	private principal: Integer = 100;
+  	private rate: Integer = 5;
+	
+    private class Offer { }
+    private class Member { 
+      	public isActive: Boolean;
+      	public name: String;
+      	@Create public Member(in isActive: Boolean, in name: String) {
+      	    this.isActive = isActive;
+      	    this.name = name;
+      	}
+  	}
+  	
+  	private class RealProperty { 
+  	    public name: String;
+        @Create public RealProperty(in name: String) { this.name = name; }
+  	}
+  	
+	//**************************************************************************
+
+	public test(out i: Integer, out last: Integer, out collection: Integer[*] sequence,
+	  out offer: Offer[0..1], out members: Member[*] sequence,
+	  out properties: RealProperty[*] sequence, out assets: RealProperty[*] sequence, 
+	  out s: any) {
+	  
+    // Setup
+	  e1 = 1;
+	  e2 = 2;
+	  
+	  period = 10;
+	  members = Member[]{new Member(false, "A"), new Member(true, "B"), new Member(false, "C")};
+	  land = new RealProperty("land");
+	  home = new RealProperty("home");
+	  condominium = new RealProperty("condominium");
+	  things = any[]{land, home, condominium, "something"};
+	  // *****
+	  
+	  /* //@parallel */
+	  { 
+	    i = e1;
+	    last = e2;
+	    collection = Integer[]{i, last};
+	  }
+	  
+	  ;
+	  
+	  currentOffer = this.offers[1];
+	  realProperties = (RealProperty)things;
+	  fixedAssets = RealProperty[] { land, home, condominium };
+	  x = "test";
+	  
+	  offer = currentOffer;
+	  properties = realProperties; 
+	  assets = fixedAssets;
+	  s = x;
+	}
+}

@@ -1,0 +1,63 @@
+private import Testing::*;
+/**
+ * Test non-literal assignment of null.
+ **/
+class Expressions_Assignment_Null specializes Test {
+
+	@Create public Expressions_Assignment_Null() {
+		this.run(null);
+	}
+
+	@Create public run(in tester: Tester[0..1]) {
+	  super(tester);
+	  this.test(i, j, m, n);
+	  
+	  AssertEqual("i", i, null);
+	  AssertEqual("j", j, 2);
+	  AssertList("m", m, Integer[]{1, 3});
+	  AssertEqual("n", n, null);
+	  
+	  this.done();
+	}
+
+  private i: Integer[0..1];
+  private j: Integer[*] sequence;
+  
+  public set(in i: Integer[0..1]) {
+    this.i = i;
+  }
+  
+  public get(): Integer[0..1] {
+    return this.i;
+  }
+  
+  public setAt(in j: Integer[0..1], in index: Integer) {
+    this.j[index] = j;
+  }
+  
+  public getAt(in index: Integer): Integer[0..1] {
+    return this.j[index];
+  }
+  
+  public activity A() { }
+  
+  public test(out i: Integer[0..1], out j: Integer[0..1],  
+  	out m : Integer[0..*], out n: Integer[0..1]) {
+  
+    this.set(5);
+    this.set(null);
+    i = this.get();
+    
+    this.j = Integer[]{1, 2};
+    
+    this.setAt(5, 1);
+    this.setAt(null, 1);
+    j = this.getAt(1);    
+    
+    m = Integer[]{1, 2, 3};
+    m[2] = null;
+    
+    n = A();
+  }
+  
+}

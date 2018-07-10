@@ -1,0 +1,63 @@
+private import Testing::*;
+private import Alf::Library::PrimitiveBehaviors::SequenceFunctions::*;
+/**
+ * Test 0 and 1 based indexing.
+ **/
+class Expressions_Indexing specializes Test {
+ 
+    @Create public Expressions_Indexing() {
+        this.run(null);
+    }
+     
+    @Create public run(in tester: Tester[0..1]) {
+        super(tester);
+        
+        this.test(a1, b1, i1, listA1, listB1);
+        
+        AssertEqual("a1", a1, 1);
+        AssertEqual("b1", b1, 2);
+        AssertEqual("i1", i1, 3);
+        AssertList("listA1", listA1, Integer[]{1, 0, -1, 2, -3, 4});
+        AssertList("listB1", listB1, Integer[]{1, 0, -1, -2, -3, 4});
+        
+        AssertList("this.list", this.list, Integer[]{1, 5, 3, 5});
+         
+        this.done();       
+    }
+    
+    private list: Integer[*] sequence = Integer[]{1, 2, 3, 4};
+    
+    public test (
+        out a1: Integer[0..1], out b1: Integer[0..1], out i1: Integer[0..1], 
+        out listA1: Integer[*] sequence, out listB1: Integer[*] sequence
+        ) 
+    {
+        
+        listA1 = Integer[]{1, 2, 3, 4};
+        listB1 = listA1;
+        
+        a1 = listA1[1];
+        b1 = at(listA1,2);
+        i1 = indexOf(listA1,3);
+         
+        listA1 = includeAt(listA1,3, -1); // {1, 2, -1, 3, 4}
+        listA1 = includeAllAt(listA1, 4, Integer[]{-2, -3}); // {1, 2, -1, -2, -3, 3, 4}
+        listA1 = (Integer)ExcludeAt(listA1, 6); // {1, 2, -1, -2, -3, 4}
+        listA1 = (Integer)ReplacingAt(listA1, 2, 0); // {1, 0, -1, -2, -3, 4}
+        listA1[4] = 2; // {1, 0, -1, 2, -3, 4}
+        
+        addAt(listB1, 3, -1);
+        addAllAt(listB1, 4, Integer[]{-2, -3});
+        removeAt(listB1, 6);
+        replaceAt(listB1, 2, 0);
+        
+        if (true) {
+            this.list[this.list[1] + 1] = this.list[2] + this.list[3]; // {1, 5, 3, 4}
+            this.list[this.list[3] + 1] = this.list[this.list[3] + 1] + 1; // {1, 5, 3, 5}
+        }
+            
+	}
+    
+}
+             
+             

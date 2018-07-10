@@ -1,0 +1,150 @@
+private import Testing::*;
+/**
+ * Test various operator expressions.
+ **/
+class Expressions_Operator specializes Test {
+
+	@Create public Expressions_Operator() {
+		this.run(null);
+	}
+
+	@Create public run(in tester: Tester[0..1]) {
+		super(tester);
+
+	    this.test(i, j, a, b, c, d, e, e1, e2, e3, e4, e5, e6, e7, e8, e9,
+	      f, f1, f2, x, y, z, r, k1, k2, k3, k4, u, v, s);
+	      
+	    AssertEqual("i", i, -1);
+	    AssertEqual("j", j, 2);
+	    
+	    AssertFalse("a", a);
+	    AssertTrue("b", b);
+	    AssertFalse("c", c);
+	    AssertTrue("d", d);
+	    AssertFalse("e", e);
+	    
+	    AssertTrue("e1", e1);
+	    AssertTrue("e2", e2);
+	    AssertTrue("e3", e3);
+	    AssertFalse("e4", e4);
+	    AssertFalse("e5", e5);
+	    AssertFalse("e6", e6);
+	    AssertTrue("e7", e7);
+	    AssertFalse("e8", e8);
+	    AssertTrue("e9", e9);
+	    
+	    AssertTrue("f", f);
+	    AssertFalse("f1", f1);
+	    AssertTrue("f2", f2);
+	    
+	    AssertEqual("x", x, +2);
+	    AssertList("y", y, Integer[]{1,2});
+	    AssertList("z", z, Integer[]{1,2});
+	    
+	    AssertEqual("r", r, 2);
+	    
+	    AssertEqual("k1", k1, 1);
+	    AssertEqual("k2", k2, 1);
+	    AssertEqual("k3", k3, 1);
+	    AssertEqual("k4", k4, null);
+	    
+	    AssertEqual("u", u, null);
+	    AssertFalse("v", v);
+	    AssertEqual("s", s, "v false");
+	
+	    this.done();
+	}
+
+    // Supporting declarations *************************************************
+    
+    private class Monitor {
+        public getActiveSensor(): Sensor { return new Sensor(); }
+    }
+    private class Sensor {
+      public getReading(): Integer { return 2; }
+    }
+    private class Person { }
+    private class Employee specializes Person {
+      public id: Integer;
+      public name: String;
+    }
+    
+    private activity Nothing() { }
+    
+  //**************************************************************************
+
+  public test(
+     out i: Integer, out j: Integer,
+     out a: Boolean, out b: Boolean, out c: Boolean, out d: Boolean, out e: Boolean,
+     out e1: Boolean, out e2: Boolean, out e3: Boolean, out e4: Boolean, out e5: Boolean,
+     out e6: Boolean, out e7: Boolean, out e8: Boolean, out e9: Boolean,
+     out f: Boolean, out f1: Boolean, out f2: Boolean,
+     out x: any, out y: any[*] sequence, out z: Integer[*], out r: Integer,
+     out k1: Integer[0..1], out k2: Integer[0..1], out k3: Integer[0..1], out k4: Integer[0..1],
+     out u: any[0..1], out v: Boolean, out s: String) {
+    
+    employee = new Employee();
+    monitor = new Monitor();
+
+    +(i = 0);  // Check assignment in unary expression.
+    (i = 1) - (j = 2); // Check assignment in binary expression.
+      
+    i = +i; // 1
+    i = -i; // -1
+    i = i * j; // -2
+    i0 = i / j; // -1
+    i = i0 != null? i0: 0;
+    i = i % j; // -1
+    i = i + j; // 1
+    i = i - j; // -1
+    
+    a = i > j;
+    b = i < j;
+    c = i >= j;
+    d = i <= j;
+    
+    f = true;
+    g = false;
+    
+    e = f || g;
+    e = e && f;
+    e = !e;
+    
+    e1 = 3 < *;
+    uln = (UnlimitedNatural)(+3);
+    e2 = (uln != null? uln: *) < *;
+    
+    e3 = employee instanceof Person;
+    e4 = i hastype Employee;
+    
+    e5 = i==0;
+    e6 = monitor!=monitor;
+    e7 = employee.name==null;
+    e8 = null!=employee.name;
+    e9 = null==null;
+    
+    f = i < j && (i > j || f); 
+      
+    f1 = i > 0 && 2 < j;
+    f2 = i == 0 || 2 >= j;
+    
+    false || (k = 1) > 2;
+    k1 = k;
+    false && (k = 2) > 1;
+    k2 = k;
+    
+    x = !f? 1: +2;
+    y = f? Integer[]{1,2}: 0;    
+    z = (Integer)any[]{1,"banana",2};
+    
+    true? (l1 = 1): (l2 = 2);
+    k3 = l1;
+    k4 = l2;
+    
+    u = true? Nothing(): 2;
+    v = (w = null) == 0 && w[1] == 1;
+    s = "v " + (!v? "false": "true");
+    
+    r = monitor.getActiveSensor().getReading();    
+  }
+}

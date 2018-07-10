@@ -1,0 +1,38 @@
+private import Testing::*;
+/**
+ * Test literal and name expressions.
+ **/
+class Expressions_Literal_Name specializes Test {
+
+	@Create public Expressions_Literal_Name() {
+		this.run(null);
+	}
+
+	@Create public run(in tester: Tester[0..1]) {
+		super(tester);
+
+	    this.test(1,i,j,b,c,d);
+	    
+	    AssertEqual("i", i, 1234);
+	    AssertEqual("j", j, 0);
+	    
+	    AssertEqual("b", b, 1);
+	    AssertEqual("c", c, 1);
+	    AssertEqual("d", d, 1);
+	
+	    this.done();
+	}
+
+    public test(in a: Integer,
+      out i: any, out j: any,
+      out b: Integer, out c: Integer, out d: Integer) {
+    
+      i = 1234;
+      j = 0;
+      
+      b = a;
+      c = Expressions_Literal_Name::test::a;
+      d = Expressions_Literal_Name::test::a;
+    
+    }
+}

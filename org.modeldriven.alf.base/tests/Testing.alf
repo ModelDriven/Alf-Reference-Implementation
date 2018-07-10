@@ -1,0 +1,75 @@
+package Testing {
+
+	public abstract class Tester {
+		public abstract completed(in message: String);
+	}
+		
+	public class DefaultTester specializes Tester {
+		public completed(in message: String) {
+			WriteLine(message);
+		}
+	}
+
+	public abstract class Test {
+		private tester : Tester;
+		
+		@Create protected Test(in tester : Tester[0..1]) {
+			this.tester = tester == null? new DefaultTester(): tester;
+		}
+		
+		public done(in message: String) {
+			this.tester.completed(message);
+		}
+		
+		public done() {
+			this.done("Done.");
+		}
+	}
+	
+	public activity AssertTrue(in label: String, in condition: Boolean[0..1]) {
+		if (condition != true) {
+	    		WriteLine("FAILED: " + label);
+	    }
+	}
+
+	public activity AssertFalse(in label: String, in condition: Boolean[0..1]) {
+	    AssertTrue("! " + label, condition == false);
+	}
+
+	public activity AssertEqual(in label: String, in value1: any[0..1], in value2: any[0..1]) {
+		if (value1 != value2) {
+			Write("FAILED: " + label + "==");
+			s = (String)value2;
+			if (s != null) {
+				Write("\"" + s + "\"");
+			} else {
+				Write(value2);
+			}
+			WriteLine("");
+		}
+	}
+	
+	public activity AssertList(in label: String, in list: any[*] sequence, in expected: any[*] sequence) {
+	    AssertEqual(label + "->size()", size(list), size(expected));
+	    for (i in 1..IntegerFunctions::Min(size(list),size(expected))) {
+	        AssertEqual(label + "[" + IntegerFunctions::ToString(i) + "]", list[i], expected[i]);
+	    }
+	}
+	
+	public activity Write(in value: any[0..1]) {
+	  if (value == null) {
+	  	WriteLine("null");
+	  } else if (value instanceof Integer) {
+	  	WriteLine(IntegerFunctions::ToString(value));
+	  } else if (value instanceof Real) {
+	  	WriteLine(RealFunctions::ToString(value));
+	  } else if (value instanceof UnlimitedNatural) {
+	  	WriteLine(UnlimitedNaturalFunctions::ToString(value));
+	  } else if (value instanceof Boolean) {
+	  	WriteLine(BooleanFunctions::ToString(value));
+	  } else if (value instanceof String) {
+	  	WriteLine(value);
+	  }
+	}
+	
+}

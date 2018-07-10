@@ -1,0 +1,115 @@
+private import Testing::*;
+/**
+ * Test for statements.
+ **/
+class Statements_For_Looping specializes Test {
+
+	@Create public Statements_For_Looping() {
+		this.run(null);
+	}
+
+	@Create public run(in tester: Tester[0..1]) {
+		super(tester);
+
+		this.test(readings, sum, outgoingEdges, testReturn, empty, n);
+		
+		AssertList("readings", readings, Integer[]{1,2,3});
+		AssertEqual("sum", sum, 55);
+		AssertList("outgoingEdges.token", outgoingEdges.token, Integer[]{1,1});
+		AssertTrue("testReturn", testReturn);
+		AssertEqual("empty", empty, null);
+		AssertEqual("n", n, 6);
+	
+	  	this.done();
+	}
+
+    // Supporting declarations *************************************************
+    
+	private class Sensor {
+		private reading: Integer[0..1];
+		@Create public Sensor(in reading: Integer[0..1]) {
+			this.reading = reading;
+		}
+		public getNextReading(): Integer[0..1] { return this.reading; }
+    }
+	private class ActivityEdgeInstance {
+		public token: Integer[0..1];
+		public sendOffer(in token: Integer[0..1]) {
+			this.token = token;
+		}
+	}
+	
+    private activity processRecord(in index: Integer) { }
+    
+    // Test that the for loop is mapped as a loop node,
+    // not an expansion region, if it contains a return.
+    private activity TestReturn() : Boolean {
+  	  for (x in Integer[]{1,2}) {
+  	    if (false) {
+  	      for (y in 1) {
+  	        return false;
+  	      }
+  	    }
+  	  }
+  	  return true;
+    }
+    
+	//**************************************************************************
+
+    public test(
+	    	out readings: Integer[*], out sum1: Integer,
+	    	out outgoingEdges: ActivityEdgeInstance[*],
+	    	out testReturn: Boolean, out empty: Integer[0..1],
+	    	out n : Integer) {
+    
+      // Setup
+  	  noiseLimit = 0;
+  	  sensors = Sensor[]{new Sensor(1), new Sensor(2), new Sensor(null), new Sensor(3)};
+  	  reading = +0;
+  	  readings = null;
+  	  recordCount = 10;
+  	  sum = +0;
+  	  outgoingEdges = ActivityEdgeInstance[]{new ActivityEdgeInstance(), new ActivityEdgeInstance()};
+   	  tokens = Integer[]{1, 2, 3};
+  	  V = Integer[]{10, 20, 30};
+	  // *****
+	      
+  	  for (s in sensors) {
+        reading = s.getNextReading();
+  	    if (reading == null) {
+ // 	      break;
+  	    } else if (reading > noiseLimit) {
+  	      add(readings, reading);
+  	    }
+  	  }
+  	  
+  	  for (j in 1..recordCount) {
+  	    sum = sum + j;
+  	  }
+  	  sum1 = sum;
+  	  
+  	  for (outgoingEdge in outgoingEdges) {
+  	    outgoingEdge.sendOffer(1);
+  	  }
+  	  
+  	  /*
+  	  //@parallel 
+  	  for (outgoingEdge in outgoingEdges) {
+  	    outgoingEdge.sendOffer(outgoingEdge.token);
+  	  }
+  	  */
+  	  
+  	  testReturn = TestReturn();
+  	  
+  	  for (nothing in null) {
+  	    dummy = 0;
+  	  }
+  	  empty = dummy;
+  	  
+  	  n = 0;
+  	  for (i in tokens) {
+  	    n = n + i;
+  	  }
+  	  
+    }
+}

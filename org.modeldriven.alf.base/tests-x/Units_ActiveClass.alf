@@ -1,0 +1,57 @@
+private import Testing::*;
+/**
+ * Test active class instantiation
+ */
+class Units_ActiveClass specializes Test {
+
+	@Create public Units_ActiveClass() {
+		this.run(null);
+	}
+
+	@Create public run(in tester: Tester[0..1]) {
+		super(tester);
+  		new TestRunner(this).Start();
+	}
+
+  private active class C {
+    public i: Integer;
+    public j: Integer;
+    public t: Base;
+    @Create public C(in i: Integer, in t: Base) { 
+      this.i = i;
+      this.t = t;
+    }
+  } do {
+    this.j = this.i;
+    this.t.Continue();
+  }
+  
+  private abstract active class Base {
+  
+  	protected c: C;
+  
+    public receive signal Start { }
+    public receive signal Continue { }
+
+  } do {
+    accept(Start);
+    this.c = new C(1, this);
+  }
+  
+  public active class TestRunner specializes Base {
+  	
+  	private outer: Test;
+  	
+  	@Create public TestRunner(in outer: Test) {
+  		this.outer = outer;
+  	}
+  
+    } do {
+      accept (Continue);
+      
+      AssertEqual("this.c.j", this.c.j, 1);
+      
+      this.outer.done();
+    }
+
+}

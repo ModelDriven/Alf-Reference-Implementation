@@ -1,0 +1,72 @@
+private import Testing::*;
+/*
+ * Test reception invocation expressions.
+ */
+class Expressions_Invocation_Reception specializes Test {
+
+	@Create public Expressions_Invocation_Reception() {
+		this.run(null);
+	}
+
+	@Create public run(in tester: Tester[0..1]) {
+		super(tester);
+  		new TestRunner(this).Start();
+	}
+
+  public active class Receiver {
+  
+    public a: Integer = 0;
+    
+    public tester: TestRunner;
+    
+    @Create
+    public Receiver(in tester: TestRunner) {
+      this.tester = tester;
+    }
+  
+    public receive signal A {
+    }
+        
+  } do {
+  
+    do {
+      accept (A);
+      this.a = this.a + 1;
+      this.tester.SignalLoop();
+    } while (true);
+    
+  }
+  
+  public active class TestRunner {
+  	
+  	private outer: Test;
+  	
+  	@Create public TestRunner(in outer: Test) {
+  		this.outer = outer;
+  	}
+  
+    public receive signal Start { }
+    public receive signal SignalLoop { }
+  
+    public test(out receiver: Receiver, out n: Integer) {
+    
+      receiver = new Receiver(this);
+      
+      receiver.A();
+      n = 1;
+    }
+    
+  } do {  
+    accept (Start);
+  
+    this.test(receiver, n);
+    
+    for (i in 1..n) {
+      accept (SignalLoop);
+    }
+    
+    AssertEqual("receiver.a", receiver.a, 1);
+  
+    this.outer.done();
+  }
+}

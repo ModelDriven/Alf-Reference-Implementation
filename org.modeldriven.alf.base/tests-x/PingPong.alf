@@ -1,0 +1,63 @@
+active class PingPong {
+
+  active class A {
+  
+  	public b: B;
+  
+    receive signal Start {
+    }
+    receive signal Ping { }
+    
+  } do {
+  
+    accept (Start);
+    WriteLine("Starting A");
+    
+    while (true) {
+      accept (Ping);
+      WriteLine("Ping!");
+      this.b.Pong();
+    }
+  }
+  
+  active class B {
+  
+  	public a: A;
+  	public n: Integer;
+  
+    receive signal Start { 
+    }
+    receive signal Pong { }
+    
+  } do {
+  
+    accept (Start);
+    WriteLine("Starting B");
+
+    for (i in 1..this.n) {
+      WriteLine("i = " + IntegerFunctions::ToString(i));
+      this.a.Ping();
+      accept (Pong);
+      WriteLine("Pong!");
+    }
+  }
+  
+} do {
+
+  a = new A();
+  b = new B();
+  
+  a.b = b;
+  b.a = a;
+
+  Write("Enter n: ");
+  n = IntegerFunctions::ToInteger(ReadLine(error));
+      
+  if (n != null) { 
+  	b.n = n;
+    a.Start();
+    b.Start();
+  }
+  
+}
+    

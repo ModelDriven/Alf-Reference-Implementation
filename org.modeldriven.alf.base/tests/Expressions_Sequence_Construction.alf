@@ -1,0 +1,69 @@
+private import Testing::*;
+/**
+ * Test sequence construction expressions.
+ **/
+class Expressions_Sequence_Construction specializes Test {
+
+	@Create public Expressions_Sequence_Construction() {
+		this.run(null);
+	}
+
+	@Create public run(in tester: Tester[0..1]) {
+		super(tester);
+
+	    this.test(seq1,seq2,seq3,seq4,seq5,seq6,seq7,
+	              x,customers);    
+	    
+	    AssertList("seq1", seq1, any[]{"apple","orange","strawberry"});
+	    AssertList("seq2", seq2, any[]{"apple","orange","strawberry"});
+	    AssertList("seq3", seq3, any[]{1, true, "blah"});
+	    AssertList("seq4", seq4, any[]{1,2,3});
+	    AssertList("seq5", seq5, any[]{1,2,3});
+	    AssertList("seq6", seq6, any[]{1,2,3});
+	    AssertTrue("seq7->isEmpty()", isEmpty(seq7));
+	    
+	    AssertEqual("x", x, 5);
+	    
+	    AssertList("customers.name", customers.name, String[]{"A", "C"});
+	    
+	    this.done();
+	}
+
+    // Supporting declarations *************************************************
+
+    private class Customer { 
+      public name: String;
+      @Create public Customer(in name: String) { this.name = name; }
+    }
+    private getList(): Integer[1..*] { return Integer[]{4,5,6}; }
+  	
+    //**************************************************************************
+	
+    public test(
+      out seq1: String[*] sequence, 
+      out seq2: String[*] sequence,
+      out seq3: any[*] sequence,
+      out seq4: Integer[*] sequence,
+      out seq5: Integer[*] sequence,
+      out seq6: Integer[*] sequence,
+      out seq7: Integer[*] sequence,
+      out x: Integer[0..1],
+      out customers: Customer[*] sequence
+    ) {
+	  
+	  seq1 = String[]{"apple","orange","strawberry"};
+	  seq2 = String[]{"apple","orange","strawberry"};
+      seq3 = any[]{1, true, "blah"};
+      seq4 = Integer[]{1, 2, 3};
+	  seq5 = Integer[]{1, 2, 3};
+	  seq6 = Integer[]{1, 2, 3};
+	  seq7 = null;
+	  
+	  x = this.getList()[2];
+	
+	  i = 2;
+	  customers = Customer[]{ new Customer("A"), new Customer("B") };
+	  customers[i] = new Customer("C");
+	  
+    }	  
+}

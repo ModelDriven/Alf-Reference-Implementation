@@ -1,0 +1,147 @@
+private import Testing::*;
+/**
+ * Test while and do statements.
+ **/
+class Statements_While_Do_Looping specializes Test {
+
+	@Create public Statements_While_Do_Looping() {
+	  this.run(null);
+	}
+
+	@Create public run(in tester: Tester[0..1]) {
+	  super(tester);
+
+	  this.test(count, checksum, nextRecord, file, lines, readings, i, j, empty);
+	  
+	  AssertEqual("count", count, 2);
+	  AssertEqual("checksum", checksum, 1);
+	  AssertEqual("nextRecord.label", nextRecord.label, "Record");
+	  AssertList("lines", lines, String[]{"Record","End"});
+	  AssertList("readings", readings, Integer[]{2,1,0});
+	  AssertEqual("i", i, 2);
+	  AssertEqual("j", j, 3);
+	  AssertEqual("empty", empty, null);
+	  
+	  AssertTrue("this.list->isEmpty()", isEmpty(this.list));
+	
+	  this.done();
+	}
+
+  // Supporting declarations *************************************************
+
+  private list: Monitor[*] sequence = Monitor[]{new Monitor(), new Monitor()};
+  
+  private class Monitor { 
+    public cleanUp() { }
+  }
+  
+  private class File { 
+    private more: Boolean;
+    public endMarker: FileRecord;
+    @Create public File() { 
+      this.more = true; 
+      this.endMarker = new FileRecord("End");
+    }
+    public hasMore(): Boolean { 
+      return this.more;
+    }
+    public readNext(): FileRecord[0..1] { 
+      if (this.more) {
+        this.more = false;
+        return new FileRecord("Record"); 
+      } else {
+        return this.endMarker;
+      }
+    }
+    public reset() {
+      this.more = true;
+    }
+  }
+  
+  private class FileRecord { 
+    public label: String;
+    @Create public FileRecord(in label: String) { this.label = label; }
+    public toString():String { return this.label; } 
+  }
+  
+  private class Sensor {
+    public count: Integer;
+    @Create public Sensor(in count: Integer) { 
+      this.count = count; 
+    }
+    public getNextReading(): Reading[0..1] { 
+      this.count = this.count - 1; 
+      return new Reading(this.count + 1);
+    }
+  }
+  
+  private class Reading {
+    private value: Integer;
+    @Create public Reading(in value: Integer) { this.value = value; }
+    public isFinal(): Boolean { return this.value <= 0; }
+    public getValue(): Integer { return this.value; }
+  }
+  
+   //**************************************************************************
+
+  public test(
+    out count: Integer, out checksum: Integer, 
+    out nextRecord: FileRecord[0..1], out file: File, 
+    out lines: String[*] sequence, out readings: Integer[*] sequence, 
+    out i: Integer, out j: Integer, out empty: Integer[0..1]) {
+  
+    // Setup
+    count = 0;
+    checksum = 0;
+    file = new File();
+    endMarker = file.endMarker;
+    sensor = new Sensor(2);
+    lines = null;
+    readings = null;
+    i = 4;
+    j = 0;
+    // *****
+   
+    while ((last = size(this.list)) > 0) {
+      this.list[last].cleanUp();
+      removeAt(this.list, last);
+      count = count + 1;
+    }
+    
+    continue = true;
+    while (continue) {
+      nextRecord = file.readNext();
+      if (!isEmpty(nextRecord)) {
+        checksum = checksum + 1;
+      }
+      continue = file.hasMore();
+    }
+    
+    while (false) {
+      dummy = 0;
+    }
+    empty = dummy;
+    
+    file.reset();
+    do {
+      line = file.readNext();
+      add(lines, line.toString());
+    } while (line != endMarker);
+    
+    do {
+      nextReading = sensor.getNextReading();
+      add(readings, nextReading.getValue());
+    } while (!nextReading.isFinal());
+    
+    do {
+      if (i > 2) {
+        i = i - 1;
+      }
+    } while(i > 2);
+    
+    do {
+      j = j + 1;
+    } while (j <= 2);
+    
+  }
+}

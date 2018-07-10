@@ -1,0 +1,35 @@
+private import Testing::*;
+/**
+ * Test non-indexed assignment expressions.
+ **/
+class Expressions_Assignment specializes Test {
+
+    @Create public run(in tester: Tester[0..1]) {
+      	super(tester);
+      
+		this.test(i,f,filename,a);
+		
+		AssertEqual("i", i, 1);
+		AssertTrue("f", f);
+		AssertEqual("filename", filename, "xyz.doc");
+		AssertEqual("a", a, 1);
+		
+		this.done();
+    }
+    
+    @Create public Expressions_Assignment() {
+      	this.run(null);
+    }
+
+    public test(out i: Integer, out f: Boolean, out filename: String, out a: Integer) {
+    
+      i = 1;
+      
+      f = true;
+       
+      filename = "xyz.doc";
+      
+      a = 1;
+    
+    }
+}

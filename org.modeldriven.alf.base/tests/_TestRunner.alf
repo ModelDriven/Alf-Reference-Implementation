@@ -1,0 +1,66 @@
+private import Testing::*;
+class _TestRunner specializes DefaultTester {
+
+    @Create
+    public _TestRunner() {
+	    WriteLine("Expressions_Assignment...");
+	    new Expressions_Assignment::run(this);
+	    
+	    WriteLine("Expressions_Assignment_Feature...");
+	    new Expressions_Assignment_Feature::run(this);
+	    
+	    WriteLine("Expressions_Assignment_Feature_Indexed...");
+	    new Expressions_Assignment_Feature_Indexed::run(this);
+	    
+	    WriteLine("Expressions_Assignment_Indexed...");
+	    new Expressions_Assignment_Indexed::run(this);
+	    
+	    WriteLine("Expressions_Assignment_Null...");
+	    new Expressions_Assignment_Null::run(this);
+	    
+	    WriteLine("Expressions_Constructor_Destructor...");
+	    new Expressions_Constructor_Destructor::run(this);
+	    
+	    WriteLine("Expressions_Indexing...");
+	    new Expressions_Indexing::run(this);
+	    
+	    WriteLine("Expressions_Invocation...");
+	    new Expressions_Invocation::run(this);
+	    
+	    WriteLine("Expressions_Literal_Name...");
+	    new Expressions_Literal_Name::run(this);
+	    
+	    WriteLine("Expressions_Object...");
+	    new Expressions_Object::run(this);
+	    
+	    WriteLine("Expressions_Operator...");
+	    new Expressions_Operator::run(this);
+	    
+	    WriteLine("Expressions_Overloading...");
+	    new Expressions_Overloading::run(this);
+	    
+	    WriteLine("Expressions_Sequence_Construction...");
+	    new Expressions_Sequence_Construction::run(this);
+	    
+	    WriteLine("Expressions_SuperConstructors...");
+	    new Expressions_SuperConstructors::run(this);
+	    
+	    WriteLine("Statements_Conditional...");
+	    new Statements_Conditional::run(this);
+	    
+	    WriteLine("Statements_For_Looping...");
+	    new Statements_For_Looping::run(this);
+	    
+	    WriteLine("Statements_Return...");
+	    new Statements_Return::run(this);
+	    
+	    WriteLine("Statements_Simple...");
+	    new Statements_Simple::run(this);
+	    
+	    WriteLine("Statements_While_Do_Looping...");
+	    new Statements_While_Do_Looping::run(this);
+	    
+	    WriteLine("All done!");
+	}
+	
+}
