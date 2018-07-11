@@ -13,10 +13,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.modeldriven.alf.parser.ParserImpl;
-import org.modeldriven.alf.parser.ParseException;
 import org.modeldriven.alf.parser.Parser;
-import org.modeldriven.alf.parser.TokenMgrError;
+import org.modeldriven.alf.parser.ParserFactory;
+import org.modeldriven.alf.parser.ParserFactoryImpl;
 import org.modeldriven.alf.syntax.expressions.NameBinding;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.ExternalNamespace;
@@ -39,8 +38,17 @@ public class ModelNamespaceImpl extends
     protected Map<String, UnitDefinition> parsedUnitCache = 
             new HashMap<String, UnitDefinition>();
     
+    private ParserFactory parserFactory = new ParserFactoryImpl();
+    
     public ModelNamespaceImpl(ModelNamespace self) {
         super(self);
+    }
+    
+    public ModelNamespaceImpl(ModelNamespace self, ParserFactory parserFactory) {
+        this(self);
+        if (this.parserFactory != null) {
+            this.parserFactory = parserFactory;
+        }
     }
     
     @Override
@@ -61,7 +69,7 @@ public class ModelNamespaceImpl extends
     }
     
     protected Parser createParser(String path) throws FileNotFoundException {
-        return new ParserImpl(path);
+        return parserFactory.createParser(path);
     }
     
     @Override
@@ -137,12 +145,7 @@ public class ModelNamespaceImpl extends
                 unit.getImpl().addImplicitImports();
                 this.parsedUnitCache.put(path, unit);
                 return unit;           
-            } catch (TokenMgrError e) {
-                System.out.println("Parse failed: " + path);
-                System.out.println(e.getMessage());
-                this.parsedUnitCache.put(path, new MissingUnit(path));
-                return null;
-            } catch (ParseException e) {
+            } catch (Throwable e) {
                 System.out.println("Parse failed: " + path);
                 System.out.println(e.getMessage());
                 this.parsedUnitCache.put(path, new MissingUnit(path));

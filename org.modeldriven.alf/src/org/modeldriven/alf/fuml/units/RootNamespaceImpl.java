@@ -12,6 +12,8 @@ package org.modeldriven.alf.fuml.units;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.modeldriven.alf.parser.ParserFactory;
+import org.modeldriven.alf.parser.ParserFactoryImpl;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.MissingMember;
@@ -31,15 +33,26 @@ public class RootNamespaceImpl extends ModelNamespaceImpl {
     private ModelNamespace modelNamespace = null;
     private String libraryDirectory = null;
     
+    private ParserFactory parserFactory;
+    
     protected RootNamespaceImpl(RootNamespace self) {
         super(self);
         RootNamespace.setRootImpl(this);
     }
     
-    public RootNamespaceImpl() {
+    public RootNamespaceImpl(ParserFactory parserFactory) {
         this(RootNamespace.getRootScope());
         this.setName(ROOT_NAMESPACE_NAME);
+        this.setParserFactory(parserFactory);
         this.resetModelNamespace();
+    }
+    
+    public RootNamespaceImpl() {
+        this(new ParserFactoryImpl());
+    }
+    
+    public void setParserFactory(ParserFactory parserFactory) {
+        this.parserFactory = parserFactory;
     }
     
     @Override
@@ -48,7 +61,7 @@ public class RootNamespaceImpl extends ModelNamespaceImpl {
     }
     
     protected ModelNamespaceImpl createModelNamespaceImpl(ModelNamespace modelNamespace) {
-        return new ModelNamespaceImpl(modelNamespace);
+        return new ModelNamespaceImpl(modelNamespace, this.parserFactory);
     }
     
     public void resetModelNamespace() {
