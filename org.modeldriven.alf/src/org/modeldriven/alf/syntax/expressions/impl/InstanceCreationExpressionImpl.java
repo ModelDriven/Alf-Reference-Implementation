@@ -171,17 +171,19 @@ public class InstanceCreationExpressionImpl
                                     // "Impl" inserted and resolving it makes sure
                                     // that all template bindings are handled 
                                     // correctly.
-                                    implConstructor = qualification.getQualification();
+                                    implConstructor = 
+                                            qualification.getImpl().copy().getQualification();
                                     if (implConstructor == null) {
                                         implConstructor = new QualifiedName();
                                         implConstructor.getImpl().
                                             setCurrentScope(namespaceDefinition);
                                     }
                                     implConstructor.getImpl().addName("Impl").
-                                    addNameBinding(qualification.getUnqualifiedName());
+                                        addNameBinding(qualification.getUnqualifiedName());
                                 }
 
                                 implConstructor.addNameBinding(unqualifiedName);
+                                implConstructor.getImpl().setIsVisibleOnly(false);
                                 ElementReference implOperationReferent = 
                                         implConstructor.getImpl().getOperationReferent();
 

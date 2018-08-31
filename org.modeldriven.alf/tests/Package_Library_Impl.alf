@@ -1,15 +1,17 @@
-package Library {
-	public abstract class Class {
-		@Create public Class() { }
-    }
-    
-    private package Impl {
-		public class Class specializes Library::Class {
-			@Create public Class() redefines Library::Class::Class { }
+package Library_Impl {
+	public package Library {
+		public abstract class Class {
+			@Create public Class() { }
 	    }
+	    
+	    private package Impl {
+			public class Class specializes Library::Class {
+				@Create public Class() redefines Library::Class::Class { }
+		    }
+		}
 	}
 	
-	public activity Instantiate(): Class {
-		return new Class();
+	public activity Instantiate(): Library::Class {
+		return new Library::Class();
 	}
 }    
