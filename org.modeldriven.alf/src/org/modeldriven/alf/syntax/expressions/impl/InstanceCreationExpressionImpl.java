@@ -131,12 +131,13 @@ public class InstanceCreationExpressionImpl
                     if (classReferent.getImpl().isAbstractClassifier()) {
                         
                         // Check for an "Impl" package.
+                        ElementReference template = classReferent.getImpl().getTemplate();
+                        while (template != null) {
+                            classReferent = template;
+                            template = classReferent.getImpl().getTemplate();
+                        }
                         ElementReference namespaceReferent = 
                                 classReferent.getImpl().getNamespace();
-                        if (classReferent.getImpl().isCompletelyBound()) {
-                            namespaceReferent = classReferent.getImpl().
-                                    getTemplate().getImpl().getNamespace();
-                        }
                         if (namespaceReferent != null) {
                             NamespaceDefinition namespaceDefinition = 
                                     namespaceReferent.getImpl().asNamespace();
@@ -144,6 +145,7 @@ public class InstanceCreationExpressionImpl
                                     getQualifiedName();
                             QualifiedName implPackageName = 
                                     namespaceName.getImpl().copy().addName("Impl");
+                            implPackageName.getImpl().setIsVisibleOnly(false);
                             ElementReference implPackageReferent = 
                                     implPackageName.getImpl().getNamespaceReferent();
                             if (implPackageReferent != null &&
