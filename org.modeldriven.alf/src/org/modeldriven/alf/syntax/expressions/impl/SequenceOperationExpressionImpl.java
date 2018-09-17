@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2017 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2018 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -258,7 +258,7 @@ public class SequenceOperationExpressionImpl
                         parameter.getImpl().getLower() == 0 && 
                         parameter.getImpl().getUpper() == -1 &&
                         parameter.getImpl().isAssignableFrom(expression);
-    }
+        }
 	}
 
     /**
@@ -270,11 +270,15 @@ public class SequenceOperationExpressionImpl
      * hand side.
      **/
 	public boolean sequenceOperationExpressionTargetCompatibility() {
-        LeftHandSide lhs = this.getLeftHandSide();
-        ElementReference parameter = this.getFirstParameter();
-        return lhs == null || lhs.getType() == null ||
-                    (lhs.getImpl().getAssignedName() == null || this.getOldAssignment() != null) &&
-                    lhs.getImpl().isAssignableFrom(parameter, lhs.getImpl().isNullable());
+	    if (!this.isInPlace()) {
+	        return true;
+	    } else {
+            LeftHandSide lhs = this.getLeftHandSide();
+            ElementReference parameter = this.getFirstParameter();
+                return lhs != null && (lhs.getType() == null ||
+                            (lhs.getImpl().getAssignedName() == null || this.getOldAssignment() != null) &&
+                            lhs.getImpl().isAssignableFrom(parameter, lhs.getImpl().isNullable()));
+	    }
 	}
 
     /**
