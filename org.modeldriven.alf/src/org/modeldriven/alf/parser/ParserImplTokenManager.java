@@ -1199,7 +1199,7 @@ private int jjMoveNfa_0(int startState, int curPos)
                      jjstateSet[jjnewStateCnt++] = 25;
                   break;
                case 25:
-                  if ((0x404410000000L & l) != 0L)
+                  if ((0x10404410000000L & l) != 0L)
                      { jjCheckNAddStates(6, 8); }
                   break;
                case 27:
@@ -1225,7 +1225,7 @@ private int jjMoveNfa_0(int startState, int curPos)
                      jjstateSet[jjnewStateCnt++] = 32;
                   break;
                case 32:
-                  if ((0x404410000000L & l) != 0L)
+                  if ((0x10404410000000L & l) != 0L)
                      { jjCheckNAddStates(16, 18); }
                   break;
                case 35:
@@ -2577,7 +2577,7 @@ private int jjMoveNfa_2(int startState, int curPos)
                      jjstateSet[jjnewStateCnt++] = 26;
                   break;
                case 26:
-                  if ((0x404410000000L & l) != 0L)
+                  if ((0x10404410000000L & l) != 0L)
                      { jjCheckNAddStates(35, 37); }
                   break;
                case 28:
@@ -2603,7 +2603,7 @@ private int jjMoveNfa_2(int startState, int curPos)
                      jjstateSet[jjnewStateCnt++] = 33;
                   break;
                case 33:
-                  if ((0x404410000000L & l) != 0L)
+                  if ((0x10404410000000L & l) != 0L)
                      { jjCheckNAddStates(48, 50); }
                   break;
                case 36:
@@ -3867,7 +3867,7 @@ private int jjMoveNfa_1(int startState, int curPos)
                      jjstateSet[jjnewStateCnt++] = 26;
                   break;
                case 26:
-                  if ((0x404410000000L & l) != 0L)
+                  if ((0x10404410000000L & l) != 0L)
                      { jjCheckNAddStates(35, 37); }
                   break;
                case 28:
@@ -3893,7 +3893,7 @@ private int jjMoveNfa_1(int startState, int curPos)
                      jjstateSet[jjnewStateCnt++] = 33;
                   break;
                case 33:
-                  if ((0x404410000000L & l) != 0L)
+                  if ((0x10404410000000L & l) != 0L)
                      { jjCheckNAddStates(48, 50); }
                   break;
                case 36:

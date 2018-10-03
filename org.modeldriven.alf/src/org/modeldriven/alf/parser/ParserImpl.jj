@@ -327,7 +327,7 @@ TOKEN:
 |
   < #ESCAPE_CHARACTER: "\\" <ESCAPED_CHARACTER> >
 |
-  < #ESCAPED_CHARACTER: [ "'", "\"", "b", "f", "n", "\\" ] >
+  < #ESCAPED_CHARACTER: [ "'", "\"", "b", "f", "n", "t", "\\" ] >
 }
 
 /* PUNCTUATION */
