@@ -110,7 +110,7 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
                 this.println(e.getMapping().toString());                  
                 this.println(" error: " + e.getMessage());
                 mapping = null;
-             }
+            }
         }
         return mapping;
     }

@@ -24,7 +24,7 @@ import org.modeldriven.alf.syntax.units.UnitDefinition;
 
 public abstract class AlfBase {
     
-   public static final String ALF_VERSION = "1.1.0d/rsch-1";
+    public static final String ALF_VERSION = "1.1.0e/rsch-1";
     
     protected boolean isVerbose = false;
 

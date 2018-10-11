@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2017 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2018 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -11,6 +11,7 @@ package org.modeldriven.alf.fuml.mapping.expressions;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -100,7 +101,12 @@ public abstract class TupleMapping extends SyntaxElementMapping {
         Tuple tuple = this.getTuple();
         // System.out.println("[mapTo] tuple=" + tuple);
         InvocationExpression invocation = tuple.getInvocation();
-        Collection<NamedExpression> inputs = tuple.getInput();
+        Collection<NamedExpression> inputs = 
+                // NOTE: The action will only be ValueSpecification if the invocation is
+                // of the library function "clear", which takes an inout parameter, but
+                // ignores its input, simply setting the output target to null.
+                action instanceof ValueSpecificationAction? Collections.emptyList():
+                tuple.getInput();
         Collection<OutputNamedExpression> outputs = tuple.getOutput();
         
         if (!inputs.isEmpty()) {

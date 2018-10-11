@@ -10,12 +10,15 @@
 package org.modeldriven.alf.eclipse.fuml.execution;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.modeldriven.alf.eclipse.units.RootNamespaceImpl;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
 import org.modeldriven.alf.uml.ElementFactory;
 import org.modeldriven.alf.uml.StereotypeApplication;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.xmi.XMLResource;
 
 public class AlfCompiler extends org.modeldriven.alf.fuml.execution.AlfCompiler {
 	
@@ -52,7 +55,9 @@ public class AlfCompiler extends org.modeldriven.alf.fuml.execution.AlfCompiler 
     	StereotypeApplication.applyStereotypes();
 
     	try {
-    		resource.save(null);
+    		Map<String, String> options = new HashMap<String, String>();
+    		options.put(XMLResource.OPTION_XML_VERSION, "1.1");
+    		resource.save(options);
     		this.printVerbose("Saved to " + resource.getURI());
     	} catch (IOException ioe) {
     		this.println("Error saving model to " + resource.getURI() + 

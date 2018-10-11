@@ -6,12 +6,13 @@ class Expressions_Assignment specializes Test {
     @Create public run(in tester: Tester[0..1]) {
       	super(tester);
       
-		this.test(i,f,h,filename,a);
+		this.test(i,f,h,filename,s,a);
 		
 		AssertEqual("i", i, 5);
 		AssertFalse("f", f);
 		AssertEqual("h", h, 0x55);
 		AssertEqual("filename", filename, "xyz.doc");
+		AssertEqual("Size(s)", StringFunctions::Size(s), 7);
 		AssertEqual("a", a, 2);
 		
 		this.done();
@@ -21,7 +22,7 @@ class Expressions_Assignment specializes Test {
       	this.run(null);
     }
 
-    public test(out i: Integer, out f: Boolean, out h: BitString, out filename: String, out a: Integer) {
+    public test(out i: Integer, out f: Boolean, out h: BitString, out filename: String, out s: String, out a: Integer) {
     
       i = 1;
       i += 4;
@@ -47,6 +48,8 @@ class Expressions_Assignment specializes Test {
     
       filename = "xyz";
       filename += ".doc";
+      
+      s = "\'\"\b\f\n\t\\";
       
       a = 1;
       a += 1;
