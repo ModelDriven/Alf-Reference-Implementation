@@ -51,7 +51,8 @@ class Expressions_Sequence_Operation specializes Test {
 	  m = Customer->size();
 	  n = Customer.allInstances()->size();
 	  
-	  list = null; // Type is "any".
+	  list = any[]{"x"};
+	  list->clear();
 	  list = list->including(customer);
 	  list->add(customer);
 	  list->add("Blah");
