@@ -678,7 +678,8 @@ public class ActivityGraph {
         LiteralString literal = this.create(LiteralString.class);
         literal.setValue(value);
         literal.setType(FumlMapping.getStringType());
-        return this.addValueSpecificationAction(literal, "\"" + value + "\"");
+        return this.addValueSpecificationAction(literal, "\"" + 
+                value.replaceAll("[\\x08\\f\\n\\t\\r]", " ") + "\"");
     }
     
     public ValueSpecificationAction addDataValueSpecificationAction(
