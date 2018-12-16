@@ -3,7 +3,11 @@ public import DomainDataTypes::Money;
 package ProductSpecification {
 
   public class Product { 
-    public getUnitPrice(): Money { }
+  	private unitPrice: Money;
+  	
+    public getUnitPrice(): Money {
+    	return this.unitPrice;
+    }
   }
   
 }

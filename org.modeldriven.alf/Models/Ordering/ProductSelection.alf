@@ -5,7 +5,9 @@ active class ProductSelection {
   protected quantity: Count;
   protected unitPriceOfSelection: Money;
 
-  public getUnitPriceOfSelection(): Money { }
+  public getUnitPriceOfSelection(): Money { 
+  	return this.unitPriceOfSelection;
+  }
 
 } do {
 

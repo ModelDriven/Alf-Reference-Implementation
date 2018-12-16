@@ -13,14 +13,14 @@ activity EstablishCustomer()
 
   // Create a Customer if one does not already exist
   // with the given email address
-  matchingCustomers = Customer -> select c                 // See Note 3
-                        (c.email == this.checkOutData.customerEmail);
+  matchingCustomer = Customer -> select c                 // See Note 3
+                        (c.email == this.checkOutData.customerEmail)[1];
 
-  if (matchingCustomers->isEmpty()) {
+  if (matchingCustomer == null) {
     customer = new Customer();                             // See Note 4
     customer.email = this.checkOutData.customerEmail;
   } else {
-    customer = matchingCustomers[1]??;                     // See Note 5
+    customer = matchingCustomer;                     // See Note 5
   } 
   
   // Use the name, address, etc. to update Customer

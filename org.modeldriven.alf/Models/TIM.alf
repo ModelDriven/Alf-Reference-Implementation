@@ -2,6 +2,8 @@ private import DomainDataTypes::*;
 
 package TIM {
 
-  public activity GetCurrentDate(): date { }
+  public activity GetCurrentDate(): date { 
+     return new date();
+  }
   
 }

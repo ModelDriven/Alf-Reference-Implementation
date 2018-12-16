@@ -1,6 +1,3 @@
-activity FactN(in arg: Natural): Natural {
-	if(arg==0) {return 1;}
-	else {
-		return (Natural)(arg*FactN((Natural)(arg-1)));
-	}
+activity FactN(in arg: Integer): Integer {
+	return arg <= 0? 1: arg * FactN(arg-1);
 }
