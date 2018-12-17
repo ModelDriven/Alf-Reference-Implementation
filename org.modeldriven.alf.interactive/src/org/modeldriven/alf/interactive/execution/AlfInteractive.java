@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright 2018 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
@@ -16,12 +15,14 @@ import java.util.Scanner;
 import org.modeldriven.alf.fuml.impl.execution.Executor;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.mapping.Mapping;
+import org.modeldriven.alf.parser.ParseException;
 import org.modeldriven.alf.parser.Parser;
 import org.modeldriven.alf.parser.ParserImpl;
 import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.statements.ReturnStatement;
+import org.modeldriven.alf.syntax.statements.Statement;
 import org.modeldriven.alf.syntax.units.ActivityDefinition;
 import org.modeldriven.alf.syntax.units.FormalParameter;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
@@ -41,19 +42,33 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 	protected int counter = 0;
 	protected ValueList result = null;
 	
-	public AlfInteractive(String libraryDirectory, String modelDirectory) {
+	public AlfInteractive() {
 		super();
-		this.libraryDirectory = libraryDirectory;
-		this.modelDirectory = modelDirectory;
+	}
+	
+	public AlfInteractive(String libraryDirectory, String modelDirectory) {
+		this();
 		this.setLibraryDirectory(libraryDirectory);
 		this.setModelDirectory(modelDirectory);
+	}
+	
+	@Override
+	public void setLibraryDirectory(String libraryDirectory) {
+		this.libraryDirectory = libraryDirectory;
+		super.setLibraryDirectory(libraryDirectory);
+	}
+	
+	@Override
+	public void setModelDirectory(String modelDirectory) {
+		this.modelDirectory = modelDirectory;
+		super.setModelDirectory(modelDirectory);		
 	}
 	
 	public ValueList getResult() {
 		return this.result;
 	}
 	
-	protected UnitDefinition makeUnit(Expression expression) {
+	protected UnitDefinition makeUnit(Statement statement) {
 		FormalParameter result = new FormalParameter();
 		result.setName("result");
 		result.setDirection("return");
@@ -61,14 +76,11 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		result.setUpper(-1);
 		result.setType(ElementReferenceImpl.any);
 		
-		ReturnStatement statement = new ReturnStatement();
-		statement.setExpression(expression);
-		
 		Block body = new Block();
 		body.addStatement(statement);
-
+		
 		ActivityDefinition activity = new ActivityDefinition();
-		activity.getImpl().setExactName("Activity_" + counter);	
+		activity.getImpl().setExactName("Activity_" + this.counter);
 		activity.addOwnedMember(result);
 		activity.setBody(body);
 		
@@ -78,6 +90,13 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		activity.setUnit(unit);
 		
 		return unit;
+	}
+	
+	protected UnitDefinition makeUnit(Expression expression) {
+		ReturnStatement statement = new ReturnStatement();
+		statement.setExpression(expression);
+		
+		return this.makeUnit(statement);
 	}
 	
 	protected ValueList execute(Behavior behavior) {
@@ -109,14 +128,24 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
     	this.setModelDirectory(this.modelDirectory);
 	}
 	
-	public ValueList eval(String input) {
-		this.result = null;
+	protected Parser createParser(String input) {
 		Parser parser = new ParserImpl(new StringReader(input));
 		parser.setFileName(this.counter + "");
+		return parser;
+	}
+	
+	public ValueList eval(String input) {
+		this.result = null;
+		Parser parser = this.createParser(input);
 		try {
-			this.process(this.makeUnit(parser.ExpressionEOF()));
+			try {
+				this.process(this.makeUnit(parser.StatementEOF()));
+			} catch (ParseException e) {
+				parser = this.createParser(input);
+				this.process(this.makeUnit(parser.ExpressionEOF()));
+			}
 		} catch (Throwable e) {
-            System.out.println(e.getMessage());
+			System.out.println(e.getMessage());
 		}
 		reset();
 		return this.result;
@@ -138,13 +167,17 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 	}
 	
 	@Override
-    public void run(String[] args) {
+	public void run(String[] args) {
+        if (args.length < 2) {
+        	System.out.println("Usage: alfi library-directory model-directory");
+        	return;
+        }
         System.out.println("Alf Reference Implementation v" + ALF_VERSION);
         System.out.println("Initializing...");
-    	this.setLibraryDirectory(args[0]);
-    	this.setModelDirectory(args[1]);
+        this.setLibraryDirectory(args[0]);
+        this.setModelDirectory(args[1]);
         this.loadResources();
-        this.eval("null");
+        this.eval(";");
         try (Scanner in = new Scanner(System.in)) {
 	        do {
 	        	System.out.print(++this.counter + "> ");
@@ -162,10 +195,6 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
     }
 	
     public static void main(String[] args) {
-        if (args.length < 2) {
-        	System.out.println("Usage: alfi library-directory model-directory");
-        	return;
-        }
-        new AlfInteractive(args[0], args[1]).run(args);
+        new AlfInteractive().run(args);
     }
 }

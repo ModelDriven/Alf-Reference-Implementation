@@ -11,6 +11,7 @@ package org.modeldriven.alf.parser;
 
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.statements.Block;
+import org.modeldriven.alf.syntax.statements.Statement;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
 
 public interface Parser {
@@ -30,6 +31,9 @@ public interface Parser {
   
   public Block StatementSequence() throws ParseException;
   public Block StatementSequenceEOF() throws ParseException;
+  
+  public Statement Statement() throws ParseException;
+  public Statement StatementEOF() throws ParseException;
   
   public Expression Expression() throws ParseException;
   public Expression ExpressionEOF() throws ParseException;
