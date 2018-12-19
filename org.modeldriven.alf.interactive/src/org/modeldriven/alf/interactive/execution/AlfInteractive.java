@@ -76,6 +76,9 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		this();
 		this.setLibraryDirectory(libraryDirectory);
 		this.setModelDirectory(modelDirectory);
+        this.loadResources();
+        this.eval(";");
+        this.counter++;
 	}
 	
 	public boolean isRun() {
@@ -148,7 +151,7 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		result.setType(ElementReferenceImpl.any);
 		
 		ActivityDefinition activity = new ActivityDefinition();
-		activity.getImpl().setExactName("Activity_" + this.counter);
+		activity.getImpl().setExactName("_" + this.counter);
 		activity.setBody(body);
 
 		for (FormalParameter parameter: this.getAllVariables()) {
@@ -381,37 +384,36 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		System.out.println();
 	}
 	
+	public void run(String input) {
+		if (input != null && !input.isEmpty()) {
+			this.eval(input);
+			this.printResult();
+			this.counter++;
+		}
+	}
+	
 	@Override
 	public void run(String[] args) {
-        if (args.length < 2) {
-        	System.out.println("Usage: alfi library-directory model-directory");
-        	return;
-        }
         System.out.println("Alf Reference Implementation v" + ALF_VERSION);
         System.out.println("Initializing...");
-        this.setLibraryDirectory(args[0]);
-        this.setModelDirectory(args[1]);
-        this.loadResources();
-        this.eval(";");
-        this.counter++;
         try (Scanner in = new Scanner(System.in)) {
 	        do {
 	        	System.out.print(this.counter + "> ");
 	        	String input = in.nextLine().trim();
-	        	if (!input.isEmpty()) {
-	        		if (input.equals("@exit")) {
-	        			break;
-	        		} else {
-	        			this.eval(input);
-	        			this.printResult();
-	        			this.counter++;
-	        		}
+	        	if ("@exit".equals(input)) {
+	        		break;
+	        	} else {
+	        		run(input);
 	        	}
 	        } while(true);
         }
     }
 	
     public static void main(String[] args) {
-        new AlfInteractive().run(args);
+        if (args.length < 2) {
+        	System.out.println("Usage: alfi library-directory model-directory");
+        	return;
+        }
+        new AlfInteractive(args[0], args[1]).run(args);
     }
 }
