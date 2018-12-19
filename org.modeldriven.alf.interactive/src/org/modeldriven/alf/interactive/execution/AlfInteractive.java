@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 
 import org.modeldriven.alf.fuml.impl.execution.Executor;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
-import org.modeldriven.alf.fuml.mapping.units.MemberMapping;
 import org.modeldriven.alf.fuml.mapping.units.NamespaceDefinitionMapping;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
@@ -48,8 +47,6 @@ import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
 import org.modeldriven.alf.uml.Behavior;
 import org.modeldriven.alf.uml.Element;
-import org.modeldriven.alf.uml.Namespace;
-
 import fUML.Semantics.Classes.Kernel.Reference;
 import fUML.Semantics.Classes.Kernel.Value;
 import fUML.Semantics.Classes.Kernel.ValueList;
@@ -219,34 +216,29 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 			if (this.counter == 0) {
 				unit = super.process(unit);
 			} else {
-				NamespaceDefinition modelScope = RootNamespace.getModelScope(unit);
-				Collection<ConstraintViolation> violations = unit.checkConstraints();
-				if (!violations.isEmpty()) {
-					this.printConstraintViolations(violations);
-				} else {
-					FumlMapping mapping = this.map(unit.getDefinition());
-					if (mapping != null) {
-						NamespaceDefinitionMapping modelScopeMapping = 
-								(NamespaceDefinitionMapping)modelScope.getImpl().getMapping();
-						if (modelScopeMapping != null) {
-							Namespace namespace = (Namespace)modelScopeMapping.getElement();
-							try {
-								for (Element element: mapping.getModelElements()) {
-									modelScopeMapping.addMemberTo(element, namespace);
+				Collection<ConstraintViolation> violations = this.check(unit);
+				if (violations.isEmpty()) {
+					NamespaceDefinition modelScope = RootNamespace.getModelScope(unit);
+					for (Member member: getUnmappedMembers(modelScope)) {
+						if (member instanceof NamespaceDefinition) {
+							NamespaceDefinitionMapping mapping = 
+									(NamespaceDefinitionMapping)this.map((NamespaceDefinition)member);
+							if (mapping == null) {
+								return null;
+							} else {
+								try {
+									mapping.mapBody();
+								} catch (MappingError e) {
+					                this.println("Mapping failed.");
+					                this.println(e.getMapping().toString());                  
+					                this.println(" error: " + e.getMessage());
+					                return null;
 								}
-								if (mapping instanceof MemberMapping) {
-									for (Element element: ((MemberMapping)mapping).mapBody()) {
-										modelScopeMapping.addMemberTo(element, namespace);
-									}
-								}
-								return this.execute(unit);
-							} catch (MappingError e) {
-				                this.println("Mapping failed.");
-				                this.println(e.getMapping().toString());                  
-				                this.println(" error: " + e.getMessage());
 							}
+							
 						}
 					}
+					return this.execute(unit);
 				}
 			}
 		}
@@ -392,10 +384,7 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		}
 	}
 	
-	@Override
-	public void run(String[] args) {
-        System.out.println("Alf Reference Implementation v" + ALF_VERSION);
-        System.out.println("Initializing...");
+	public void run() {
         try (Scanner in = new Scanner(System.in)) {
 	        do {
 	        	System.out.print(this.counter + "> ");
@@ -409,11 +398,20 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
         }
     }
 	
-    public static void main(String[] args) {
+	@Override
+	public void run(String[] args) {
+		this.setLibraryDirectory(args[0]);
+		this.setModelDirectory(args[1]);
+		this.run();
+	}
+		 
+   public static void main(String[] args) {
         if (args.length < 2) {
         	System.out.println("Usage: alfi library-directory model-directory");
         	return;
         }
-        new AlfInteractive(args[0], args[1]).run(args);
+        System.out.println("Alf Reference Implementation v" + ALF_VERSION);
+        System.out.println("Initializing...");
+        new AlfInteractive(args[0], args[1]).run();
     }
 }
