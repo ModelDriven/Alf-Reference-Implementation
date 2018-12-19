@@ -66,14 +66,17 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 	protected Map<String, ValueList> valueMap = new HashMap<>();
 	
 	public AlfInteractive() {
-        this.loadResources();
-        this.eval(";");
-        this.counter++;
+        super();
 	}
 	
 	public AlfInteractive(String libraryDirectory, String modelDirectory) {
+		this();
 		this.setLibraryDirectory(libraryDirectory);
 		this.setModelDirectory(modelDirectory);
+		this.initialize();
+	}
+	
+	public void initialize() {
         this.loadResources();
         this.eval(";");
         this.counter++;
