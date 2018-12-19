@@ -1,0 +1,23 @@
+private import Alf::Library::PrimitiveBehaviors::RealFunctions::'+';
+class MassedThing {
+    public mass: Real = 0.0;
+    public containedThings: compose MassedThing[*] = null;
+
+    @Create MassedThing(in mass: Real) {
+        this.mass = mass;
+    }
+
+    @Create MassedThing(in containedThings: MassedThing[*]) {
+        this.containedThings = containedThings;
+    }
+
+    @Create copyOf(in original: MassedThing) {
+        this.mass = original.mass;
+        this.containedThings = original.containedThings->collect thing (new copyOf(thing));
+    }
+
+    public getTotalMass(): Real {
+        return this.mass + (this.containedThings.getTotalMass()->reduce '+' ?? 0.0);
+    }
+}
+

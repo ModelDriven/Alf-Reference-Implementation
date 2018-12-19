@@ -1,0 +1,8 @@
+activity MassedThingTest() {
+	let wing1: MassedThing = new MassedThing(100.0);
+	let wing2: MassedThing = new MassedThing::copyOf(wing1); // Created a second wing, because 'containedThings' is unique by default.
+	let fuselage: MassedThing = new MassedThing(250.0);
+	let airplane: MassedThing = new MassedThing(MassedThing[]{wing1, wing2, fuselage});
+	WriteLine("Airplane total mass is " + RealFunctions::ToString(airplane.getTotalMass()));
+}
+
