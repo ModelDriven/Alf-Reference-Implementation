@@ -20,7 +20,10 @@ import java.util.stream.Collectors;
 
 import org.modeldriven.alf.fuml.impl.execution.Executor;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
+import org.modeldriven.alf.fuml.mapping.units.MemberMapping;
+import org.modeldriven.alf.fuml.mapping.units.NamespaceDefinitionMapping;
 import org.modeldriven.alf.mapping.Mapping;
+import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.parser.ParseException;
 import org.modeldriven.alf.parser.Parser;
 import org.modeldriven.alf.parser.ParserImpl;
@@ -45,6 +48,7 @@ import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
 import org.modeldriven.alf.uml.Behavior;
 import org.modeldriven.alf.uml.Element;
+import org.modeldriven.alf.uml.Namespace;
 
 import fUML.Semantics.Classes.Kernel.Reference;
 import fUML.Semantics.Classes.Kernel.Value;
@@ -72,6 +76,14 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		this();
 		this.setLibraryDirectory(libraryDirectory);
 		this.setModelDirectory(modelDirectory);
+	}
+	
+	public boolean isRun() {
+		return this.isRun;
+	}
+	
+	public void setIsRun(boolean isRun) {
+		this.isRun = isRun;
 	}
 	
 	public ValueList getResult() {
@@ -180,14 +192,15 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		if (unit == null) {
 			return null;
 		} else {
-			unit.getImpl().addImplicitImports();
 			if (this.counter == 0) {
 				return super.check(unit);
 			} else {
 				NamespaceDefinition modelScope = RootNamespace.getModelScope(unit);
 				modelScope.deriveAll();
 				Collection<ConstraintViolation> violations = new TreeSet<ConstraintViolation>();
-				getUnmappedMembers(modelScope).forEach(member->violations.addAll(member.checkConstraints()));
+				for (Member member: getUnmappedMembers(modelScope)) {
+					violations.addAll(member.checkConstraints());
+				}
 				if (!violations.isEmpty()) {
 					this.printConstraintViolations(violations);
 				}
@@ -198,14 +211,49 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 	
 	@Override
 	public UnitDefinition process(UnitDefinition unit) {
-		return this.process(unit, false);
+		if (unit != null) {
+			unit.getImpl().addImplicitImports();
+			if (this.counter == 0) {
+				unit = super.process(unit);
+			} else {
+				NamespaceDefinition modelScope = RootNamespace.getModelScope(unit);
+				Collection<ConstraintViolation> violations = unit.checkConstraints();
+				if (!violations.isEmpty()) {
+					this.printConstraintViolations(violations);
+				} else {
+					FumlMapping mapping = this.map(unit.getDefinition());
+					if (mapping != null) {
+						NamespaceDefinitionMapping modelScopeMapping = 
+								(NamespaceDefinitionMapping)modelScope.getImpl().getMapping();
+						if (modelScopeMapping != null) {
+							Namespace namespace = (Namespace)modelScopeMapping.getElement();
+							try {
+								for (Element element: mapping.getModelElements()) {
+									modelScopeMapping.addMemberTo(element, namespace);
+								}
+								if (mapping instanceof MemberMapping) {
+									for (Element element: ((MemberMapping)mapping).mapBody()) {
+										modelScopeMapping.addMemberTo(element, namespace);
+									}
+								}
+								return this.execute(unit);
+							} catch (MappingError e) {
+				                this.println("Mapping failed.");
+				                this.println(e.getMapping().toString());                  
+				                this.println(" error: " + e.getMessage());
+							}
+						}
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 	public UnitDefinition process(UnitDefinition unit, boolean isRun) {
-		this.isRun = isRun;
-		unit.getImpl().addImplicitImports();
-		unit = super.process(unit);
-		this.isRun = false;
+		this.setIsRun(isRun);
+		unit = this.process(unit);
+		this.setIsRun(false);
 		return unit;
 	}
 	
@@ -255,7 +303,7 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 	@Override
 	public UnitDefinition execute(UnitDefinition unit) {
 		this.result = null;
-		if (unit != null && this.isRun) {
+		if (unit != null && this.isRun()) {
 			NamespaceDefinition definition = unit.getDefinition();
 			Mapping elementMapping = definition.getImpl().getMapping();
 			if (elementMapping == null) {
@@ -274,9 +322,7 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 	}
 	
 	protected void reset() {
-		this.rootScopeImpl.setMapping(null);
 		ModelNamespace modelScope = this.rootScopeImpl.getModelNamespace();
-		modelScope.getImpl().setMapping(null);
 		modelScope.setOwnedMember(getMappedMembers(modelScope));
 	}
 	
