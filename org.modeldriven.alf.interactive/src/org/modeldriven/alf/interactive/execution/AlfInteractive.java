@@ -10,7 +10,13 @@
 package org.modeldriven.alf.interactive.execution;
 
 import java.io.StringReader;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import org.modeldriven.alf.fuml.impl.execution.Executor;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
@@ -18,29 +24,44 @@ import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.parser.ParseException;
 import org.modeldriven.alf.parser.Parser;
 import org.modeldriven.alf.parser.ParserImpl;
+import org.modeldriven.alf.parser.TokenMgrError;
+import org.modeldriven.alf.syntax.common.AssignedSource;
+import org.modeldriven.alf.syntax.common.ConstraintViolation;
+import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.expressions.Expression;
+import org.modeldriven.alf.syntax.expressions.NameExpression;
+import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.statements.Block;
+import org.modeldriven.alf.syntax.statements.LocalNameDeclarationStatement;
 import org.modeldriven.alf.syntax.statements.ReturnStatement;
 import org.modeldriven.alf.syntax.statements.Statement;
 import org.modeldriven.alf.syntax.units.ActivityDefinition;
 import org.modeldriven.alf.syntax.units.FormalParameter;
+import org.modeldriven.alf.syntax.units.Member;
+import org.modeldriven.alf.syntax.units.ModelNamespace;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
+import org.modeldriven.alf.syntax.units.RootNamespace;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
 import org.modeldriven.alf.uml.Behavior;
 import org.modeldriven.alf.uml.Element;
 
+import fUML.Semantics.Classes.Kernel.Reference;
 import fUML.Semantics.Classes.Kernel.Value;
 import fUML.Semantics.Classes.Kernel.ValueList;
+import fUML.Semantics.CommonBehaviors.BasicBehaviors.ParameterValue;
 import fUML.Semantics.CommonBehaviors.BasicBehaviors.ParameterValueList;
+import fUML.Syntax.Classes.Kernel.Parameter;
+import fUML.Syntax.Classes.Kernel.ParameterDirectionKind;
 
 public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf {
 	
-	protected String libraryDirectory;
-	protected String modelDirectory;
-	
 	protected int counter = 0;
+	protected LocalNameDeclarationStatement variableDeclaration = null;
 	protected ValueList result = null;
+	
+	protected Map<String, FormalParameter> variableMap = new HashMap<>();
+	protected Map<String, ValueList> valueMap = new HashMap<>();
 	
 	public AlfInteractive() {
 		super();
@@ -52,23 +73,60 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		this.setModelDirectory(modelDirectory);
 	}
 	
-	@Override
-	public void setLibraryDirectory(String libraryDirectory) {
-		this.libraryDirectory = libraryDirectory;
-		super.setLibraryDirectory(libraryDirectory);
-	}
-	
-	@Override
-	public void setModelDirectory(String modelDirectory) {
-		this.modelDirectory = modelDirectory;
-		super.setModelDirectory(modelDirectory);		
-	}
-	
 	public ValueList getResult() {
 		return this.result;
 	}
 	
+	public void defineVariable(String name, ElementReference type, int lower, int upper) {
+		FormalParameter parameter = new FormalParameter();
+		parameter.setName(name);
+		parameter.setDirection("inout");
+		parameter.setType(type);
+		parameter.setLower(lower);
+		parameter.setUpper(upper);
+		
+		this.variableMap.put(name, parameter);
+	}
+	
+	public FormalParameter getVariable(String name) {
+		return this.variableMap.get(name);
+	}
+	
+	public Collection<FormalParameter> getAllVariables() {
+		return this.variableMap.values();
+	}
+	
+	public ValueList getValues(String variable) {
+		return this.valueMap.get(variable);
+	}
+	
+	public void putValues(String variable, ValueList values) {
+		this.valueMap.put(variable, values);
+	}
+	
 	protected UnitDefinition makeUnit(Statement statement) {
+		
+		Block body = new Block();
+		body.addStatement(statement);
+		
+		// If a new variable is being defined using a local name declaration statement, return the values
+		// computed for that statement, so the initial values of the variable can be set.
+		if (statement instanceof LocalNameDeclarationStatement) {
+			LocalNameDeclarationStatement declaration = (LocalNameDeclarationStatement)statement;
+			String name = declaration.getName();
+			if (this.getVariable(name) == null) {
+				this.variableDeclaration = declaration;
+				
+				NameExpression expression = new NameExpression();
+				expression.setName(new QualifiedName().getImpl().addName(name));
+				
+				ReturnStatement returnStatement = new ReturnStatement();
+				returnStatement.setExpression(expression);
+				
+				body.addStatement(returnStatement);
+			}
+		}
+		
 		FormalParameter result = new FormalParameter();
 		result.setName("result");
 		result.setDirection("return");
@@ -76,13 +134,17 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		result.setUpper(-1);
 		result.setType(ElementReferenceImpl.any);
 		
-		Block body = new Block();
-		body.addStatement(statement);
-		
 		ActivityDefinition activity = new ActivityDefinition();
 		activity.getImpl().setExactName("Activity_" + this.counter);
-		activity.addOwnedMember(result);
 		activity.setBody(body);
+
+		for (FormalParameter parameter: this.getAllVariables()) {
+			activity.addOwnedMember(parameter);
+			parameter.setNamespace(activity);
+		}
+
+		activity.addOwnedMember(result);
+		result.setNamespace(activity);
 		
 		UnitDefinition unit = new UnitDefinition();
 		unit.setDefinition(activity);
@@ -99,11 +161,79 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		return this.makeUnit(statement);
 	}
 	
+	protected static List<Member> filterMembers(NamespaceDefinition namespace, boolean isMapped) {
+		return namespace.getOwnedMember().stream().
+				filter(member->(member.getImpl().getMapping() != null) == isMapped).
+				collect(Collectors.toList());
+	}
+	
+	protected static List<Member> getMappedMembers(NamespaceDefinition namespace) {
+		return filterMembers(namespace, true);
+	}
+	
+	protected static List<Member> getUnmappedMembers(NamespaceDefinition namespace) {
+		return filterMembers(namespace, false);
+	}
+	
+	@Override
+	public Collection<ConstraintViolation> check(UnitDefinition unit) {
+		if (unit == null) {
+			return null;
+		} else if (this.counter == 0) {
+			return super.check(unit);
+		} else {
+			NamespaceDefinition modelScope = RootNamespace.getModelScope(unit);
+			modelScope.deriveAll();
+			Collection<ConstraintViolation> violations = new TreeSet<ConstraintViolation>();
+			getUnmappedMembers(modelScope).forEach(member->violations.addAll(member.checkConstraints()));
+			if (!violations.isEmpty()) {
+				this.printConstraintViolations(violations);
+			}
+			return violations;
+		}
+	}
+	
 	protected ValueList execute(Behavior behavior) {
+		
+		// Set input parameter values to the current variable values.
+		ParameterValueList input = new ParameterValueList();
+		for (org.modeldriven.alf.uml.Parameter parameter: behavior.getOwnedParameter()) {
+			if ("inout".equals(parameter.getDirection()) || "in".equals(parameter.getDirection())) {
+				ParameterValue parameterValue = new ParameterValue();
+				parameterValue.parameter = ((org.modeldriven.alf.fuml.impl.uml.Parameter)parameter).getBase();
+				parameterValue.values = this.getValues(parameter.getName());
+				input.add(parameterValue);
+			}
+		}
+		
+		// Execute the behavior.
 		ParameterValueList output = ((Executor)this.getLocus().getExecutor()).getBase().execute(
 				((org.modeldriven.alf.fuml.impl.uml.Behavior)behavior).getBase(), null,
-                new ParameterValueList());
-		return output.isEmpty()? null: output.get(0).values;
+                input);
+		
+		// Update the variable values from the outputs for the corresponding parameters.
+		for (ParameterValue parameterValue: output) {
+			Parameter parameter = parameterValue.parameter;
+			if (ParameterDirectionKind.inout.equals(parameter.direction) || 
+					ParameterDirectionKind.out.equals(parameter.direction)) {
+				this.putValues(parameter.name, parameterValue.values);
+			}
+		}
+		
+		// Determine the result values.
+		if (output.isEmpty()) {
+			return null;
+		} else {
+			ParameterValue result = output.get(output.size() - 1);
+			if (this.variableDeclaration != null) {
+				// If a new variable is being defined, set its initial values.
+				String name = this.variableDeclaration.getName();
+				AssignedSource assignment = this.variableDeclaration.getImpl().getAssignmentAfter(name);
+				this.defineVariable(name, assignment.getType(), assignment.getLower(), assignment.getUpper());
+				this.putValues(name, result.values);
+			}
+			return ParameterDirectionKind.return_.equals(result.parameter.direction)? result.values: null;
+		}
 	}
 	
 	@Override
@@ -123,9 +253,10 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 	}
 	
 	protected void reset() {
-		this.getRootScopeImpl().resetModelNamespace();
-    	this.setLibraryDirectory(this.libraryDirectory);
-    	this.setModelDirectory(this.modelDirectory);
+		this.rootScopeImpl.setMapping(null);
+		ModelNamespace modelScope = this.rootScopeImpl.getModelNamespace();
+		modelScope.getImpl().setMapping(null);
+		modelScope.setOwnedMember(getMappedMembers(modelScope));
 	}
 	
 	protected Parser createParser(String input) {
@@ -136,16 +267,19 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 	
 	public ValueList eval(String input) {
 		this.result = null;
+		this.variableDeclaration = null;
 		Parser parser = this.createParser(input);
 		try {
 			try {
-				this.process(this.makeUnit(parser.StatementEOF()));
+				this.process(this.makeUnit(parser.ExpressionEOF()));
 			} catch (ParseException e) {
 				parser = this.createParser(input);
-				this.process(this.makeUnit(parser.ExpressionEOF()));
+				this.process(this.makeUnit(parser.StatementEOF()));
 			}
-		} catch (Throwable e) {
+		} catch (ParseException | TokenMgrError e) {
 			System.out.println(e.getMessage());
+		} catch (Throwable e) {
+			e.printStackTrace();
 		}
 		reset();
 		return this.result;
@@ -158,7 +292,12 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 				System.out.println("null");
 			} else {
 				for (Value value: result) {
-					System.out.print(value + " ");
+					System.out.print(value);
+					if (value instanceof Reference) {
+						System.out.println();
+					} else {
+						System.out.print(" ");
+					}
 				}
 				System.out.println();
 			}
@@ -178,16 +317,18 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
         this.setModelDirectory(args[1]);
         this.loadResources();
         this.eval(";");
+        this.counter++;
         try (Scanner in = new Scanner(System.in)) {
 	        do {
-	        	System.out.print(++this.counter + "> ");
+	        	System.out.print(this.counter + "> ");
 	        	String input = in.nextLine().trim();
 	        	if (!input.isEmpty()) {
-	        		if (input.equals("@")) {
+	        		if (input.equals("@exit")) {
 	        			break;
 	        		} else {
 	        			this.eval(input);
 	        			this.printResult();
+	        			this.counter++;
 	        		}
 	        	}
 	        } while(true);
