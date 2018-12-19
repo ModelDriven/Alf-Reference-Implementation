@@ -57,6 +57,7 @@ import fUML.Syntax.Classes.Kernel.ParameterDirectionKind;
 public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf {
 	
 	protected int counter = 0;
+	protected boolean isRun = false;
 	protected LocalNameDeclarationStatement variableDeclaration = null;
 	protected ValueList result = null;
 	
@@ -148,7 +149,6 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		
 		UnitDefinition unit = new UnitDefinition();
 		unit.setDefinition(activity);
-		unit.getImpl().addImplicitImports();
 		activity.setUnit(unit);
 		
 		return unit;
@@ -179,18 +179,34 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 	public Collection<ConstraintViolation> check(UnitDefinition unit) {
 		if (unit == null) {
 			return null;
-		} else if (this.counter == 0) {
-			return super.check(unit);
 		} else {
-			NamespaceDefinition modelScope = RootNamespace.getModelScope(unit);
-			modelScope.deriveAll();
-			Collection<ConstraintViolation> violations = new TreeSet<ConstraintViolation>();
-			getUnmappedMembers(modelScope).forEach(member->violations.addAll(member.checkConstraints()));
-			if (!violations.isEmpty()) {
-				this.printConstraintViolations(violations);
+			unit.getImpl().addImplicitImports();
+			if (this.counter == 0) {
+				return super.check(unit);
+			} else {
+				NamespaceDefinition modelScope = RootNamespace.getModelScope(unit);
+				modelScope.deriveAll();
+				Collection<ConstraintViolation> violations = new TreeSet<ConstraintViolation>();
+				getUnmappedMembers(modelScope).forEach(member->violations.addAll(member.checkConstraints()));
+				if (!violations.isEmpty()) {
+					this.printConstraintViolations(violations);
+				}
+				return violations;
 			}
-			return violations;
 		}
+	}
+	
+	@Override
+	public UnitDefinition process(UnitDefinition unit) {
+		return this.process(unit, false);
+	}
+
+	public UnitDefinition process(UnitDefinition unit, boolean isRun) {
+		this.isRun = isRun;
+		unit.getImpl().addImplicitImports();
+		unit = super.process(unit);
+		this.isRun = false;
+		return unit;
 	}
 	
 	protected ValueList execute(Behavior behavior) {
@@ -238,7 +254,8 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 	
 	@Override
 	public UnitDefinition execute(UnitDefinition unit) {
-		if (unit != null) {
+		this.result = null;
+		if (unit != null && this.isRun) {
 			NamespaceDefinition definition = unit.getDefinition();
 			Mapping elementMapping = definition.getImpl().getMapping();
 			if (elementMapping == null) {
@@ -246,7 +263,11 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 				return null;
 			} else {
 				Element element = ((FumlMapping)elementMapping).getElement();
-				this.result = this.execute((Behavior)element);
+				if (element instanceof Behavior) {
+					this.result = this.execute((Behavior)element);
+				} else {
+					this.println(definition.getName() + " is not a behavior.");
+				}
 			}
 		}
 		return unit;
@@ -271,10 +292,19 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		Parser parser = this.createParser(input);
 		try {
 			try {
-				this.process(this.makeUnit(parser.ExpressionEOF()));
+				this.process(this.makeUnit(parser.ExpressionEOF()), true);
 			} catch (ParseException e) {
 				parser = this.createParser(input);
-				this.process(this.makeUnit(parser.StatementEOF()));
+				try {
+					this.process(this.makeUnit(parser.StatementEOF()), true);
+				} catch (ParseException e1) {
+					parser = this.createParser(input);
+					try {
+						this.process(parser.UnitDefinitionEOF(), false);
+					} catch (ParseException e2) {
+						throw e1.getBeginColumn() > e2.getBeginColumn()? e1: e2;
+					}
+				}
 			}
 		} catch (ParseException | TokenMgrError e) {
 			System.out.println(e.getMessage());
