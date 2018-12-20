@@ -323,6 +323,7 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 	protected void reset() {
 		ModelNamespace modelScope = this.rootScopeImpl.getModelNamespace();
 		modelScope.setOwnedMember(getMappedMembers(modelScope));
+		modelScope.setMember(null);
 	}
 	
 	protected Parser createParser(String input) {
