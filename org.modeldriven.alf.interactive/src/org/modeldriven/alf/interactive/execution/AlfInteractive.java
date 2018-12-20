@@ -58,6 +58,7 @@ import fUML.Syntax.Classes.Kernel.ParameterDirectionKind;
 public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf {
 	
 	protected int counter = 0;
+	protected boolean isRedirectErr = false;
 	protected boolean isRun = false;
 	protected LocalNameDeclarationStatement variableDeclaration = null;
 	protected ValueList result = null;
@@ -76,10 +77,22 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		this.initialize();
 	}
 	
+	public AlfInteractive(String libraryDirectory, String modelDirectory, boolean isRedirectErr) {
+		this(libraryDirectory, modelDirectory);
+		this.setIsRedirectErr(isRedirectErr);
+	}
+	
 	public void initialize() {
         this.loadResources();
         this.eval(";");
-        this.counter++;
+	}
+	
+	public boolean isRedirectErr() {
+		return this.isRedirectErr;
+	}
+	
+	public void setIsRedirectErr(boolean isRedirectErr) {
+		this.isRedirectErr = isRedirectErr;
 	}
 	
 	public boolean isRun() {
@@ -191,6 +204,19 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		return filterMembers(namespace, false);
 	}
 	
+	protected void printErr(String message) {
+		if (this.isRedirectErr) {
+			System.out.println(message);
+		} else { 
+			System.err.println(message);
+		}
+	}
+	
+	@Override
+	protected void println(String message) {
+		this.printErr(message);
+	}
+	
 	@Override
 	public Collection<ConstraintViolation> check(UnitDefinition unit) {
 		if (unit == null) {
@@ -233,9 +259,9 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 								try {
 									mapping.mapBody();
 								} catch (MappingError e) {
-					                this.println("Mapping failed.");
-					                this.println(e.getMapping().toString());                  
-					                this.println(" error: " + e.getMessage());
+					                this.printErr("Mapping failed.");
+					                this.printErr(e.getMapping().toString());                  
+					                this.printErr(" error: " + e.getMessage());
 					                return null;
 								}
 							}
@@ -306,14 +332,14 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 			NamespaceDefinition definition = unit.getDefinition();
 			Mapping elementMapping = definition.getImpl().getMapping();
 			if (elementMapping == null) {
-				this.println(definition.getName() + " is unmapped.");
+				this.printErr(definition.getName() + " is unmapped.");
 				return null;
 			} else {
 				Element element = ((FumlMapping)elementMapping).getElement();
 				if (element instanceof Behavior) {
 					this.result = this.execute((Behavior)element);
 				} else {
-					this.println(definition.getName() + " is not a behavior.");
+					this.printErr(definition.getName() + " is not a behavior.");
 				}
 			}
 		}
@@ -324,6 +350,7 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		ModelNamespace modelScope = this.rootScopeImpl.getModelNamespace();
 		modelScope.setOwnedMember(getMappedMembers(modelScope));
 		modelScope.setMember(null);
+		this.counter++;
 	}
 	
 	protected Parser createParser(String input) {
@@ -353,7 +380,7 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 				}
 			}
 		} catch (ParseException | TokenMgrError e) {
-			System.out.println(e.getMessage());
+			this.printErr(e.getMessage());
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -385,7 +412,6 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		if (input != null && !input.isEmpty()) {
 			this.eval(input);
 			this.printResult();
-			this.counter++;
 		}
 	}
 	
@@ -417,6 +443,6 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
         }
         System.out.println("Alf Reference Implementation v" + ALF_VERSION);
         System.out.println("Initializing...");
-        new AlfInteractive(args[0], args[1]).run();
+        new AlfInteractive(args[0], args[1], true).run();
     }
 }
