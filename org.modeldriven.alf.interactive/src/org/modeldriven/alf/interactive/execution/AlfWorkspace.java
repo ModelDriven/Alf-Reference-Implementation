@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.modeldriven.alf.fuml.execution.Locus;
 import org.modeldriven.alf.fuml.impl.execution.Executor;
 import org.modeldriven.alf.syntax.common.AssignedSource;
 import org.modeldriven.alf.syntax.common.ElementReference;
@@ -37,16 +38,10 @@ import fUML.Syntax.Classes.Kernel.ParameterDirectionKind;
 
 public class AlfWorkspace {
 	
-	private AlfInteractive alf;
-	
 	private LocalNameDeclarationStatement variableDeclaration = null;
 	private Map<String, FormalParameter> variableMap = new HashMap<>();
 	private Map<String, ValueList> valueMap = new HashMap<>();
 	
-	public AlfWorkspace(AlfInteractive alf) {
-		this.alf = alf;
-	}
-
 	public void defineVariable(String name, ElementReference type, int lower, int upper) {
 		FormalParameter parameter = new FormalParameter();
 		parameter.setName(name);
@@ -132,7 +127,7 @@ public class AlfWorkspace {
 		return this.makeUnit(unitName, statement);
 	}
 	
-	protected ValueList execute(Behavior behavior) {
+	protected ValueList execute(Behavior behavior, Locus locus) {
 		
 		// Set input parameter values to the current variable values.
 		ParameterValueList input = new ParameterValueList();
@@ -146,7 +141,7 @@ public class AlfWorkspace {
 		}
 		
 		// Execute the behavior.
-		ParameterValueList output = ((Executor)this.alf.getLocus().getExecutor()).getBase().execute(
+		ParameterValueList output = ((Executor)locus.getExecutor()).getBase().execute(
 				((org.modeldriven.alf.fuml.impl.uml.Behavior)behavior).getBase(), null,
                 input);
 		

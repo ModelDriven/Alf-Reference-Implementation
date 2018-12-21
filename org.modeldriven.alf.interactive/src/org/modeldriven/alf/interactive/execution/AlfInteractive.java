@@ -41,7 +41,7 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 	protected boolean isRun = false;
 	protected ValueList result = null;
 	
-	protected AlfWorkspace workspace = new AlfWorkspace(this);
+	protected AlfWorkspace workspace = new AlfWorkspace();
 
 	public AlfInteractive() {
         super();
@@ -112,6 +112,12 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 				NamespaceDefinition modelScope = RootNamespace.getModelScope(unit);
 				modelScope.deriveAll();
 				Collection<ConstraintViolation> violations = new TreeSet<ConstraintViolation>();
+				NamespaceDefinition definition = unit.getDefinition();
+				if (!definition.getImpl().isDistinguishableFromAll(
+						AlfInteractiveUtil.getMappedMembers(modelScope))) {
+					violations.add(new ConstraintViolation(
+							"namespaceDefinitionMemberDistinguishability", definition));
+				}
 				for (Member member: AlfInteractiveUtil.getUnmappedMembers(modelScope)) {
 					violations.addAll(member.checkConstraints());
 				}
@@ -125,13 +131,17 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 	
 	@Override
 	public UnitDefinition process(UnitDefinition unit) {
-		if (unit != null) {
+		if (unit == null) {
+			return null;
+		} else {
 			unit.getImpl().addImplicitImports();
 			if (this.counter == 0) {
-				unit = super.process(unit);
+				return super.process(unit);
 			} else {
 				Collection<ConstraintViolation> violations = this.check(unit);
-				if (violations.isEmpty()) {
+				if (!violations.isEmpty()) {
+					return null;
+				} else {
 					NamespaceDefinition modelScope = RootNamespace.getModelScope(unit);
 					for (Member member: AlfInteractiveUtil.getUnmappedMembers(modelScope)) {
 						if (member instanceof NamespaceDefinition) {
@@ -156,13 +166,13 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 				}
 			}
 		}
-		return null;
 	}
 
 	public UnitDefinition process(UnitDefinition unit, boolean isRun) {
+		boolean wasRun = this.isRun();
 		this.setIsRun(isRun);
 		unit = this.process(unit);
-		this.setIsRun(false);
+		this.setIsRun(wasRun);
 		return unit;
 	}
 	
@@ -178,7 +188,7 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 			} else {
 				Element element = ((FumlMapping)elementMapping).getElement();
 				if (element instanceof Behavior) {
-					this.result = this.workspace.execute((Behavior)element);
+					this.result = this.workspace.execute((Behavior)element, this.getLocus());
 				} else {
 					this.printErr(definition.getName() + " is not a behavior.");
 				}
