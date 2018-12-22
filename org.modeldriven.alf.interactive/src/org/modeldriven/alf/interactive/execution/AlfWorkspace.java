@@ -6,28 +6,17 @@
  * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
  * contact Model Driven Solutions.
  *******************************************************************************/
-
 package org.modeldriven.alf.interactive.execution;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.modeldriven.alf.fuml.execution.Locus;
 import org.modeldriven.alf.fuml.impl.execution.Executor;
-import org.modeldriven.alf.syntax.common.AssignedSource;
 import org.modeldriven.alf.syntax.common.ElementReference;
-import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
-import org.modeldriven.alf.syntax.expressions.Expression;
-import org.modeldriven.alf.syntax.expressions.NameExpression;
-import org.modeldriven.alf.syntax.expressions.QualifiedName;
-import org.modeldriven.alf.syntax.statements.Block;
-import org.modeldriven.alf.syntax.statements.LocalNameDeclarationStatement;
-import org.modeldriven.alf.syntax.statements.ReturnStatement;
-import org.modeldriven.alf.syntax.statements.Statement;
-import org.modeldriven.alf.syntax.units.ActivityDefinition;
 import org.modeldriven.alf.syntax.units.FormalParameter;
-import org.modeldriven.alf.syntax.units.UnitDefinition;
 import org.modeldriven.alf.uml.Behavior;
 
 import fUML.Semantics.Classes.Kernel.ValueList;
@@ -38,27 +27,37 @@ import fUML.Syntax.Classes.Kernel.ParameterDirectionKind;
 
 public class AlfWorkspace {
 	
-	private LocalNameDeclarationStatement variableDeclaration = null;
 	private Map<String, FormalParameter> variableMap = new HashMap<>();
 	private Map<String, ValueList> valueMap = new HashMap<>();
 	
-	public void defineVariable(String name, ElementReference type, int lower, int upper) {
+	public static final AlfWorkspace INSTANCE = new AlfWorkspace();
+	
+	private AlfWorkspace() {
+	}
+	
+	public FormalParameter defineVariable(String name, ElementReference type, int lower, int upper) {
 		FormalParameter parameter = new FormalParameter();
-		parameter.setName(name);
+		parameter.getImpl().setExactName(name);
 		parameter.setDirection("inout");
 		parameter.setType(type);
 		parameter.setLower(lower);
 		parameter.setUpper(upper);
+		parameter.setIsOrdered(true);
+		parameter.setIsNonunique(true);
 		
 		this.variableMap.put(name, parameter);
+		
+		return AlfInteractiveUtil.copyFormalParameter(parameter);
 	}
 	
 	public FormalParameter getVariable(String name) {
-		return this.variableMap.get(name);
+		return AlfInteractiveUtil.copyFormalParameter(this.variableMap.get(name));
 	}
 	
 	public Collection<FormalParameter> getAllVariables() {
-		return this.variableMap.values();
+		return this.variableMap.values().stream().
+				map(parameter->AlfInteractiveUtil.copyFormalParameter(parameter)).
+				collect(Collectors.toList());
 	}
 	
 	public ValueList getValues(String variable) {
@@ -69,65 +68,7 @@ public class AlfWorkspace {
 		this.valueMap.put(variable, values);
 	}
 	
-	protected UnitDefinition makeUnit(String unitName, Statement statement) {
-		
-		Block body = new Block();
-		body.addStatement(statement);
-		
-		this.variableDeclaration = null;
-		
-		// If a new variable is being defined using a local name declaration statement, return the values
-		// computed for that statement, so the initial values of the variable can be set.
-		if (statement instanceof LocalNameDeclarationStatement) {
-			LocalNameDeclarationStatement declaration = (LocalNameDeclarationStatement)statement;
-			String name = declaration.getName();
-			if (this.getVariable(name) == null) {
-				this.variableDeclaration = declaration;
-				
-				NameExpression expression = new NameExpression();
-				expression.setName(new QualifiedName().getImpl().addName(name));
-				
-				ReturnStatement returnStatement = new ReturnStatement();
-				returnStatement.setExpression(expression);
-				
-				body.addStatement(returnStatement);
-			}
-		}
-		
-		FormalParameter result = new FormalParameter();
-		result.setName("result");
-		result.setDirection("return");
-		result.setLower(0);
-		result.setUpper(-1);
-		result.setType(ElementReferenceImpl.any);
-		
-		ActivityDefinition activity = new ActivityDefinition();
-		activity.getImpl().setExactName(unitName);
-		activity.setBody(body);
-
-		for (FormalParameter parameter: this.getAllVariables()) {
-			activity.addOwnedMember(parameter);
-			parameter.setNamespace(activity);
-		}
-
-		activity.addOwnedMember(result);
-		result.setNamespace(activity);
-		
-		UnitDefinition unit = new UnitDefinition();
-		unit.setDefinition(activity);
-		activity.setUnit(unit);
-		
-		return unit;
-	}
-	
-	protected UnitDefinition makeUnit(String unitName, Expression expression) {
-		ReturnStatement statement = new ReturnStatement();
-		statement.setExpression(expression);
-		
-		return this.makeUnit(unitName, statement);
-	}
-	
-	protected ValueList execute(Behavior behavior, Locus locus) {
+	public ValueList execute(Behavior behavior, Locus locus) {
 		
 		// Set input parameter values to the current variable values.
 		ParameterValueList input = new ParameterValueList();
@@ -145,29 +86,20 @@ public class AlfWorkspace {
 				((org.modeldriven.alf.fuml.impl.uml.Behavior)behavior).getBase(), null,
                 input);
 		
-		// Update the variable values from the outputs for the corresponding parameters.
+		// Update the variable values from the outputs for the corresponding parameters, and
+		// determine the result value, if any.
+		ValueList result = null;
 		for (ParameterValue parameterValue: output) {
 			Parameter parameter = parameterValue.parameter;
 			if (ParameterDirectionKind.inout.equals(parameter.direction) || 
 					ParameterDirectionKind.out.equals(parameter.direction)) {
 				this.putValues(parameter.name, parameterValue.values);
+			} else if (ParameterDirectionKind.return_.equals(parameter.direction)) {
+				result = parameterValue.values;
 			}
 		}
 		
-		// Determine the result values.
-		if (output.isEmpty()) {
-			return null;
-		} else {
-			ParameterValue result = output.get(output.size() - 1);
-			if (this.variableDeclaration != null) {
-				// If a new variable is being defined, set its initial values.
-				String name = this.variableDeclaration.getName();
-				AssignedSource assignment = this.variableDeclaration.getImpl().getAssignmentAfter(name);
-				this.defineVariable(name, assignment.getType(), assignment.getLower(), assignment.getUpper());
-				this.putValues(name, result.values);
-			}
-			return ParameterDirectionKind.return_.equals(result.parameter.direction)? result.values: null;
-		}
+		return result;
 	}
 	
 }

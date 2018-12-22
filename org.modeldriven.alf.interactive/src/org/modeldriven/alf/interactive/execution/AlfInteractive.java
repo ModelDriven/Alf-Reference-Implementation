@@ -6,7 +6,6 @@
  * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
  * contact Model Driven Solutions.
  *******************************************************************************/
-
 package org.modeldriven.alf.interactive.execution;
 
 import java.io.StringReader;
@@ -41,8 +40,6 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 	protected boolean isRun = false;
 	protected ValueList result = null;
 	
-	protected AlfWorkspace workspace = new AlfWorkspace();
-
 	public AlfInteractive() {
         super();
 	}
@@ -82,10 +79,6 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 	
 	public ValueList getResult() {
 		return this.result;
-	}
-	
-	public AlfWorkspace getWorkspace() {
-		return this.workspace;
 	}
 	
 	protected void printErr(String message) {
@@ -188,7 +181,7 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 			} else {
 				Element element = ((FumlMapping)elementMapping).getElement();
 				if (element instanceof Behavior) {
-					this.result = this.workspace.execute((Behavior)element, this.getLocus());
+					this.result = AlfWorkspace.INSTANCE.execute((Behavior)element, this.getLocus());
 				} else {
 					this.printErr(definition.getName() + " is not a behavior.");
 				}
@@ -216,11 +209,11 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		try {
 			String unitName = "_" + this.counter;
 			try {
-				this.process(this.workspace.makeUnit(unitName, parser.ExpressionEOF()), true);
+				this.process(AlfInteractiveUtil.makeUnit(unitName, parser.ExpressionEOF()), true);
 			} catch (ParseException e) {
 				parser = this.createParser(input);
 				try {
-					this.process(this.workspace.makeUnit(unitName, parser.StatementEOF()), true);
+					this.process(AlfInteractiveUtil.makeUnit(unitName, parser.StatementEOF()), true);
 				} catch (ParseException e1) {
 					parser = this.createParser(input);
 					try {
