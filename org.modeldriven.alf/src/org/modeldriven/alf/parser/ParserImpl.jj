@@ -2133,16 +2133,6 @@ Statement Statement():
   { return s; }
 }
 
-Statement StatementEOF():
-{
-  Statement s;
-}
-{
-  s = Statement() <EOF>
-
-  { return s; }
-}
-
 /* BLOCK */
 
 Block Block():

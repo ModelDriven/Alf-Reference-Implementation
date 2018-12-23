@@ -15,7 +15,6 @@ import org.modeldriven.alf.interactive.unit.ActivityDefinitionWrapper;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.statements.ReturnStatement;
-import org.modeldriven.alf.syntax.statements.Statement;
 import org.modeldriven.alf.syntax.units.ActivityDefinition;
 import org.modeldriven.alf.syntax.units.FormalParameter;
 import org.modeldriven.alf.syntax.units.Member;
@@ -38,15 +37,10 @@ public class AlfInteractiveUtil {
 		return filterMembers(namespace, false);
 	}
 
-	public static UnitDefinition makeUnit(String unitName, Statement statement) {
+	public static UnitDefinition makeUnit(String unitName, Block body) {
 		
-		Block body = new Block();
-		body.addStatement(statement);
-				
-		ActivityDefinition activity = 
-				new ActivityDefinitionWrapper(unitName, AlfWorkspace.INSTANCE.getAllVariables(), body);
-
 		UnitDefinition unit = new UnitDefinition();
+		ActivityDefinition activity = new ActivityDefinitionWrapper(unitName, body);
 		unit.setDefinition(activity);
 		activity.setUnit(unit);
 		
@@ -57,7 +51,10 @@ public class AlfInteractiveUtil {
 		ReturnStatement statement = new ReturnStatement();
 		statement.setExpression(expression);
 		
-		return makeUnit(unitName, statement);
+		Block body = new Block();
+		body.addStatement(statement);
+				
+		return makeUnit(unitName, body);
 	}
 	
 	public static FormalParameter copyFormalParameter(FormalParameter parameter) {

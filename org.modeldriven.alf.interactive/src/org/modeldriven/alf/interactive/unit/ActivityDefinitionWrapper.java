@@ -8,8 +8,7 @@
  *******************************************************************************/
 package org.modeldriven.alf.interactive.unit;
 
-import java.util.Collection;
-
+import org.modeldriven.alf.interactive.execution.AlfWorkspace;
 import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.units.ActivityDefinition;
@@ -17,7 +16,7 @@ import org.modeldriven.alf.syntax.units.FormalParameter;
 
 public class ActivityDefinitionWrapper extends ActivityDefinition {
 	
-	public ActivityDefinitionWrapper(String name, Collection<FormalParameter> parameters, Block body) {
+	public ActivityDefinitionWrapper(String name, Block body) {
 		super();
 		
 		this.getImpl().setExactName(name);
@@ -31,7 +30,7 @@ public class ActivityDefinitionWrapper extends ActivityDefinition {
 		
 		// Note: Parameters must be added before the body, in order for the initial assigned sources
 		// to be set correctly.
-		for (FormalParameter parameter: parameters) {
+		for (FormalParameter parameter: AlfWorkspace.INSTANCE.getAllVariables()) {
 			this.addOwnedMember(parameter);
 			parameter.setNamespace(this);
 		}

@@ -213,7 +213,7 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 			} catch (ParseException e) {
 				parser = this.createParser(input);
 				try {
-					this.process(AlfInteractiveUtil.makeUnit(unitName, parser.StatementEOF()), true);
+					this.process(AlfInteractiveUtil.makeUnit(unitName, parser.StatementSequenceEOF()), true);
 				} catch (ParseException e1) {
 					parser = this.createParser(input);
 					try {
