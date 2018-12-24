@@ -12,9 +12,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modeldriven.alf.interactive.unit.ActivityDefinitionWrapper;
-import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.statements.Block;
+import org.modeldriven.alf.syntax.statements.ExpressionStatement;
 import org.modeldriven.alf.syntax.statements.ReturnStatement;
+import org.modeldriven.alf.syntax.statements.Statement;
 import org.modeldriven.alf.syntax.units.ActivityDefinition;
 import org.modeldriven.alf.syntax.units.FormalParameter;
 import org.modeldriven.alf.syntax.units.Member;
@@ -39,22 +40,23 @@ public class AlfInteractiveUtil {
 
 	public static UnitDefinition makeUnit(String unitName, Block body) {
 		
+		List<Statement> statements = body.getStatement();
+		int n = statements.size() - 1;
+		if (n >= 0) {
+			Statement lastStatement = statements.get(n);
+			if (lastStatement instanceof ExpressionStatement) {
+				ReturnStatement statement = new ReturnStatement();
+				statement.setExpression(((ExpressionStatement)lastStatement).getExpression());
+				statements.set(n, statement);
+			}
+		}
+		
 		UnitDefinition unit = new UnitDefinition();
 		ActivityDefinition activity = new ActivityDefinitionWrapper(unitName, body);
 		unit.setDefinition(activity);
 		activity.setUnit(unit);
 		
 		return unit;
-	}
-	
-	public static UnitDefinition makeUnit(String unitName, Expression expression) {
-		ReturnStatement statement = new ReturnStatement();
-		statement.setExpression(expression);
-		
-		Block body = new Block();
-		body.addStatement(statement);
-				
-		return makeUnit(unitName, body);
 	}
 	
 	public static FormalParameter copyFormalParameter(FormalParameter parameter) {

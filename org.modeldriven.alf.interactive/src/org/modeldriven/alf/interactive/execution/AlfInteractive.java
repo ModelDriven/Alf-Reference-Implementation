@@ -8,6 +8,7 @@
  *******************************************************************************/
 package org.modeldriven.alf.interactive.execution;
 
+import java.io.FileNotFoundException;
 import java.io.StringReader;
 import java.util.Collection;
 import java.util.Scanner;
@@ -205,22 +206,17 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 	
 	public ValueList eval(String input) {
 		this.result = null;
-		Parser parser = this.createParser(input);
+		String unitName = "_" + this.counter;
 		try {
-			String unitName = "_" + this.counter;
+			Parser parser = this.createParser(input + ";");
 			try {
-				this.process(AlfInteractiveUtil.makeUnit(unitName, parser.ExpressionEOF()), true);
-			} catch (ParseException e) {
+				this.process(AlfInteractiveUtil.makeUnit(unitName, parser.StatementSequenceEOF()), true);
+			} catch (ParseException e1) {
 				parser = this.createParser(input);
 				try {
-					this.process(AlfInteractiveUtil.makeUnit(unitName, parser.StatementSequenceEOF()), true);
-				} catch (ParseException e1) {
-					parser = this.createParser(input);
-					try {
-						this.process(parser.UnitDefinitionEOF(), false);
-					} catch (ParseException e2) {
-						throw e1.getBeginColumn() > e2.getBeginColumn()? e1: e2;
-					}
+					this.process(parser.UnitDefinitionEOF(), false);
+				} catch (ParseException e2) {
+					throw e1.getBeginColumn() > e2.getBeginColumn()? e1: e2;
 				}
 			}
 		} catch (ParseException | TokenMgrError e) {
@@ -279,8 +275,8 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		this.setModelDirectory(args[1]);
 		this.run();
 	}
-		 
-   public static void main(String[] args) {
+	
+	public static void main(String[] args) {
         if (args.length < 2) {
         	System.out.println("Usage: alfi library-directory model-directory");
         	return;
