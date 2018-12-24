@@ -8,12 +8,12 @@
  *******************************************************************************/
 package org.modeldriven.alf.interactive.execution;
 
-import java.io.FileNotFoundException;
 import java.io.StringReader;
 import java.util.Collection;
 import java.util.Scanner;
 import java.util.TreeSet;
 
+import org.apache.log4j.helpers.LogLog;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.units.NamespaceDefinitionMapping;
 import org.modeldriven.alf.mapping.Mapping;
@@ -276,6 +276,12 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		this.run();
 	}
 	
+	@Override
+	public void configure() {
+		LogLog.setQuietMode(true);
+		super.configure();
+	}
+		 
 	public static void main(String[] args) {
         if (args.length < 2) {
         	System.out.println("Usage: alfi library-directory model-directory");
