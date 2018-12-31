@@ -150,7 +150,7 @@ public abstract class ImportReferenceImpl extends SyntaxElementImpl {
     public boolean equals(Object other) {
         if (other instanceof ImportReference) {
             return ((ImportReference)other).getReferentName().equals(this.getSelf().getReferentName());
-        } else if (other instanceof PackageImportReferenceImpl) {
+        } else if (other instanceof ImportReferenceImpl) {
             return ((ImportReferenceImpl)other).getSelf().getReferentName().equals(this.getSelf().getReferentName());
         } else {
             return false;
