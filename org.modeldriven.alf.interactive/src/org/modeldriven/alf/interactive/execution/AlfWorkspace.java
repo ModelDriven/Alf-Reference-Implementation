@@ -10,6 +10,7 @@ package org.modeldriven.alf.interactive.execution;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -17,6 +18,12 @@ import org.modeldriven.alf.fuml.execution.Locus;
 import org.modeldriven.alf.fuml.impl.execution.Executor;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.units.FormalParameter;
+import org.modeldriven.alf.syntax.units.ImportReference;
+import org.modeldriven.alf.syntax.units.Member;
+import org.modeldriven.alf.syntax.units.NamespaceDefinition;
+import org.modeldriven.alf.syntax.units.PackageDefinition;
+import org.modeldriven.alf.syntax.units.RootNamespace;
+import org.modeldriven.alf.syntax.units.UnitDefinition;
 import org.modeldriven.alf.uml.Behavior;
 
 import fUML.Semantics.Classes.Kernel.ValueList;
@@ -27,12 +34,72 @@ import fUML.Syntax.Classes.Kernel.ParameterDirectionKind;
 
 public class AlfWorkspace {
 	
+	private final UnitDefinition unit = new UnitDefinition();
+	
 	private Map<String, FormalParameter> variableMap = new HashMap<>();
 	private Map<String, ValueList> valueMap = new HashMap<>();
 	
 	public static final AlfWorkspace INSTANCE = new AlfWorkspace();
 	
 	private AlfWorkspace() {
+		NamespaceDefinition namespace = new PackageDefinition();
+		namespace.getImpl().setExactName("Workspace");
+		namespace.setUnit(this.unit);
+		this.unit.setDefinition(namespace);
+		this.unit.getImpl().addImplicitImports();
+		RootNamespace.getModelScope(this.unit);
+	}
+	
+	public UnitDefinition getUnit() {
+		return this.unit;
+	}
+	
+	public UnitDefinition addImport(ImportReference importReference) {
+		this.unit.addImport(importReference);
+		importReference.setUnit(this.unit);
+		importReference.deriveAll();
+		
+		NamespaceDefinition namespace = this.unit.getDefinition();
+		namespace.setMember(null);
+		namespace.getMember();
+		
+		return this.getUnit();
+	}
+	
+	public UnitDefinition removeImport(ImportReference importReference) {
+		Collection<ImportReference> imports = this.unit.getImport();
+		imports.remove(importReference);
+		
+		NamespaceDefinition namespace = this.unit.getDefinition();
+		namespace.setMember(null);
+		namespace.getMember();
+		
+		return this.getUnit();
+	}
+	
+	public List<Member> getOwnedMembers() {
+		return this.unit.getDefinition().getOwnedMember();
+	}
+	
+	public UnitDefinition addMember(Member member) {
+		UnitDefinition unit = this.getUnit();
+		
+		NamespaceDefinition namespace = unit.getDefinition();
+		namespace.addOwnedMember(member);
+		namespace.addMember(member);
+		member.setNamespace(namespace);
+		
+		return unit;
+	}
+	
+	public UnitDefinition removeOwnedMember(Member member) {
+		UnitDefinition unit = this.getUnit();
+		
+		NamespaceDefinition namespace = unit.getDefinition();
+		namespace.getOwnedMember().remove(member);
+		namespace.getImpl().removeMember(member);
+		
+		return unit;
 	}
 	
 	public FormalParameter defineVariable(String name, ElementReference type, int lower, int upper) {

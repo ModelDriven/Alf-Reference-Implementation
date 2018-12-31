@@ -16,7 +16,6 @@ import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.statements.ExpressionStatement;
 import org.modeldriven.alf.syntax.statements.ReturnStatement;
 import org.modeldriven.alf.syntax.statements.Statement;
-import org.modeldriven.alf.syntax.units.ActivityDefinition;
 import org.modeldriven.alf.syntax.units.FormalParameter;
 import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
@@ -37,9 +36,17 @@ public class AlfInteractiveUtil {
 	protected static List<Member> getUnmappedMembers(NamespaceDefinition namespace) {
 		return filterMembers(namespace, false);
 	}
+	
+	public static UnitDefinition makeUnit(NamespaceDefinition definition) {
+		AlfWorkspace.INSTANCE.addMember(definition);
 
-	public static UnitDefinition makeUnit(String unitName, Block body) {
-		
+		UnitDefinition unit = new UnitDefinition();
+		unit.setDefinition(definition);
+		definition.setUnit(unit);		
+		return unit;
+	}
+
+	public static UnitDefinition makeUnit(String unitName, Block body) {		
 		List<Statement> statements = body.getStatement();
 		int n = statements.size() - 1;
 		if (n >= 0) {
@@ -49,14 +56,8 @@ public class AlfInteractiveUtil {
 				statement.setExpression(((ExpressionStatement)lastStatement).getExpression());
 				statements.set(n, statement);
 			}
-		}
-		
-		UnitDefinition unit = new UnitDefinition();
-		ActivityDefinition activity = new ActivityDefinitionWrapper(unitName, body);
-		unit.setDefinition(activity);
-		activity.setUnit(unit);
-		
-		return unit;
+		}		
+		return makeUnit(new ActivityDefinitionWrapper(unitName, body));
 	}
 	
 	public static FormalParameter copyFormalParameter(FormalParameter parameter) {
