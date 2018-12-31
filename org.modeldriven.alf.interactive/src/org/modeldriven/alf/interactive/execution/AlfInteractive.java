@@ -8,7 +8,12 @@
  *******************************************************************************/
 package org.modeldriven.alf.interactive.execution;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.StringReader;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Scanner;
 
@@ -39,6 +44,8 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 	protected int counter = 0;
 	protected boolean isRedirectErr = false;
 	protected boolean isRun = false;
+	
+	protected String input = null;
 	protected ValueList result = null;
 	
 	public AlfInteractive() {
@@ -127,6 +134,42 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 	}
 	
 	@Override
+    public void printConstraintViolations(Collection<ConstraintViolation> violations) {
+        String fileName = null;
+        BufferedReader reader = null;
+        String line = "";
+        int lineNum = 0;
+        for (ConstraintViolation violation: violations) {
+            String nextFileName = violation.getFileName();
+            if (fileName == null || !fileName.equals(nextFileName)) {
+                fileName = nextFileName;
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                    }
+                    reader = null;
+                }
+                if (this.input != null && Integer.toString(this.counter).equals(fileName)) {
+                	reader = new BufferedReader(new StringReader(this.input));
+                } else if (fileName != null) {
+                    try {
+                        reader = Files.newBufferedReader(Paths.get(fileName), Charset.defaultCharset());
+                    } catch (IOException e) {
+                    }
+                }
+                line = null;
+                lineNum = 0;
+                this.println("\n" + (fileName == null? "": fileName) + ":");
+            }
+            int prevLineNum = lineNum;
+            lineNum = violation.getBeginLine();
+            line = this.getLine(reader, line, prevLineNum, lineNum);
+            this.printConstraintViolation(line, violation);
+        }
+    }
+
+    @Override
 	public FumlMapping map(NamespaceDefinition definition) {
 		FumlMapping mapping = super.map(definition);
 		if (mapping != null) {
@@ -231,8 +274,9 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 	}
 	
 	public ValueList eval(String input) {
-        BoundClassifierImpl.clearBoundClassifiers();
+		this.input = input;
 		this.result = null;
+        BoundClassifierImpl.clearBoundClassifiers();
 		InteractiveParserImpl parser = this.createParser(input);
 		try {
 			try {
