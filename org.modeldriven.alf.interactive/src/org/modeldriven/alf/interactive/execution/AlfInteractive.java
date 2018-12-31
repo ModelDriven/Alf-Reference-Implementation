@@ -21,6 +21,8 @@ import org.apache.log4j.helpers.LogLog;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.units.NamespaceDefinitionMapping;
 import org.modeldriven.alf.interactive.parser.InteractiveParserImpl;
+import org.modeldriven.alf.interactive.units.ModelNamespaceImpl;
+import org.modeldriven.alf.interactive.units.RootNamespaceImpl;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.parser.ParseException;
@@ -264,6 +266,7 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		modelScope.setOwnedMember(AlfInteractiveUtil.getMappedMembers(modelScope));
 		modelScope.setMember(null);
 		modelScope.getMember();
+		((ModelNamespaceImpl)modelScope.getImpl()).clearParsedUnitCache();
 		this.counter++;
 	}
 	
@@ -328,6 +331,17 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		System.out.println();
 	}
 	
+	@Override
+    protected RootNamespaceImpl createRootScopeImpl() {
+        return new RootNamespaceImpl();
+    }
+    
+	@Override
+	public void configure() {
+		LogLog.setQuietMode(true);
+		super.configure();
+	}
+		 
 	public void run(String input) {
 		if (input != null && !input.isEmpty()) {
 			this.eval(input);
@@ -356,12 +370,6 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		this.run();
 	}
 	
-	@Override
-	public void configure() {
-		LogLog.setQuietMode(true);
-		super.configure();
-	}
-		 
 	public static void main(String[] args) {
         if (args.length < 2) {
         	System.out.println("Usage: alfi library-directory model-directory");

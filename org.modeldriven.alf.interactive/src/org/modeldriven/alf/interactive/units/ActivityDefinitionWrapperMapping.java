@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
  * contact Model Driven Solutions.
  *******************************************************************************/
-package org.modeldriven.alf.interactive.unit;
+package org.modeldriven.alf.interactive.units;
 
 import java.util.Collection;
 import java.util.stream.Collectors;

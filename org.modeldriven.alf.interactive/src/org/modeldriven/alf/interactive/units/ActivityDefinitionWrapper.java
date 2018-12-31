@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
  * contact Model Driven Solutions.
  *******************************************************************************/
-package org.modeldriven.alf.interactive.unit;
+package org.modeldriven.alf.interactive.units;
 
 import org.modeldriven.alf.interactive.execution.AlfWorkspace;
 import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;

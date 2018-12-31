@@ -11,7 +11,7 @@ package org.modeldriven.alf.interactive.execution;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.modeldriven.alf.interactive.unit.ActivityDefinitionWrapper;
+import org.modeldriven.alf.interactive.units.ActivityDefinitionWrapper;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.statements.ExpressionStatement;
 import org.modeldriven.alf.syntax.statements.ReturnStatement;
