@@ -58,22 +58,14 @@ public class AlfWorkspace {
 		this.unit.addImport(importReference);
 		importReference.setUnit(this.unit);
 		importReference.deriveAll();
-		
-		NamespaceDefinition namespace = this.unit.getDefinition();
-		namespace.setMember(null);
-		namespace.getMember();
-		
+		this.deriveMembers();		
 		return this.getUnit();
 	}
 	
 	public UnitDefinition removeImport(ImportReference importReference) {
 		Collection<ImportReference> imports = this.unit.getImport();
 		imports.remove(importReference);
-		
-		NamespaceDefinition namespace = this.unit.getDefinition();
-		namespace.setMember(null);
-		namespace.getMember();
-		
+		this.deriveMembers();		
 		return this.getUnit();
 	}
 	
@@ -100,6 +92,25 @@ public class AlfWorkspace {
 		namespace.getImpl().removeMember(member);
 		
 		return unit;
+	}
+	
+	public Collection<Member> getIndistinguishableFrom(Member newMember) {
+		return this.getOwnedMembers().stream().
+				filter(member->!newMember.equals(member) && !newMember.isDistinguishableFrom(member)).
+				collect(Collectors.toSet());
+	}
+	
+	public void setNames(Collection<Member> members, String name) {
+		if (!members.isEmpty()) {
+			members.forEach(member->member.getImpl().setExactName(name));
+			this.deriveMembers();
+		}
+	}
+	
+	public void deriveMembers() {
+		NamespaceDefinition namespace = this.getUnit().getDefinition();
+		namespace.setMember(null);
+		namespace.getMember();
 	}
 	
 	public FormalParameter defineVariable(String name, ElementReference type, int lower, int upper) {

@@ -116,19 +116,18 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 			if (this.counter == 0) {
 				return super.check(unit);
 			} else {
+				NamespaceDefinition definition = unit.getDefinition();
+				Collection<Member> conflicts = AlfWorkspace.INSTANCE.getIndistinguishableFrom(definition);
+				AlfWorkspace.INSTANCE.setNames(conflicts, "");
 				NamespaceDefinition modelScope = this.getRootScopeImpl().getModelNamespace();
 				modelScope.deriveAll();
 				Collection<ConstraintViolation> violations = unit.checkConstraints();
-				NamespaceDefinition definition = unit.getDefinition();
-				if (!definition.getImpl().isDistinguishableFromAll(AlfWorkspace.INSTANCE.getOwnedMembers())) {
-					violations.add(new ConstraintViolation(
-							"namespaceDefinitionMemberDistinguishability", definition));
-				}
 				for (Member member: AlfInteractiveUtil.getUnmappedMembers(modelScope)) {
 					violations.addAll(member.checkConstraints());
 				}
 				if (!violations.isEmpty()) {
 					this.printConstraintViolations(violations);
+					AlfWorkspace.INSTANCE.setNames(conflicts, definition.getName());
 				}
 				return violations;
 			}
