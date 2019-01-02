@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2018 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2018-2019 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -21,12 +21,12 @@ import org.apache.log4j.helpers.LogLog;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.units.NamespaceDefinitionMapping;
 import org.modeldriven.alf.interactive.parser.InteractiveParserImpl;
+import org.modeldriven.alf.interactive.parser.ParseException;
+import org.modeldriven.alf.interactive.parser.TokenMgrError;
 import org.modeldriven.alf.interactive.units.ModelNamespaceImpl;
 import org.modeldriven.alf.interactive.units.RootNamespaceImpl;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
-import org.modeldriven.alf.parser.ParseException;
-import org.modeldriven.alf.parser.TokenMgrError;
 import org.modeldriven.alf.syntax.common.ConstraintViolation;
 import org.modeldriven.alf.syntax.units.ImportReference;
 import org.modeldriven.alf.syntax.units.Member;
@@ -283,16 +283,16 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		InteractiveParserImpl parser = this.createParser(input);
 		try {
 			try {
-				this.process(parser.PublicImportDeclaration());
+				this.process(parser.PublicImportDeclarationEOF());
 			} catch (ParseException e1) {
-				if (e1.getBeginColumn() > 1) {
+				if (parser.token.beginColumn > 0) {
 					throw e1;
 				} else {
 					parser = this.createParser(input);
 					try {
 						this.process(AlfInteractiveUtil.makeUnit(parser.NamespaceDefinitionEOF()), false);
 					} catch (ParseException e2) {
-						if (e2.getBeginColumn() > 1) {
+						if (parser.token.beginColumn > 0) {
 							throw e2;
 						} else {
 							parser = this.createParser(input + ";");						
@@ -361,7 +361,7 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 	        			input = "";
 	        			String line = in.nextLine();
 	        			while (!"\\".equals(line.trim())) {
-	        				input += line;
+	        				input += line + "\n";
 	        				line = in.nextLine();
 	        			}
 	        		}
