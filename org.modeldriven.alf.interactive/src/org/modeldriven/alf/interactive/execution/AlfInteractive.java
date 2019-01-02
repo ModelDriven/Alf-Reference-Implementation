@@ -353,10 +353,18 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
         try (Scanner in = new Scanner(System.in)) {
 	        do {
 	        	System.out.print(this.counter + "> ");
-	        	String input = in.nextLine().trim();
-	        	if ("@exit".equals(input)) {
+	        	String input = in.nextLine();
+	        	if ("\\exit".equals(input.trim())) {
 	        		break;
 	        	} else {
+	        		if ("\\".equals(input.trim())) {
+	        			input = "";
+	        			String line = in.nextLine();
+	        			while (!"\\".equals(line.trim())) {
+	        				input += line;
+	        				line = in.nextLine();
+	        			}
+	        		}
 	        		run(input);
 	        	}
 	        } while(true);
