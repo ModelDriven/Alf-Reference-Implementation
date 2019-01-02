@@ -15,6 +15,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.List;
 import java.util.Scanner;
 
 import org.apache.log4j.helpers.LogLog;
@@ -228,13 +229,13 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		return unit;
 	}
 	
-	public UnitDefinition process(ImportReference importReference) {
-		UnitDefinition unit = AlfWorkspace.INSTANCE.addImport(importReference);
+	public UnitDefinition process(List<ImportReference> imports) {
+		UnitDefinition unit = AlfWorkspace.INSTANCE.addImports(imports);
 		Collection<ConstraintViolation> violations = this.check(unit);
 		if (violations.isEmpty()) {
 			return unit;
 		} else {
-			AlfWorkspace.INSTANCE.removeImport(importReference);
+			AlfWorkspace.INSTANCE.removeImports(imports);
 			return null;
 		}
 	}
@@ -282,7 +283,7 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		InteractiveParserImpl parser = this.createParser(input);
 		try {
 			try {
-				this.process(parser.PublicImportDeclarationEOF());
+				this.process(parser.InteractiveImportsEOF());
 			} catch (ParseException e1) {
 				if (parser.token.beginColumn > 0) {
 					throw e1;
@@ -353,7 +354,7 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 	        do {
 	        	System.out.print(this.counter + "> ");
 	        	String input = in.nextLine();
-	        	if ("\\exit".equals(input.trim())) {
+	        	if ("\\\\".equals(input.trim())) {
 	        		break;
 	        	} else {
 	        		if ("\\".equals(input.trim())) {

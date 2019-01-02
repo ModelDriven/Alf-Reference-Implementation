@@ -3823,12 +3823,25 @@ SignalReceptionDefinition SignalReceptionDefinitionOrStub():
  * INTERACTIVE *
  ***************/
 
-ImportReference PublicImportDeclarationEOF():
+List<ImportReference> InteractiveImportsEOF():
+{
+  List<ImportReference> l = new ArrayList<ImportReference>();
+  ImportReference i;
+}
+{
+  i = PublicImportDeclaration() { l.add(i); } 
+  ( LOOKAHEAD(2) <SEMICOLON> i = PublicImportDeclaration() { l.add(i); } )*
+  [ <SEMICOLON> ] <EOF>
+
+  { return l; }
+}
+
+ImportReference PublicImportDeclaration():
 {
   ImportReference i = new ElementImportReference(this);
 }
 {
-  <IMPORT> i = ImportReference(i) [ <SEMICOLON> ] <EOF>
+  <IMPORT> i = ImportReference(i)
   
   { i.setVisibility("public");
   	this.provideEnd(i);

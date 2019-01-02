@@ -54,17 +54,18 @@ public class AlfWorkspace {
 		return this.unit;
 	}
 	
-	public UnitDefinition addImport(ImportReference importReference) {
-		this.unit.addImport(importReference);
-		importReference.setUnit(this.unit);
-		importReference.deriveAll();
+	public UnitDefinition addImports(List<ImportReference> imports) {
+		for (ImportReference importReference: imports) {
+			this.unit.addImport(importReference);
+			importReference.setUnit(this.unit);
+			importReference.deriveAll();
+		}
 		this.deriveMembers();		
 		return this.getUnit();
 	}
 	
-	public UnitDefinition removeImport(ImportReference importReference) {
-		Collection<ImportReference> imports = this.unit.getImport();
-		imports.remove(importReference);
+	public UnitDefinition removeImports(List<ImportReference> imports) {
+		this.unit.getImport().removeAll(imports);
 		this.deriveMembers();		
 		return this.getUnit();
 	}
