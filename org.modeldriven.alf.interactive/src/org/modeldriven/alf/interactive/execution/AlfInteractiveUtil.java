@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2018 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2018-2019 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modeldriven.alf.interactive.units.ActivityDefinitionWrapper;
+import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.statements.ExpressionStatement;
 import org.modeldriven.alf.syntax.statements.ReturnStatement;
@@ -37,13 +38,22 @@ public class AlfInteractiveUtil {
 		return filterMembers(namespace, false);
 	}
 	
+	public static UnitDefinition addUnit(UnitDefinition unit) {
+		AlfWorkspace.INSTANCE.addOwnedMember(unit.getDefinition());
+		return unit;
+	}
+	
+	public static UnitDefinition makeUnit(int counter, SyntaxElement element) {
+		return element instanceof UnitDefinition? 
+				addUnit((UnitDefinition)element): 
+				makeUnit("_" + counter, (Block)element);
+	}
+	
 	public static UnitDefinition makeUnit(NamespaceDefinition definition) {
-		AlfWorkspace.INSTANCE.addOwnedMember(definition);
-
 		UnitDefinition unit = new UnitDefinition();
 		unit.setDefinition(definition);
 		definition.setUnit(unit);		
-		return unit;
+		return addUnit(unit);
 	}
 
 	public static UnitDefinition makeUnit(String unitName, Block body) {		

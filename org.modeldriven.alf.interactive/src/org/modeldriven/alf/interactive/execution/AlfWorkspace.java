@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2018 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2018-2019 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -81,6 +81,7 @@ public class AlfWorkspace {
 		namespace.addOwnedMember(member);
 		namespace.addMember(member);
 		member.setNamespace(namespace);
+		member.setVisibility("public");
 		
 		return unit;
 	}

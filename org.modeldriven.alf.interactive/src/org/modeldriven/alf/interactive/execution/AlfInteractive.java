@@ -27,11 +27,13 @@ import org.modeldriven.alf.fuml.mapping.units.NamespaceDefinitionMapping;
 import org.modeldriven.alf.interactive.parser.InteractiveParserImpl;
 import org.modeldriven.alf.interactive.parser.ParseException;
 import org.modeldriven.alf.interactive.parser.TokenMgrError;
+import org.modeldriven.alf.interactive.units.ActivityDefinitionWrapper;
 import org.modeldriven.alf.interactive.units.ModelNamespaceImpl;
 import org.modeldriven.alf.interactive.units.RootNamespaceImpl;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.syntax.common.ConstraintViolation;
+import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.units.ImportReference;
 import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.MissingUnit;
@@ -49,7 +51,6 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 	
 	protected int counter = 0;
 	protected boolean isRedirectErr = false;
-	protected boolean isRun = false;
 	
 	protected String input = null;
 	protected ValueList result = null;
@@ -87,14 +88,6 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		this.isRedirectErr = isRedirectErr;
 	}
 	
-	public boolean isRun() {
-		return this.isRun;
-	}
-	
-	public void setIsRun(boolean isRun) {
-		this.isRun = isRun;
-	}
-	
 	public ValueList getResult() {
 		return this.result;
 	}
@@ -117,9 +110,11 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 			return null;
 		} else {
 			AlfWorkspace.INSTANCE.addImports(imports);
+			
 			NamespaceDefinition definition = unit.getDefinition();
 			Collection<Member> conflicts = AlfWorkspace.INSTANCE.getIndistinguishableFrom(definition);
 			AlfWorkspace.INSTANCE.setNames(conflicts, "");
+			
 			NamespaceDefinition modelScope = this.getRootScopeImpl().getModelNamespace();
 			modelScope.deriveAll();
 			Collection<ConstraintViolation> violations = new TreeSet<ConstraintViolation>();
@@ -130,11 +125,13 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 			for (Member member: AlfInteractiveUtil.getUnmappedMembers(modelScope)) {
 				violations.addAll(member.checkConstraints());
 			}
+			
 			if (!violations.isEmpty()) {
 				this.printConstraintViolations(violations);
 				AlfWorkspace.INSTANCE.removeImports(imports);
 				AlfWorkspace.INSTANCE.setNames(conflicts, definition.getName());
 			}
+			
 			return violations;
 		}
 	}
@@ -229,30 +226,11 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		}
 	}
 
-	public UnitDefinition process(List<ImportReference> imports, UnitDefinition unit, boolean isRun) {
-		boolean wasRun = this.isRun();
-		this.setIsRun(isRun);
-		unit = this.process(imports, unit);
-		this.setIsRun(wasRun);
-		return unit;
-	}
-	
-	public UnitDefinition process(List<ImportReference> imports) {
-		UnitDefinition unit = AlfWorkspace.INSTANCE.addImports(imports);
-		Collection<ConstraintViolation> violations = this.check(unit);
-		if (violations.isEmpty()) {
-			return unit;
-		} else {
-			AlfWorkspace.INSTANCE.removeImports(imports);
-			return null;
-		}
-	}
-	
 	@Override
 	public UnitDefinition execute(UnitDefinition unit) {
 		this.result = null;
-		if (unit != null && this.isRun()) {
-			NamespaceDefinition definition = unit.getDefinition();
+		NamespaceDefinition definition = unit.getDefinition();
+		if (definition instanceof ActivityDefinitionWrapper) {
 			Mapping elementMapping = definition.getImpl().getMapping();
 			if (elementMapping == null) {
 				this.printErr(definition.getName() + " is unmapped.");
@@ -262,7 +240,7 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 				if (element instanceof Behavior) {
 					this.result = AlfWorkspace.INSTANCE.execute((Behavior)element, this.getLocus());
 				} else {
-					this.printErr(definition.getName() + " is not a behavior.");
+					this.printErr(definition.getName() + " does not map to a behavior.");
 				}
 			}
 		}
@@ -289,20 +267,10 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		this.result = null;
         BoundClassifierImpl.clearBoundClassifiers();
 		List<ImportReference> imports = new ArrayList<>();
-		InteractiveParserImpl parser = this.createParser(input);
+		InteractiveParserImpl parser = this.createParser(input + ";");
 		try {
-			try {
-				this.process(imports, AlfInteractiveUtil.makeUnit(parser.NamespaceDefinitionEOF()), false);
-			} catch (ParseException e2) {
-				if (parser.token.beginColumn > 0) {
-					throw e2;
-				} else {
-					parser = this.createParser(input + ";");						
-					UnitDefinition unit = AlfInteractiveUtil.makeUnit(
-							"_" + this.counter, parser.InteractiveStatementSequenceEOF(imports));
-					this.process(imports, unit, true);
-				}
-			}
+			SyntaxElement element = parser.InteractiveUnitDefinitionEOF(imports);
+			this.process(imports, AlfInteractiveUtil.makeUnit(this.counter, element));
 		} catch (ParseException | TokenMgrError e) {
 			this.printErr(e.getMessage());
 		} catch (Throwable e) {

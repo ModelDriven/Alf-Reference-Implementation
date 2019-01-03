@@ -3826,17 +3826,16 @@ SignalReceptionDefinition SignalReceptionDefinitionOrStub():
 ImportReference InteractiveImportDeclaration():
 {
   ImportReference i = new ElementImportReference(this);
-  String v = "public";
 }
 {
-  [ v = ImportVisibilityIndicator() ]  <IMPORT> i = ImportReference(i) <SEMICOLON>
+  <IMPORT> i = ImportReference(i) <SEMICOLON>
   
-  { i.setVisibility(v);
+  { i.setVisibility("public");
   	this.provideEnd(i);
     return i; }
 }
 
-Block InteractiveStatementSequenceEOF(List<ImportReference> imports):
+Block InteractiveStatementSequence(List<ImportReference> imports):
 {
   ImportReference i;
   Block b;
@@ -3848,12 +3847,14 @@ Block InteractiveStatementSequenceEOF(List<ImportReference> imports):
   { return b; }
 }
 
-NamespaceDefinition NamespaceDefinitionEOF():
+SyntaxElement InteractiveUnitDefinitionEOF(List<ImportReference> imports):
 {
-  NamespaceDefinition d;
+  SyntaxElement e;
 }
 {
-  d = NamespaceDefinition() <EOF>
+  ( LOOKAHEAD(2) e = UnitDefinition() <SEMICOLON>
+  | e = InteractiveStatementSequence(imports)
+  )
 
-  { return d; }
+  { return e; }
 }
