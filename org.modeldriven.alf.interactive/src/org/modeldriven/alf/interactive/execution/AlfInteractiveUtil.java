@@ -38,7 +38,7 @@ public class AlfInteractiveUtil {
 	}
 	
 	public static UnitDefinition makeUnit(NamespaceDefinition definition) {
-		AlfWorkspace.INSTANCE.addMember(definition);
+		AlfWorkspace.INSTANCE.addOwnedMember(definition);
 
 		UnitDefinition unit = new UnitDefinition();
 		unit.setDefinition(definition);

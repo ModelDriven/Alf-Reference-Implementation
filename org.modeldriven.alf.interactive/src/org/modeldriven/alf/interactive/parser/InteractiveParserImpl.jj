@@ -3823,29 +3823,29 @@ SignalReceptionDefinition SignalReceptionDefinitionOrStub():
  * INTERACTIVE *
  ***************/
 
-List<ImportReference> InteractiveImportsEOF():
-{
-  List<ImportReference> l = new ArrayList<ImportReference>();
-  ImportReference i;
-}
-{
-  i = PublicImportDeclaration() { l.add(i); } 
-  ( LOOKAHEAD(2) <SEMICOLON> i = PublicImportDeclaration() { l.add(i); } )*
-  [ <SEMICOLON> ] <EOF>
-
-  { return l; }
-}
-
-ImportReference PublicImportDeclaration():
+ImportReference InteractiveImportDeclaration():
 {
   ImportReference i = new ElementImportReference(this);
+  String v = "public";
 }
 {
-  <IMPORT> i = ImportReference(i)
+  [ v = ImportVisibilityIndicator() ]  <IMPORT> i = ImportReference(i) <SEMICOLON>
   
-  { i.setVisibility("public");
+  { i.setVisibility(v);
   	this.provideEnd(i);
     return i; }
+}
+
+Block InteractiveStatementSequenceEOF(List<ImportReference> imports):
+{
+  ImportReference i;
+  Block b;
+}
+{
+  ( i = InteractiveImportDeclaration() { imports.add(i); } )*
+  b = StatementSequenceEOF()
+
+  { return b; }
 }
 
 NamespaceDefinition NamespaceDefinitionEOF():

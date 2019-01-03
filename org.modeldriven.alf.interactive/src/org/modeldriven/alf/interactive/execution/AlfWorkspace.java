@@ -74,7 +74,7 @@ public class AlfWorkspace {
 		return this.unit.getDefinition().getOwnedMember();
 	}
 	
-	public UnitDefinition addMember(Member member) {
+	public UnitDefinition addOwnedMember(Member member) {
 		UnitDefinition unit = this.getUnit();
 		
 		NamespaceDefinition namespace = unit.getDefinition();

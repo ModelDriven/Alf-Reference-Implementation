@@ -14,9 +14,12 @@ import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
+import java.util.TreeSet;
 
 import org.apache.log4j.helpers.LogLog;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
@@ -70,7 +73,7 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 	public void initialize() {
 		this.counter = 0;
         this.loadResources();        
-        if (this.process(AlfWorkspace.INSTANCE.getUnit(), false) == null) {
+        if (super.process(AlfWorkspace.INSTANCE.getUnit()) == null) {
         	throw new Error("Initialization failed.");
         }
         this.counter = 1;
@@ -109,29 +112,30 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		this.printErr(message);
 	}
 	
-	@Override
-	public Collection<ConstraintViolation> check(UnitDefinition unit) {
+	public Collection<ConstraintViolation> check(List<ImportReference> imports, UnitDefinition unit) {
 		if (unit == null) {
 			return null;
 		} else {
-			if (this.counter == 0) {
-				return super.check(unit);
-			} else {
-				NamespaceDefinition definition = unit.getDefinition();
-				Collection<Member> conflicts = AlfWorkspace.INSTANCE.getIndistinguishableFrom(definition);
-				AlfWorkspace.INSTANCE.setNames(conflicts, "");
-				NamespaceDefinition modelScope = this.getRootScopeImpl().getModelNamespace();
-				modelScope.deriveAll();
-				Collection<ConstraintViolation> violations = unit.checkConstraints();
-				for (Member member: AlfInteractiveUtil.getUnmappedMembers(modelScope)) {
-					violations.addAll(member.checkConstraints());
-				}
-				if (!violations.isEmpty()) {
-					this.printConstraintViolations(violations);
-					AlfWorkspace.INSTANCE.setNames(conflicts, definition.getName());
-				}
-				return violations;
+			AlfWorkspace.INSTANCE.addImports(imports);
+			NamespaceDefinition definition = unit.getDefinition();
+			Collection<Member> conflicts = AlfWorkspace.INSTANCE.getIndistinguishableFrom(definition);
+			AlfWorkspace.INSTANCE.setNames(conflicts, "");
+			NamespaceDefinition modelScope = this.getRootScopeImpl().getModelNamespace();
+			modelScope.deriveAll();
+			Collection<ConstraintViolation> violations = new TreeSet<ConstraintViolation>();
+			for (ImportReference importReference: imports) {
+				violations.addAll(importReference.checkConstraints());
 			}
+			violations.addAll(unit.checkConstraints());
+			for (Member member: AlfInteractiveUtil.getUnmappedMembers(modelScope)) {
+				violations.addAll(member.checkConstraints());
+			}
+			if (!violations.isEmpty()) {
+				this.printConstraintViolations(violations);
+				AlfWorkspace.INSTANCE.removeImports(imports);
+				AlfWorkspace.INSTANCE.setNames(conflicts, definition.getName());
+			}
+			return violations;
 		}
 	}
 	
@@ -189,6 +193,10 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 	
 	@Override
 	public UnitDefinition process(UnitDefinition unit) {
+		return this.process(Collections.emptyList(), unit);
+	}
+	
+	public UnitDefinition process(List<ImportReference> imports, UnitDefinition unit) {
 		if (unit == null || unit instanceof MissingUnit) {
 			return null;
 		} else {
@@ -197,7 +205,7 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 				return super.process(unit);
 			} else {
 				NamespaceDefinition definition = unit.getDefinition();
-				Collection<ConstraintViolation> violations = this.check(unit);
+				Collection<ConstraintViolation> violations = this.check(imports, unit);
 				if (!violations.isEmpty()) {
 					AlfWorkspace.INSTANCE.removeOwnedMember(definition);
 					return null;
@@ -221,10 +229,10 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		}
 	}
 
-	public UnitDefinition process(UnitDefinition unit, boolean isRun) {
+	public UnitDefinition process(List<ImportReference> imports, UnitDefinition unit, boolean isRun) {
 		boolean wasRun = this.isRun();
 		this.setIsRun(isRun);
-		unit = this.process(unit);
+		unit = this.process(imports, unit);
 		this.setIsRun(wasRun);
 		return unit;
 	}
@@ -280,26 +288,19 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 		this.input = input;
 		this.result = null;
         BoundClassifierImpl.clearBoundClassifiers();
+		List<ImportReference> imports = new ArrayList<>();
 		InteractiveParserImpl parser = this.createParser(input);
 		try {
 			try {
-				this.process(parser.InteractiveImportsEOF());
-			} catch (ParseException e1) {
+				this.process(imports, AlfInteractiveUtil.makeUnit(parser.NamespaceDefinitionEOF()), false);
+			} catch (ParseException e2) {
 				if (parser.token.beginColumn > 0) {
-					throw e1;
+					throw e2;
 				} else {
-					parser = this.createParser(input);
-					try {
-						this.process(AlfInteractiveUtil.makeUnit(parser.NamespaceDefinitionEOF()), false);
-					} catch (ParseException e2) {
-						if (parser.token.beginColumn > 0) {
-							throw e2;
-						} else {
-							parser = this.createParser(input + ";");						
-							String unitName = "_" + this.counter;
-							this.process(AlfInteractiveUtil.makeUnit(unitName, parser.StatementSequenceEOF()), true);
-						}
-					}
+					parser = this.createParser(input + ";");						
+					UnitDefinition unit = AlfInteractiveUtil.makeUnit(
+							"_" + this.counter, parser.InteractiveStatementSequenceEOF(imports));
+					this.process(imports, unit, true);
 				}
 			}
 		} catch (ParseException | TokenMgrError e) {
@@ -361,6 +362,10 @@ public class AlfInteractive extends org.modeldriven.alf.fuml.impl.execution.Alf 
 	        			input = "";
 	        			String line = in.nextLine();
 	        			while (!"\\".equals(line.trim())) {
+	        				if ("\\\\".equals(line.trim())) {
+	        					input = null;
+	        					break;
+	        				}
 	        				input += line + "\n";
 	        				line = in.nextLine();
 	        			}
