@@ -57,8 +57,14 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
     @Override
     public void addExternalReferences(Collection<ExternalElementReference> references) {
         super.addExternalReferences(references);
-        SyntaxElement.addExternalReference(references, this.getSelf().getReferent());
-        SyntaxElement.addExternalReferences(references, this.getSelf().getParameter());
+        InvocationExpression self = this.getSelf();
+        ElementReference referent = self.getReferent();
+        SyntaxElement.addExternalReference(references, referent);
+        if (self.getIsBehavior() || self.getIsOperation()) {
+            SyntaxElement.addExternalReferences(references, self.getParameter());
+        } else {
+            SyntaxElement.addExternalReferences(references, referent.getImpl().getPropertiesForParameters()); 
+        }
     }
     
 	public Boolean getIsBehavior() {

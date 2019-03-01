@@ -11,11 +11,13 @@ package org.modeldriven.alf.syntax.common.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.common.ElementReferenceMapping;
@@ -174,38 +176,25 @@ public abstract class ElementReferenceImpl implements AssignableElement {
             return this.getParameters();
         } else {
             List<ElementReference> parameters = new ArrayList<ElementReference>();
-            if (this.isReception()){
-                ElementReference signal = this.getSignal();
-                if (signal != null) {
-                    for (ElementReference property: signal.getImpl().getAttributes()) {
-                        parameters.add(parameterFromProperty(property).getImpl().getReferent());
-                    }
-                }
-            } else if (this.isDataType() || this.isSignal()){
-                for (ElementReference property: this.getAttributes()) {
-                    parameters.add(parameterFromProperty(property).getImpl().getReferent());
-                }
-            } else if (this.isAssociation()) {
-                for (ElementReference property: this.getAssociationEnds()) {
-                    FormalParameter parameter = parameterFromProperty(property);
+            for (ElementReference property: this.getPropertiesForParameters()) {
+                FormalParameter parameter = parameterFromProperty(property);
+                if (property.getImpl().isAssociationEnd()) {
                     parameter.setLower(1);
                     parameter.setUpper(1);
-                    parameters.add(parameter.getImpl().getReferent());
                 }
-            } else if (this.isAssociationEnd()) {
-                ElementReference association = this.getAssociation();
-                String referentName = this.getName();
-                for (ElementReference property: association.getImpl().getAssociationEnds()) {
-                    if (!property.getImpl().getName().equals(referentName)) {
-                        FormalParameter parameter = parameterFromProperty(property);
-                        parameter.setLower(1);
-                        parameter.setUpper(1);
-                        parameters.add(parameter.getImpl().getReferent());
-                    }
-                }
+                parameters.add(parameter.getImpl().getReferent());
             }
             return parameters;
         }
+    }
+    
+    public List<ElementReference> getPropertiesForParameters() {
+        return this.isReception() && this.getSignal() != null? this.getSignal().getImpl().getAttributes():
+               this.isDataType() || this.isSignal()? this.getAttributes():
+               this.isAssociation()? this.getAssociationEnds():
+               this.isAssociationEnd()? this.getAssociation().getImpl().getAssociationEnds().stream().
+                       filter(end->this.getName() == null || !this.getName().equals(end.getImpl().getName())).collect(Collectors.toList()): 
+               Collections.emptyList();
     }
 
     public static FormalParameter parameterFromProperty(ElementReference property) {
