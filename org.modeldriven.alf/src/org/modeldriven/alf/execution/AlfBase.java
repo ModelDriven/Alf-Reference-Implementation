@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2018 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2019 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -24,7 +24,7 @@ import org.modeldriven.alf.syntax.units.UnitDefinition;
 
 public abstract class AlfBase {
     
-    public static final String ALF_VERSION = "1.1.0f/maint-1";
+    public static final String ALF_VERSION = "1.1.0f/maint-2";
     
     protected boolean isVerbose = false;
 

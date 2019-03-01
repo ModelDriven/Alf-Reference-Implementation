@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2018 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2019 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -423,63 +423,63 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
            List<ElementReference> templateParameters,
            List<ElementReference> templateArguments) {
        ElementReference newReference = null;
-       org.modeldriven.alf.uml.TemplateBinding templateBinding = 
-               ExternalElementReferenceImpl.getUMLTemplateBinding(reference);
-       if (templateBinding == null) {
-           Element owner = reference.getOwner();
-           Namespace namespace = owner instanceof TemplateParameter?
-                   (Namespace)((TemplateParameter)owner).getSignature().getTemplate():
-                   reference.getNamespace();
-           if (namespace != null) {
-               ElementReference namespaceReference = getNewReference(
-                       instantiation, namespace, templateParameters, templateArguments);
-               if (namespaceReference != null) {
-                   NamespaceDefinition namespaceDefinition = 
-                           namespaceReference.getImpl().asNamespace();
-                   if (namespaceDefinition != null) {
-                       String name = reference.getName();
-                       for (Member member: namespaceDefinition.getOwnedMember()) {
-                           ElementReference referent = member.getImpl().getReferent();
-                           if (name == null && referent.getImpl().getName() == null ||
-                                   name != null && name.equals(referent.getImpl().getName())) {
-                               if (referent.getImpl().isClassifierTemplateParameter()) {
-                                   referent = referent.getImpl().getParameteredElement();
-                               }
-                               Element element = referent.getImpl().getUml();
-                               if (element != null && !element.equals(reference) && 
-                                       isSameKind(element, reference, instantiation, templateParameters, templateArguments)) {
-                                   newReference = referent;
+       if (reference != null) {
+           org.modeldriven.alf.uml.TemplateBinding templateBinding = 
+                   ExternalElementReferenceImpl.getUMLTemplateBinding(reference);
+           if (templateBinding == null) {
+               Element owner = reference.getOwner();
+               Namespace namespace = owner instanceof TemplateParameter?
+                       (Namespace)((TemplateParameter)owner).getSignature().getTemplate():
+                       reference.getNamespace();
+               if (namespace != null) {
+                   ElementReference namespaceReference = getNewReference(
+                           instantiation, namespace, templateParameters, templateArguments);
+                   if (namespaceReference != null) {
+                       NamespaceDefinition namespaceDefinition = namespaceReference.getImpl().asNamespace();
+                       if (namespaceDefinition != null) {
+                           String name = reference.getName();
+                           for (Member member: namespaceDefinition.getOwnedMember()) {
+                               ElementReference referent = member.getImpl().getReferent();
+                               if (name == null && referent.getImpl().getName() == null ||
+                                       name != null && name.equals(referent.getImpl().getName())) {
+                                   if (referent.getImpl().isClassifierTemplateParameter()) {
+                                       referent = referent.getImpl().getParameteredElement();
+                                   }
+                                   Element element = referent.getImpl().getUml();
+                                   if (element != null && !element.equals(reference) && 
+                                           isSameKind(element, reference, instantiation, templateParameters, templateArguments)) {
+                                       newReference = referent;
+                                   }
                                }
                            }
                        }
                    }
                }
-           }
-       } else {
-           NamedElement template = 
-                   (NamedElement)templateBinding.getSignature().getTemplate();
-           if (template == instantiation) {
-               template = (NamedElement)instantiation.getTemplateBinding().get(0).
-                       getSignature().getTemplate();
-           }
-           List<ElementReference> formals = new ArrayList<ElementReference>();
-           List<ElementReference> actuals = new ArrayList<ElementReference>();
-           for (org.modeldriven.alf.uml.TemplateParameterSubstitution parameterSubstitution: 
-               templateBinding.getParameterSubstitution()) {
-               formals.add(
-                       ElementReferenceImpl.makeElementReference(parameterSubstitution.getFormal()));
-               actuals.add(makeSubstitution(
-                       ElementReferenceImpl.makeElementReference(parameterSubstitution.getActual()),
-                       templateParameters, templateArguments));
-           }
-           ElementReference templateReference = 
-                   getNewReference(instantiation, template, templateParameters, templateArguments);
-           if (templateReference == null) {
-               newReference = RootNamespace.getRootScope().getEffectiveBoundElement(
-                       ElementReferenceImpl.makeElementReference(template), formals, actuals);
            } else {
-               newReference = RootNamespace.getRootScope().getEffectiveBoundElement(
-                       templateReference, formals, actuals);
+               NamedElement template = 
+                       (NamedElement)templateBinding.getSignature().getTemplate();
+               if (template == instantiation) {
+                   template = (NamedElement)instantiation.getTemplateBinding().get(0).getSignature().getTemplate();
+               }
+               List<ElementReference> formals = new ArrayList<ElementReference>();
+               List<ElementReference> actuals = new ArrayList<ElementReference>();
+               for (org.modeldriven.alf.uml.TemplateParameterSubstitution parameterSubstitution: 
+                   templateBinding.getParameterSubstitution()) {
+                   formals.add(
+                           ElementReferenceImpl.makeElementReference(parameterSubstitution.getFormal()));
+                   actuals.add(makeSubstitution(
+                           ElementReferenceImpl.makeElementReference(parameterSubstitution.getActual()),
+                           templateParameters, templateArguments));
+               }
+               ElementReference templateReference = 
+                       getNewReference(instantiation, template, templateParameters, templateArguments);
+               if (templateReference == null) {
+                   newReference = RootNamespace.getRootScope().getEffectiveBoundElement(
+                           ElementReferenceImpl.makeElementReference(template), formals, actuals);
+               } else {
+                   newReference = RootNamespace.getRootScope().getEffectiveBoundElement(
+                           templateReference, formals, actuals);
+               }
            }
        }
        return newReference;

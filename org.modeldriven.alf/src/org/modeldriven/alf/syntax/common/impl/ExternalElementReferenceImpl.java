@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2018 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2019 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -357,7 +357,7 @@ public class ExternalElementReferenceImpl extends ElementReferenceImpl {
             Class_ class_ = (Class_)this.getUml();
             for (NamedElement member: class_.getMember()) {
                 if (member instanceof Reception &&
-                        ((Reception)member).getSignal().equals(umlSignal)) {
+                        umlSignal.equals(((Reception)member).getSignal())) {
                     return true;
                 }
             }
