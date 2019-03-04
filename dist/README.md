@@ -1,5 +1,5 @@
 # Action Language for UML (Alf) <br> Open Source Reference Implementation
-_Copyright &copy; 2011-2017 Data Access Technologies, Inc. (Model Driven Solutions)_
+_Copyright &copy; 2011-2019 Model Driven Solutions, Inc._
 
 Alf is an action language for UML developed in response to the OMG <em>Concrete 
 Syntax for a UML Action Language</em> Request for Proposals. The Alf specification 
@@ -13,7 +13,7 @@ The compilation can target either of two fUML execution engine implementations:
 [v1.3.0](https://github.com/ModelDriven/fUML-Reference-Implementation/releases/tag/v1.3.0)
 (this version conforms to fUML 1.3).
 * The fUML execution engine from the Moka framework for model execution in the Eclipse Papyrus tool
-(see http://wiki.eclipse.org/Papyrus/UserGuide/ModelExecution), v3.1.0 or later.
+(see http://wiki.eclipse.org/Papyrus/UserGuide/ModelExecution), v3.1.0.
 
 The implementation handles the full Alf syntax at the Extended compliance level, as given in Annex C Consolidated 
 LL Grammar of the Alf Specification.
