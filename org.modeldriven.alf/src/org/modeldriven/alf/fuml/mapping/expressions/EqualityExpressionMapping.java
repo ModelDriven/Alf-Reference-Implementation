@@ -75,6 +75,15 @@ public class EqualityExpressionMapping extends BinaryExpressionMapping {
             String operator,
             ActivityNode operand1Result, 
             ActivityNode operand2Result) throws MappingError {
+        if (operand1Result == null) {
+            this.throwError("Operand mapping has no result source: " + 
+                                this.getBinaryExpression().getOperand1());
+        }
+        if (operand2Result == null) {
+            this.throwError("Operand mapping has no result source: " + 
+                                this.getBinaryExpression().getOperand2());
+        }
+
         // The following optimizes the cases when one or both operands are
         // known to be null.
         
