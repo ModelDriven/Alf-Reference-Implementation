@@ -62,7 +62,7 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
         SyntaxElement.addExternalReference(references, referent);
         if (self.getIsBehavior() || self.getIsOperation()) {
             SyntaxElement.addExternalReferences(references, self.getParameter());
-        } else {
+        } else if (self.getIsSignal() || self.getIsAssociationEnd()) {
             SyntaxElement.addExternalReferences(references, referent.getImpl().getPropertiesForParameters()); 
         }
     }
