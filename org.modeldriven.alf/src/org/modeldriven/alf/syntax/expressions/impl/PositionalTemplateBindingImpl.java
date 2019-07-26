@@ -12,6 +12,7 @@ package org.modeldriven.alf.syntax.expressions.impl;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.common.ExternalElementReference;
 import org.modeldriven.alf.syntax.common.SyntaxElement;
+import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
@@ -96,8 +97,10 @@ public class PositionalTemplateBindingImpl extends TemplateBindingImpl {
             boolean isVisibleOnly) {
         List<ElementReference> argumentReferents = new ArrayList<ElementReference>();
         for (QualifiedName argumentName: this.getSelf().getArgumentName()) {
-            if (argumentName == null || argumentName.getNameBinding().isEmpty()) {
+            if (argumentName == null) {
                 argumentReferents.add(null);
+            } else if (argumentName.getNameBinding().isEmpty()) {
+                argumentReferents.add(ElementReferenceImpl.any);
             } else {
                 argumentName.getImpl().setCurrentScope(currentScope);
                 argumentName.getImpl().setIsVisibleOnly(isVisibleOnly);

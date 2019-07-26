@@ -11,6 +11,7 @@ package org.modeldriven.alf.syntax.expressions.impl;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.common.SyntaxElement;
+import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.expressions.*;
 import org.modeldriven.alf.syntax.units.*;
 
@@ -98,9 +99,10 @@ public class NamedTemplateBindingImpl extends TemplateBindingImpl {
                 String name = substitution.getParameterName();
                 if (name != null && name.equals(parameterName)) {
                     QualifiedName argumentName = substitution.getArgumentName();
-                    if (argumentName == null || 
-                            argumentName.getNameBinding().isEmpty()) {
+                    if (argumentName == null) {
                         argumentReferents.add(null);
+                    } else if (argumentName.getNameBinding().isEmpty()) {
+                        argumentReferents.add(ElementReferenceImpl.any);
                     } else {
                         argumentName.getImpl().setCurrentScope(currentScope);
                         argumentName.getImpl().setIsVisibleOnly(isVisibleOnly);

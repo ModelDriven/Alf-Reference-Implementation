@@ -125,7 +125,7 @@ public abstract class ClassifierDefinitionMapping extends
                                     ElementReference boundArgument = 
                                             templateParameter.getImpl().getBoundArgument();
                                     Element actual = null;
-                                    if (boundArgument != null) {
+                                    if (boundArgument != null && !boundArgument.getImpl().isAny()) {
                                         actual = boundArgument.getImpl().getUml();
                                         if (actual == null) {
                                             mapping = this.fumlMap(boundArgument);
