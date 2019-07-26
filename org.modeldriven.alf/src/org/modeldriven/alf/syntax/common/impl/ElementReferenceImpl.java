@@ -204,6 +204,8 @@ public abstract class ElementReferenceImpl implements AssignableElement {
         parameter.setType(propertyImpl.getType());
         parameter.setLower(propertyImpl.getLower());
         parameter.setUpper(propertyImpl.getUpper());
+        parameter.setIsOrdered(propertyImpl.isOrdered());
+        parameter.setIsNonunique(!propertyImpl.isUnique());
         parameter.setDirection("in");
         return parameter;
     }
