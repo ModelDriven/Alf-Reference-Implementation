@@ -37,67 +37,22 @@ import org.modeldriven.alf.syntax.units.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParserImpl implements Parser {
-
-  private String fileName = "";
+public class ParserImpl extends BaseParser {
 
   public ParserImpl(String fileName) throws java.io.FileNotFoundException {
     this(fileName == null? System.in: new java.io.FileInputStream(fileName));
     this.setFileName(fileName == null? "System.in": fileName);
   }
-
-  public void setFileName(String fileName) {
-    this.fileName = fileName;
+  
+  @Override
+  protected SimpleCharStream getCharStream() {
+      return jj_input_stream;
   }
   
-  public String getFileName() {
-    return this.fileName;
+  @Override
+  protected Token getCurrentToken() {
+    return token;
   }
-  
-  public void setTabSize(int tabSize) {
-    this.jj_input_stream.setTabSize(tabSize);
-  }
-  
-  public int getTabSize() {
-    return this.jj_input_stream.getTabSize();
-  }
-
-  public int getLine() {
-    return this.token.beginLine;
-  }
-  
-  public int getColumn() {
-    return this.token.beginColumn;
-  }
-
-  public void provideInfo(ParsedElement element, boolean fromNextToken) {
-    Token token = this.getToken(0);
-    if (fromNextToken && token.next != null) {
-      token = token.next;
-  	}
-	element.setParserInfo(this.fileName,
-		token.beginLine, token.beginColumn,
-		token.endLine, token.endColumn);
-  }
-
-  public void provideBegin(ParsedElement element, Token token) {
-    element.setBegin(token.beginLine, token.beginColumn);
-  }
-
-  public void provideEnd(ParsedElement element) {
-    Token token = this.getToken(0);
-    element.setEnd(token.endLine, token.endColumn);
-  }
-
-  private String errorMessage(String message) {
-    return "[" + this.getLine() + ":" + this.getColumn() + "] " +
-           message;
-  }
-
-  private ParseException generateParseException(Token token, String message) {
-    return new ParseException(token, errorMessage(message));
-  } 
-  
 }
 
 PARSER_END(ParserImpl)
@@ -419,12 +374,16 @@ QualifiedName QualifiedName():
   QualifiedName q;
 }
 {
-
-  q = UnqualifiedName()
-  [ LOOKAHEAD(2) (
-    ColonQualifiedNameCompletion(q)
-  | DotQualifiedNameCompletion(q)
-  ) ]
+  try {
+    q = UnqualifiedName()
+    [ LOOKAHEAD(2) (
+      ColonQualifiedNameCompletion(q)
+    | DotQualifiedNameCompletion(q)
+    ) ]
+  } catch (ParseException exc) {
+    collectParsingError(exc);
+    q = new QualifiedName();
+  }
   
   { this.provideEnd(q);
     return q; }
@@ -586,7 +545,13 @@ Expression Expression():
   Expression e;
 }
 {
-  e = UnaryExpression() e = ExpressionCompletion(e)
+  try {
+    e = UnaryExpression() 
+    e = ExpressionCompletion(e)
+  } catch (ParseException exc) {
+    collectParsingError(exc);
+    e = new ExpressionPlaceholder();
+  }
   
   { return e; }
 }
@@ -988,7 +953,7 @@ Tuple LinkOperationTuple():
 {
   <LPAREN>
   [ LOOKAHEAD(Name() ( <LBRACKET> | <THICK_ARROW> ))
-  	{  b = new NameBinding(this); q = new QualifiedName(b); }
+    {  b = new NameBinding(this); q = new QualifiedName(b); }
     n = Name() 
     { b.setName(n); q.addNameBinding(b); }
     ( i = Index() 
@@ -1072,7 +1037,7 @@ SequenceConstructionExpression SequenceAnyExpression():
   )
   
   { this.provideEnd(e);
-  	return e; }
+    return e; }
 }
 
 SequenceConstructionExpression SequenceConstructionExpressionCompletion(QualifiedName q):
@@ -1083,7 +1048,7 @@ SequenceConstructionExpression SequenceConstructionExpressionCompletion(Qualifie
   SequenceConstructionExpressionBody(e)
   
   { e.setTypeName(q);
-  	this.provideEnd(e);
+    this.provideEnd(e);
     return e; }
 }
 
@@ -1159,7 +1124,7 @@ Expression SequenceInitializationExpression():
   [ <NEW> ] <LBRACE> c = SequenceElements() <RBRACE>
   
   { e.setElements(c);
-  	this.provideEnd(e);
+    this.provideEnd(e);
     return e;
   }
 }
@@ -1173,7 +1138,7 @@ Expression Index():
 {
   <LBRACKET> e = Expression() <RBRACKET>
   { this.provideEnd(e);
-  	return e; }
+    return e; }
 }
 
 /* SEQUENCE OPERATION, REDUCTION AND EXPANSION EXPRESSIONS */
@@ -1214,13 +1179,13 @@ Expression SequenceOperationOrReductionOrExpansion(Expression p):
   | op = <IDENTIFIER> 
     { SequenceExpansionExpression see;
       if (op.image.equals("select") || op.image.equals("reject")) { 
-      	see = new SelectOrRejectExpression(ee);
+        see = new SelectOrRejectExpression(ee);
       } else if (op.image.equals("collect") || op.image.equals("iterate")) { 
-      	see = new CollectOrIterateExpression(ee);
+        see = new CollectOrIterateExpression(ee);
       } else if (op.image.equals("forAll") || op.image.equals("exists") || op.image.equals("one")) { 
-      	see = new ForAllOrExistsOrOneExpression(ee);
+        see = new ForAllOrExistsOrOneExpression(ee);
       } else if (op.image.equals("isUnique")) { 
-      	see = new IsUniqueExpression(ee);
+        see = new IsUniqueExpression(ee);
       } else {
         throw generateParseException(token, "\""+ op.image + "\" is not a legal expansion operation.");
       }
@@ -1235,7 +1200,7 @@ Expression SequenceOperationOrReductionOrExpansion(Expression p):
   )
   
   { this.provideEnd(e);
-  	return e; }
+    return e; }
 }
 
 
@@ -1472,7 +1437,7 @@ String NumericUnaryOperator():
     t = <PLUS>
   | t = <MINUS>
   )
-	
+    
   { return t.image; }
 }
 
@@ -1893,7 +1858,7 @@ Expression ConditionalAndExpressionCompletion(Expression u):
   e1 = InclusiveOrExpressionCompletion(u) 
   ( <SC_AND> e2 = InclusiveOrExpression() 
     { ConditionalLogicalExpression b = 
-    		new ConditionalLogicalExpression(u);
+            new ConditionalLogicalExpression(u);
       b.setOperand1(e1);
       b.setOperator("&&");
       b.setOperand2(e2);
@@ -1923,7 +1888,7 @@ Expression ConditionalOrExpressionCompletion(Expression u):
   e1 = ConditionalAndExpressionCompletion(u) 
   ( <SC_OR> e2 = ConditionalAndExpression() 
     { ConditionalLogicalExpression b = 
-    		new ConditionalLogicalExpression(u);
+            new ConditionalLogicalExpression(u);
       b.setOperand1(e1);
       b.setOperator("||");
       b.setOperand2(e2);
@@ -1954,13 +1919,13 @@ Expression NullCoalescingExpressionCompletion(Expression u):
 {
   e1 = ConditionalOrExpressionCompletion(u)
   [ <DOUBLE_HOOK> 
-  	{ NullCoalescingExpression b =
-  	    new NullCoalescingExpression(u);
-  	  b.setOperand1(e1);
-  	  e1 = b; }
-  	e2 = NullCoalescingExpression()
-  	  { ((NullCoalescingExpression)e1).setOperand2(e2);
-  	  	this.provideEnd(e1); } ]
+    { NullCoalescingExpression b =
+        new NullCoalescingExpression(u);
+      b.setOperand1(e1);
+      e1 = b; }
+    e2 = NullCoalescingExpression()
+      { ((NullCoalescingExpression)e1).setOperand2(e2);
+        this.provideEnd(e1); } ]
   
   { return e1; }
 }
@@ -1988,7 +1953,7 @@ Expression ConditionalExpressionCompletion(Expression u):
   e1 = NullCoalescingExpressionCompletion(u) 
   [ <HOOK> e2 = Expression() <COLON> e3 = ConditionalExpression() 
     { ConditionalTestExpression c = 
-    	new ConditionalTestExpression(u);
+        new ConditionalTestExpression(u);
       c.setOperand1(e1);
       c.setOperand2(e2);
       c.setOperand3(e3);
@@ -2076,10 +2041,13 @@ Block StatementSequence():
   Block b = new Block(this);
 }
 {
-  ( s = DocumentedStatement() { b.addStatement(s); } )*
-  
+  try { 
+    ( s = DocumentedStatement() { b.addStatement(s); } )*
+  } catch (ParseException exc) {
+    collectParsingError(exc);
+  }
   { this.provideEnd(b);
-  	return b; }
+    return b; }
 }
 
 /* For use in parsing the bodies of OpaqueBehaviors and OpaqueActions */
@@ -2112,6 +2080,7 @@ Statement Statement():
   Statement s;
 }
 {
+  try {  
   (
     s = AnnotatedStatement()
   | s = InLineStatement()
@@ -2129,7 +2098,10 @@ Statement Statement():
   | s = AcceptStatement()
   | s = ClassifyStatement()
   )
-  
+  } catch (ParseException exc) {
+    collectParsingError(exc);
+    s = new EmptyStatement();
+  }
   { return s; }
 }
 
@@ -2143,8 +2115,8 @@ Block Block():
 {
   t = <LBRACE> b = StatementSequence() <RBRACE>
   
-  {	this.provideBegin(b, t);
-  	this.provideEnd(b);
+  { this.provideBegin(b, t);
+    this.provideEnd(b);
     return b; }
 }
 
@@ -2186,7 +2158,7 @@ Annotation Annotation():
     ( <COMMA> n = Name() { a.addArgument(n); } )* <RPAREN> ]
     
   { this.provideEnd(a);
-  	return a; }
+    return a; }
 }
 
 /* IN-LINE STATEMENTS */
@@ -2202,9 +2174,9 @@ InLineStatement InLineStatement():
   <SLASH_STAR_AT> t = <IDENTIFIER> 
   
   { if (!t.image.equals("inline")) { 
-  	  throw generateParseException(t, "Encountered \"" + t.image 
-  	    + "\". Expected \"inline\"."); 
-  	}
+      throw generateParseException(t, "Encountered \"" + t.image 
+        + "\". Expected \"inline\"."); 
+    }
   }
   
   <LPAREN> n = Name() <RPAREN> d = <DOCUMENTATION_COMMENT> 
@@ -2266,7 +2238,7 @@ Statement LocalNameDeclarationOrExpressionStatement():
   )
   
   { this.provideEnd(s);
-  	return s; }
+    return s; }
 }
 
 LocalNameDeclarationStatement LocalNameDeclarationStatement():
@@ -2283,7 +2255,7 @@ LocalNameDeclarationStatement LocalNameDeclarationStatement():
   LocalNameDeclarationStatementCompletion(s)
   
   { this.provideEnd(s);
-  	return s; }
+    return s; }
 }
 
 void LocalNameDeclarationStatementCompletion(LocalNameDeclarationStatement s):
@@ -2316,7 +2288,7 @@ Expression InstanceInitializationExpression():
   <NEW> t = Tuple()
   
   { e.setTuple(t);
-  	this.provideEnd(e);
+    this.provideEnd(e);
     t.setInvocation(e);
     return e; }
 }
@@ -2332,7 +2304,7 @@ IfStatement IfStatement():
   <IF> SequentialClauses(s) [ b = FinalClause() { s.setFinalClause(b); } ]
   
   { this.provideEnd(s);
-  	return s; }
+    return s; }
 }
 
 void SequentialClauses(IfStatement s):
@@ -2354,7 +2326,7 @@ ConcurrentClauses ConcurrentClauses():
   ( <OR> <IF> c = NonFinalClause() { cs.addClause(c); } )*
   
   { this.provideEnd(cs);
-  	return cs; }
+    return cs; }
 }
 
 NonFinalClause NonFinalClause():
@@ -2398,7 +2370,7 @@ SwitchStatement SwitchStatement():
   [ b = SwitchDefaultClause() { s.setDefaultClause(b); } ] <RBRACE>
   
   { this.provideEnd(s);
-  	return s; }
+    return s; }
 }
 
 SwitchClause SwitchClause():
@@ -2413,7 +2385,7 @@ SwitchClause SwitchClause():
   b = NonEmptyStatementSequence() { c.setBlock(b); }
   
   { this.provideEnd(c);
-  	return c; }
+    return c; }
 }
 
 Expression SwitchCase():
@@ -2444,7 +2416,7 @@ Block NonEmptyStatementSequence():
 {
   ( s = DocumentedStatement() { b.addStatement(s); } )+
   
-  {	this.provideEnd(b);
+  { this.provideEnd(b);
     return b; }
 }
 
@@ -2493,7 +2465,7 @@ ForStatement ForStatement():
   <FOR> <LPAREN> ForControl(s) <RPAREN> b = Block()
   
   { s.setBody(b);
-  	this.provideEnd(s);
+    this.provideEnd(s);
     return s;
   }
 }
@@ -2542,7 +2514,7 @@ BreakStatement BreakStatement():
   <BREAK> <SEMICOLON>
   
   { this.provideEnd(s);
-  	return s; }
+    return s; }
 }
 
 /* RETURN STATEMENTS */
@@ -2556,7 +2528,7 @@ ReturnStatement ReturnStatement():
   <RETURN> [ e = Expression() ] <SEMICOLON>
   
   { s.setExpression(e);
-  	this.provideEnd(s);
+    this.provideEnd(s);
     return s; }
 }
 
@@ -2582,7 +2554,7 @@ AcceptStatement SimpleAcceptStatementCompletion(AcceptBlock b):
 {
   <SEMICOLON>
   { s.addAcceptBlock(b);
-  	this.provideEnd(s);
+    this.provideEnd(s);
     return s; }
 }
 
@@ -2597,7 +2569,7 @@ AcceptStatement CompoundAcceptStatementCompletion(AcceptBlock a1):
   ( <OR> a = AcceptBlock() { s.addAcceptBlock(a); } )*
   
   { this.provideEnd(s);
-  	return s; }
+    return s; }
 }
 
 AcceptBlock AcceptBlock():
@@ -2609,7 +2581,7 @@ AcceptBlock AcceptBlock():
   a = AcceptClause() b = Block()
   
   { a.setBlock(b);
-  	this.provideEnd(a);
+    this.provideEnd(a);
     return a;
   }
 }
@@ -2621,12 +2593,19 @@ AcceptBlock AcceptClause():
   AcceptBlock b = new AcceptBlock(this);
 }
 {
+  try { 
   <ACCEPT> <LPAREN> [ LOOKAHEAD(2) n = Name() <COLON> ] nl = QualifiedNameList() <RPAREN>
-  
-  { b.setName(n);
+  {
+    b.setName(n);
     b.setSignalNames(nl);
+  }
+  } catch (ParseException exc) {
+    collectParsingError(exc);
+  }  
+  { 
     this.provideEnd(b);
-    return b; }
+    return b;
+  }
 }
 
 /* CLASSIFY STATEMENTS */
@@ -2641,7 +2620,7 @@ ClassifyStatement ClassifyStatement():
   ClassificationClause(s) <SEMICOLON>
   
   { this.provideEnd(s);
-  	return s; }
+    return s; }
 }
 
 void ClassificationClause(ClassifyStatement s):
@@ -2653,8 +2632,8 @@ void ClassificationClause(ClassifyStatement s):
   nl = ClassificationFromClause() { s.setFromList(nl); }
   [ nl = ClassificationToClause() { s.setToList(nl); } ]
 | [ ReclassifyAllClause()
-	{ s.setFromList(new QualifiedNameList(this)); 
-	  s.setIsReclassifyAll(true); }] 
+    { s.setFromList(new QualifiedNameList(this)); 
+      s.setIsReclassifyAll(true); }] 
   nl = ClassificationToClause() { s.setToList(nl); }
 }
 
@@ -2694,7 +2673,7 @@ QualifiedNameList QualifiedNameList():
   ( <COMMA> n = QualifiedName() { nl.addName(n); } )*
   
   { this.provideEnd(nl);
-  	return nl; }
+    return nl; }
 }
 
 /*********
@@ -2711,6 +2690,7 @@ UnitDefinition UnitDefinition():
   UnitDefinition u = new UnitDefinition(this);
 }
 {
+  try { 
   [ n = NamespaceDeclaration() { u.setNamespaceName(n); } ] 
   ( i = ImportDeclaration() { u.addImport(i); i.setUnit(u); } )*
   [ t = <DOCUMENTATION_COMMENT> { u.addDocumentation(t.image); } ] 
@@ -2722,6 +2702,11 @@ UnitDefinition UnitDefinition():
     d.setUnit(u);
     this.provideEnd(u);
     return u; 
+  }
+  
+  } catch (ParseException exc) {
+    collectParsingError(exc);
+    return u;
   }
 }
 
@@ -2756,7 +2741,7 @@ StereotypeAnnotation StereotypeAnnotation():
   [ <LPAREN> TaggedValues(s) <RPAREN> ]
   
   { this.provideEnd(s);
-  	return s; }
+    return s; }
 }
 
 void TaggedValues(StereotypeAnnotation s):
@@ -2779,7 +2764,7 @@ TaggedValueList TaggedValueList():
   ( "," v = TaggedValue() { tl.addTaggedValue(v); } )*
   
   { this.provideEnd(tl);
-  	return tl; }
+    return tl; }
 }
 
 TaggedValue TaggedValue():
@@ -2804,7 +2789,7 @@ TaggedValue TaggedValue():
   )
   
   { v.setValue(t.image);
-  	this.provideEnd(v);
+    this.provideEnd(v);
     return v; }
 }
 
@@ -2827,7 +2812,7 @@ ImportReference ImportDeclaration():
   v = ImportVisibilityIndicator() <IMPORT> i = ImportReference(i) <SEMICOLON>
   
   { i.setVisibility(v);
-  	this.provideEnd(i);
+    this.provideEnd(i);
     return i; }
 }
 
@@ -2860,14 +2845,14 @@ ImportReference ImportReference(ImportReference i):
     [ <DOT> <STAR> { i = new PackageImportReference(i); } 
     | a = AliasDefinition() { ((ElementImportReference)i).setAlias(a); } ]
   |
-  	{ NameBinding b = new NameBinding(this); q = new QualifiedName(b); }
+    { NameBinding b = new NameBinding(this); q = new QualifiedName(b); }
     n = Name() 
     { b.setName(n); q.addNameBinding(b); this.provideEnd(q); }
     [ ( <DOUBLE_COLON> | <DOT> ) <STAR> { i = new PackageImportReference(i); }
     | a = AliasDefinition() { ((ElementImportReference)i).setAlias(a); } ]    
   )
   
-  {	i.setReferentName(q);
+  { i.setReferentName(q);
     return i; }
 }
 
@@ -2932,7 +2917,7 @@ PackageDefinition PackageDefinition():
   PackageBody(d)
   
   { this.provideEnd(d);
-  	return d; }
+    return d; }
 }
   
 PackageDefinition PackageDefinitionOrStub():
@@ -2941,13 +2926,20 @@ PackageDefinition PackageDefinitionOrStub():
   PackageDefinition d = new PackageDefinition(this);
 }
 {
+  try {
+    
   n = PackageDeclaration() { d.setName(n); }
   ( <SEMICOLON> { d.setIsStub(true); }
   | PackageBody(d)
   )
 
   { this.provideEnd(d);
-  	return d; }
+    return d; }
+
+  } catch (ParseException exc) {
+    collectParsingError(exc);
+    return d;
+  } 
 }
 
 void PackageBody(PackageDefinition d):
@@ -2955,7 +2947,14 @@ void PackageBody(PackageDefinition d):
   Member m;
 }
 {
-  <LBRACE> ( m = PackagedElement() { d.addOwnedMember(m); m.setNamespace(d); } )* <RBRACE>
+  <LBRACE> (
+    m = PackagedElement()
+    {
+      if (m != null) {
+          d.addOwnedMember(m); m.setNamespace(d);
+      }
+    }
+  )* <RBRACE>
 }
 
 Member PackagedElement():
@@ -2964,9 +2963,11 @@ Member PackagedElement():
   String c = null;
   ArrayList<StereotypeAnnotation> sl;
   String v;
-  Member m;
+  Member m = null;
 }
 {
+  try {
+    
   [ t = <DOCUMENTATION_COMMENT> { c = t.image; } ] 
   sl = StereotypeAnnotations()
   v = ImportVisibilityIndicator()
@@ -2975,6 +2976,13 @@ Member PackagedElement():
   { if (c != null) { m.addDocumentation(c); }
     m.setAnnotation(sl);
     m.setVisibility(v);
+  }
+
+  } catch (ParseException exc) {
+    collectParsingError(exc);
+  }
+
+  {
     return m;
   }
 }
@@ -3103,7 +3111,7 @@ ClassDefinition ClassDeclaration():
   [ <ABSTRACT> { d.setIsAbstract(true); } ] <CLASS> ClassifierSignature(d)
   
   { this.provideEnd(d);
-  	return d; }
+    return d; }
 }
 
 ClassDefinition ClassDefinition():
@@ -3114,7 +3122,7 @@ ClassDefinition ClassDefinition():
   d = ClassDeclaration() ClassBody(d)
   
   { this.provideEnd(d);
-  	return d; }
+    return d; }
 }
 
 ClassDefinition ClassDefinitionOrStub():
@@ -3128,7 +3136,7 @@ ClassDefinition ClassDefinitionOrStub():
   )
   
   { this.provideEnd(d);
-  	return d; }
+    return d; }
 }
 
 void ClassBody(ClassDefinition d):
@@ -3186,7 +3194,7 @@ ActiveClassDefinition ActiveClassDeclaration():
   [ <ABSTRACT> { d.setIsAbstract(true); } ] <ACTIVE> <CLASS> ClassifierSignature(d)
   
   { this.provideEnd(d);
-  	return d; }
+    return d; }
 }
 
 ActiveClassDefinition ActiveClassDefinition():
@@ -3197,7 +3205,7 @@ ActiveClassDefinition ActiveClassDefinition():
   d = ActiveClassDeclaration() ActiveClassBody(d)
   
   { this.provideEnd(d);
-  	return d; }
+    return d; }
 }
 
 ActiveClassDefinition ActiveClassDefinitionOrStub():
@@ -3211,7 +3219,7 @@ ActiveClassDefinition ActiveClassDefinitionOrStub():
   )
   
   { this.provideEnd(d);
-  	return d; }
+    return d; }
 }
 
 void ActiveClassBody(ActiveClassDefinition d):
@@ -3232,14 +3240,14 @@ ActivityDefinition BehaviorClause():
   String n;
 }
 {
-	(
-	  b = Block() { a.setBody(b); }
-	| n = Name() { a.setName(n); a.setIsStub(true); }
-	)
-	
-	{ a.setVisibility("private");
-	  this.provideEnd(a);
-	  return a; }
+    (
+      b = Block() { a.setBody(b); }
+    | n = Name() { a.setName(n); a.setIsStub(true); }
+    )
+    
+    { a.setVisibility("private");
+      this.provideEnd(a);
+      return a; }
 }
 
 Member ActiveClassMember():
@@ -3289,7 +3297,7 @@ DataTypeDefinition DataTypeDeclaration():
   [ <ABSTRACT>  { d.setIsAbstract(true); } ] <DATATYPE> ClassifierSignature(d)
   
   { this.provideEnd(d);
-  	return d; }
+    return d; }
 }
 
 DataTypeDefinition DataTypeDefinition():
@@ -3300,7 +3308,7 @@ DataTypeDefinition DataTypeDefinition():
   d = DataTypeDeclaration() StructuredBody(d)
   
   { this.provideEnd(d);
-  	return d; }
+    return d; }
 }
 
 DataTypeDefinition DataTypeDefinitionOrStub():
@@ -3314,7 +3322,7 @@ DataTypeDefinition DataTypeDefinitionOrStub():
   )
   
   { this.provideEnd(d);
-  	return d; }
+    return d; }
 }
 
 void StructuredBody(ClassifierDefinition d):
@@ -3359,7 +3367,7 @@ AssociationDefinition AssociationDeclaration():
   [ <ABSTRACT> { d.setIsAbstract(true); } ] <ASSOC> ClassifierSignature(d)
   
   { this.provideEnd(d);
-  	return d; }
+    return d; }
 }
 
 AssociationDefinition AssociationDefinition():
@@ -3370,7 +3378,7 @@ AssociationDefinition AssociationDefinition():
   d = AssociationDeclaration() StructuredBody(d)
   
   { this.provideEnd(d);
-  	return d; }
+    return d; }
 }
 
 AssociationDefinition AssociationDefinitionOrStub():
@@ -3384,7 +3392,7 @@ AssociationDefinition AssociationDefinitionOrStub():
   )
   
   { this.provideEnd(d);
-  	return d; }
+    return d; }
 }
 
 /* ENUMERATIONS */
@@ -3400,7 +3408,7 @@ EnumerationDefinition EnumerationDeclaration():
   [ nl = SpecializationClause() { d.setSpecialization(nl); } ]
   
   { this.provideEnd(d);
-  	return d; }
+    return d; }
 }
 
 EnumerationDefinition EnumerationDefinition():
@@ -3411,7 +3419,7 @@ EnumerationDefinition EnumerationDefinition():
   d = EnumerationDeclaration() EnumerationBody(d)
   
   { this.provideEnd(d);
-  	return d; }
+    return d; }
 }
 
 EnumerationDefinition EnumerationDefinitionOrStub():
@@ -3425,7 +3433,7 @@ EnumerationDefinition EnumerationDefinitionOrStub():
   )
   
   { this.provideEnd(d);
-  	return d; }
+    return d; }
 }
 
 void EnumerationBody(EnumerationDefinition d):
@@ -3447,7 +3455,7 @@ EnumerationLiteralName EnumerationLiteralName():
   [ t = <DOCUMENTATION_COMMENT> ]
 
   { e = new EnumerationLiteralName(this);
-  	if (t != null) { e.addDocumentation(t.image); } }
+    if (t != null) { e.addDocumentation(t.image); } }
 
   n = Name()
   
@@ -3467,7 +3475,7 @@ SignalDefinition SignalDeclaration():
   [ <ABSTRACT> { d.setIsAbstract(true); } ] <SIGNAL> ClassifierSignature(d)
   
   { this.provideEnd(d);
-  	return d; }
+    return d; }
 }
 
 SignalDefinition SignalDefinition():
@@ -3478,7 +3486,7 @@ SignalDefinition SignalDefinition():
   d = SignalDeclaration() StructuredBody(d)
   
   { this.provideEnd(d);
-  	return d; }
+    return d; }
 }
 
 SignalDefinition SignalDefinitionOrStub():
@@ -3492,7 +3500,7 @@ SignalDefinition SignalDefinitionOrStub():
   )
   
   { this.provideEnd(d);
-  	return d; }
+    return d; }
 }
 
 /* ACTIVITIES */
@@ -3502,14 +3510,23 @@ ActivityDefinition ActivityDeclaration():
   ActivityDefinition d = new ActivityDefinition(this);
   String n;
 }
-{ 
+{
+  try {
+    
   <ACTIVITY> n = Name() { d.setName(n); } 
   [ TemplateParameters(d) ] FormalParameters(d) 
   [ <COLON> { FormalParameter p = new FormalParameter(this); }
     TypePart(p) { p.setDirection("return"); p.setNamespace(d); d.addOwnedMember(p); } ]
   
-  { this.provideEnd(d);
-  	return d; }
+  { this.provideEnd(d); }
+
+  } catch (ParseException exc) {
+    collectParsingError(exc);
+  }
+
+  {
+    return d;
+  }
 }
 
 ActivityDefinition ActivityDefinition():
@@ -3521,7 +3538,7 @@ ActivityDefinition ActivityDefinition():
   a = ActivityDeclaration() b = Block()
   
   { a.setBody(b);
-  	this.provideEnd(a);
+    this.provideEnd(a);
     return a; }
 }
 
@@ -3537,7 +3554,7 @@ ActivityDefinition ActivityDefinitionOrStub():
   )
   
   { this.provideEnd(a);
-  	return a; }
+    return a; }
 }
 
 void FormalParameters(NamespaceDefinition d):
@@ -3567,14 +3584,14 @@ FormalParameter FormalParameter():
   [ t = <DOCUMENTATION_COMMENT> ]
   
   { p = new FormalParameter(this);
-  	if (t != null)  { p.addDocumentation(t.image); } }
-  	
+    if (t != null)  { p.addDocumentation(t.image); } }
+    
   sl = StereotypeAnnotations() { p.setAnnotation(sl); }
   d = ParameterDirection() { p.setDirection(d); }
   n = Name() { p.setName(n); } <COLON> TypePart(p)
   
   { this.provideEnd(p);
-  	return p; }
+    return p; }
 }
 
 String ParameterDirection():
@@ -3631,7 +3648,7 @@ PropertyDefinition PropertyDefinition():
   d = PropertyDeclaration() <SEMICOLON>
   
   { this.provideEnd(d);
-  	return d; }
+    return d; }
 }
 
 PropertyDefinition AttributeDefinition():
@@ -3647,7 +3664,7 @@ PropertyDefinition AttributeDefinition():
   [ e = AttributeInitializer() { d.setInitializer(e); } ] <SEMICOLON>
   
   { this.provideEnd(d);
-  	return d; }
+    return d; }
 }
 
 
@@ -3671,7 +3688,7 @@ PropertyDefinition PropertyDeclaration():
   <COLON> [ <COMPOSE> { d.setIsComposite(true); } ] TypePart(d)
   
   { this.provideEnd(d);
-  	return d; }
+    return d; }
 }
 
 void TypePart(TypedElementDefinition d):
@@ -3745,7 +3762,7 @@ OperationDefinition OperationDeclaration():
   [ nl = RedefinitionClause() { d.setRedefinition(nl); } ]
   
   { this.provideEnd(d);
-  	return d; }
+    return d; }
 }
 
 OperationDefinition OperationDefinitionOrStub():
@@ -3760,7 +3777,7 @@ OperationDefinition OperationDefinitionOrStub():
   )
   
   { this.provideEnd(o);
-  	return o; }
+    return o; }
 }
 
 QualifiedNameList RedefinitionClause():
@@ -3801,7 +3818,7 @@ SignalReceptionDefinition SignalReceptionDeclaration():
   [ nl = SpecializationClause() { d.setSpecialization(nl); } ]
   
   { this.provideEnd(d);
-  	return d; }
+    return d; }
 }
 
 SignalReceptionDefinition SignalReceptionDefinitionOrStub():
@@ -3815,5 +3832,5 @@ SignalReceptionDefinition SignalReceptionDefinitionOrStub():
   )
   
   { this.provideEnd(d);
-  	return d; }
+    return d; }
 }

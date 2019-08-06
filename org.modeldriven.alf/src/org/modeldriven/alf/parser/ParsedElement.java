@@ -17,7 +17,11 @@ public abstract class ParsedElement {
     private int endColumn = 0;
 
     protected void init(Parser parser) {
-        parser.provideInfo(this, true);        
+        parser.provideInfo(this, getInfoFromNextToken());        
+    }
+
+    protected boolean getInfoFromNextToken() {
+        return true;
     }
     
     protected void init(ParsedElement element) {

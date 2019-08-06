@@ -10,6 +10,7 @@
 package org.modeldriven.alf.parser;
 
 import java.io.FileNotFoundException;
+import java.io.Reader;
 
 public class ParserFactoryImpl implements ParserFactory {
 
@@ -18,4 +19,9 @@ public class ParserFactoryImpl implements ParserFactory {
         return new ParserImpl(fileName);
     }
 
+    @Override
+    public Parser createParser(Reader contents){
+        return new ParserImpl(contents);
+    }
+    
 }
