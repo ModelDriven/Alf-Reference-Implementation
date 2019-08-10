@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("all")
-public class ParserImpl extends BaseParser implements ParserImplConstants {
+public class ParserImpl extends ParserBase implements ParserImplConstants {
 
   public ParserImpl(String fileName) throws java.io.FileNotFoundException {
     this(fileName == null? System.in: new java.io.FileInputStream(fileName));

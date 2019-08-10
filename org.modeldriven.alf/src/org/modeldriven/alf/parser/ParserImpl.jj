@@ -37,7 +37,7 @@ import org.modeldriven.alf.syntax.units.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParserImpl extends BaseParser {
+public class ParserImpl extends ParserBase {
 
   public ParserImpl(String fileName) throws java.io.FileNotFoundException {
     this(fileName == null? System.in: new java.io.FileInputStream(fileName));

@@ -14,7 +14,7 @@ import org.modeldriven.alf.syntax.units.UnitDefinition;
  * most of the custom Java code that is required by the Alf RI parser,
  * thus avoiding the idiosyncrasies of embedding Java code in a JavaCC grammar.  
  */
-public abstract class BaseParser implements Parser {
+public abstract class ParserBase implements Parser {
     
     /**
      * A protocol for JavaCC-generated parsing operations.
