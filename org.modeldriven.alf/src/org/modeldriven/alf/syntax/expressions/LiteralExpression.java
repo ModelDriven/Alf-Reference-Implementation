@@ -21,8 +21,9 @@ import org.modeldriven.alf.syntax.expressions.impl.LiteralExpressionImpl;
 
 public abstract class LiteralExpression extends Expression {
 
-    protected void init(Parser parser) {
-        parser.provideInfo(this, false);        
+    @Override
+    protected boolean getInfoFromNextToken() {
+        return false;
     }
     
 	@Override

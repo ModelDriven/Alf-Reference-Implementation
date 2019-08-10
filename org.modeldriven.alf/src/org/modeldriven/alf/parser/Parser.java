@@ -9,6 +9,8 @@
 
 package org.modeldriven.alf.parser;
 
+import java.util.Collection;
+
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
@@ -28,10 +30,26 @@ public interface Parser {
   public UnitDefinition UnitDefinition() throws ParseException;
   public UnitDefinition UnitDefinitionEOF() throws ParseException;
   
+  
   public Block StatementSequence() throws ParseException;
   public Block StatementSequenceEOF() throws ParseException;
   
+  
   public Expression Expression() throws ParseException;
   public Expression ExpressionEOF() throws ParseException;
-
+  
+  public UnitDefinition parseUnitDefinition(boolean eof);
+  public Block parseStatementSequence(boolean eof);
+  public Expression parseExpression(boolean eof);
+  
+  /**
+   * Returns a list of problems collected by this parser since the last "parse" operation.
+   * 
+   * @see #parseUnitDefinition(boolean)
+   * @see #parseStatementSequence(boolean)
+   * @see #parseUnitDefinition(boolean)
+   * 
+   * @return the errors collected since the last call to a parse operation.
+   */
+  public Collection<ParsingProblem> getProblems();
 }
