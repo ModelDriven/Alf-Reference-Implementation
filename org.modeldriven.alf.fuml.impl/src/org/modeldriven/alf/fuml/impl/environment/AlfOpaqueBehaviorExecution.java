@@ -17,10 +17,13 @@ import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.FumlMappingFactory;
 import org.modeldriven.alf.fuml.mapping.units.MemberMapping;
 import org.modeldriven.alf.mapping.MappingError;
-import org.modeldriven.alf.parser.ParseException;
+import org.modeldriven.alf.parser.Parser;
+import org.modeldriven.alf.parser.ParserFactory;
 import org.modeldriven.alf.parser.ParserImpl;
+import org.modeldriven.alf.parser.ParsingProblem;
 import org.modeldriven.alf.parser.TokenMgrError;
 import org.modeldriven.alf.syntax.common.ConstraintViolation;
+import org.modeldriven.alf.syntax.common.SourceProblem;
 import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.units.ActivityDefinition;
@@ -111,30 +114,24 @@ public class AlfOpaqueBehaviorExecution extends
 		ElementReferenceImpl.clearTemplateBindings();
 		StereotypeApplication.clearStereotypeApplications();
 
-		ParserImpl parser = new ParserImpl(new StringReader(textualRepresentation));
-		parser.setFileName(behavior.name);
+		Parser parser = ParserFactory.defaultImplementation().createParser(
+		        behavior.name, new StringReader(textualRepresentation));
 
 		try {
-			Block body = parser.StatementSequenceEOF();
-			
-			UnitDefinition unit = makeUnitForBehavior(behavior, body);
-			
-			NamespaceDefinition modelScope = RootNamespace.getModelScope(unit);
+            Block body = parser.parseStatementSequence(true);
+
+            Collection<ParsingProblem> parsingProblems = parser.getProblems();
+            checkForProblems(parsingProblems);
+
+            UnitDefinition unit = makeUnitForBehavior(behavior, body);
+
+            NamespaceDefinition modelScope = RootNamespace.getModelScope(unit);
             modelScope.deriveAll();
-            
+
             Collection<ConstraintViolation> violations = modelScope.checkConstraints();
-            if (violations.isEmpty()) {
-            	return unit;
-            } else {
-            	StringBuffer msg = new StringBuffer("Constraint violations:\n");
-                for (ConstraintViolation violation: violations) {
-                    msg.append(violation + "\n");
-                }
-                throw new FumlException(msg.toString());
-            }
+            checkForProblems(violations);
+            return unit;
         } catch (TokenMgrError e) {
-            throw new FumlException(e.getMessage());
-        } catch (ParseException e) {
             throw new FumlException(e.getMessage());
         }
 	}
@@ -198,5 +195,14 @@ public class AlfOpaqueBehaviorExecution extends
 		return (Element)((org.modeldriven.alf.fuml.impl.uml.Element)mapping.
 				getElement()).getBase();
 	}
-	
+
+    private static void checkForProblems(Collection<? extends SourceProblem> problems) {
+        if (!problems.isEmpty()) {
+            StringBuffer msg = new StringBuffer("Constraint violations:\n");
+            for (SourceProblem problem: problems) {
+                msg.append(problem + "\n");
+            }
+            throw new FumlException(msg.toString());
+        }
+    }	
 }

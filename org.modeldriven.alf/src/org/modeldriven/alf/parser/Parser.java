@@ -27,20 +27,28 @@ public interface Parser {
   
   public void provideInfo(ParsedElement element, boolean fromNextToken);
 
-  public UnitDefinition UnitDefinition() throws ParseException;
-  public UnitDefinition UnitDefinitionEOF() throws ParseException;
-  
-  
-  public Block StatementSequence() throws ParseException;
-  public Block StatementSequenceEOF() throws ParseException;
-  
-  
-  public Expression Expression() throws ParseException;
-  public Expression ExpressionEOF() throws ParseException;
-  
+  /**
+   * Parses the next unit definition, even if there are errors. 
+   * 
+   * Use {@link #getProblems()} to query any errors that may have arised.
+   * 
+   * @param eof whether EOF is expected after the unit 
+   * @return the parsed unit
+   * @see #getProblems()
+   */
   public UnitDefinition parseUnitDefinition(boolean eof);
+  /**
+   * Parses the next unit definition, even if there are errors. 
+   * 
+   * Use {@link #getProblems()} to query any errors that may have arised.
+   * 
+   * @param eof whether EOF is expected after the unit 
+   * @return the parsed unit
+   * @see #getProblems()
+   */
   public Block parseStatementSequence(boolean eof);
   public Expression parseExpression(boolean eof);
+
   
   /**
    * Returns a list of problems collected by this parser since the last "parse" operation.

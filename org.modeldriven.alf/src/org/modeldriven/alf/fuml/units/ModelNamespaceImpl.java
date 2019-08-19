@@ -12,10 +12,11 @@ import java.io.FileNotFoundException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.modeldriven.alf.parser.Parser;
 import org.modeldriven.alf.parser.ParserFactory;
-import org.modeldriven.alf.parser.ParserFactoryImpl;
+import org.modeldriven.alf.parser.TokenMgrError;
 import org.modeldriven.alf.syntax.expressions.NameBinding;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.ExternalNamespace;
@@ -38,7 +39,7 @@ public class ModelNamespaceImpl extends
     protected Map<String, UnitDefinition> parsedUnitCache = 
             new HashMap<String, UnitDefinition>();
     
-    private ParserFactory parserFactory = new ParserFactoryImpl();
+    private ParserFactory parserFactory = ParserFactory.defaultImplementation();
     
     public ModelNamespaceImpl(ModelNamespace self) {
         super(self);
@@ -136,24 +137,30 @@ public class ModelNamespaceImpl extends
             return unit instanceof MissingUnit? null: unit;
         } else {
             Parser parser = this.createParser(path);
-    
             try {
-                unit = parser.UnitDefinitionEOF();
+                unit = parser.parseUnitDefinition(true);
                 if (isVerbose) {
                     System.out.println("Parsed " + path);
                 }
+                if (!parser.getProblems().isEmpty()) {
+                    reportProblems(path, parser.getProblems().stream().map(p -> p.getErrorMessage()));
+                }
                 unit.getImpl().addImplicitImports();
                 this.parsedUnitCache.put(path, unit);
-                return unit;           
-            } catch (Throwable e) {
-                System.out.println("Parse failed: " + path);
-                System.out.println(e.getMessage());
+                return unit;
+            } catch (TokenMgrError e) {
+                reportProblems(path, Stream.of(e.getMessage()));
                 this.parsedUnitCache.put(path, new MissingUnit(path));
                 return null;
             }
         }
     }
     
+    private void reportProblems(String path, Stream<String> problems) {
+        System.out.println("Parse failed: " + path);
+        problems.forEach(System.out::println);
+    }
+
     public UnitDefinition resolveUnit(QualifiedName qualifiedName) {
         UnitDefinition unit = null;
         

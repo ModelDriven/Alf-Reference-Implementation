@@ -9,6 +9,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 import org.modeldriven.alf.parser.ParsedElement;
 
@@ -21,10 +23,17 @@ public class SourceProblem implements Comparable<SourceProblem> {
 
     protected String problemKey = null;
     protected ParsedElement violatingElement = null;
+    private String originalMessage;
+
     
-    public SourceProblem(String problemName, ParsedElement violatingElement) {
-        this.problemKey = problemName;
+    public SourceProblem(String problemKey, ParsedElement violatingElement) {
+        this(problemKey, null, violatingElement);
+    }
+    
+    public SourceProblem(String problemKey, String originalMessage, ParsedElement violatingElement) {
+        this.problemKey = problemKey;
         this.violatingElement = violatingElement;
+        this.originalMessage = originalMessage;
     }
 
     public static void loadErrorMessageFile() throws IOException {
@@ -72,9 +81,9 @@ public class SourceProblem implements Comparable<SourceProblem> {
         errorMessages.put(constraintName, errorMessage);
     }
 
-    public static String getErrorMessage(String constraintName) {
+    private static String getErrorMessage(String constraintName) {
         String errorMessage = errorMessages.get(constraintName);
-        return errorMessage == null? constraintName: 
+        return errorMessage == null? null: 
             errorMessage + " (" + constraintName + ")";
     }
 
@@ -84,8 +93,9 @@ public class SourceProblem implements Comparable<SourceProblem> {
     }
 
     public String getErrorMessage() {
-        return "[" + this.getBeginLine() + ":" + this.getBeginColumn() + "] " + 
-                getErrorMessage(this.problemKey);
+        return Optional.ofNullable(getErrorMessage(this.getProblemKey())) //
+                .map(baseMessage -> errorMessage(getBeginLine(), getBeginColumn(), () -> baseMessage))
+                .orElse(this.originalMessage);
     }
 
     public ParsedElement getViolatingElement() {
@@ -173,4 +183,10 @@ public class SourceProblem implements Comparable<SourceProblem> {
                problemName.compareTo(otherProblemName);
     }
 
+    public static String errorMessage(int line, int column, Supplier<String> message) {
+        return "[" + line + ":" + column + "] " + message.get();
+    }
+    public static String errorMessage(int line, int column, String message) {
+        return errorMessage(line, column, () -> message);
+    }
 }

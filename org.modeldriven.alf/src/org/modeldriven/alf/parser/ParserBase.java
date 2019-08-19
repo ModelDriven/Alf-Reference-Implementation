@@ -3,6 +3,7 @@ package org.modeldriven.alf.parser;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.modeldriven.alf.syntax.common.SourceProblem;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
@@ -40,7 +41,7 @@ public abstract class ParserBase implements Parser {
     }
     
     protected void collectParsingError(ParseException e) {
-        collectedProblems.add(new ParsingProblem(new UnexpectedElement(this)));
+        collectedProblems.add(new ParsingProblem(e.getMessage(), new UnexpectedElement(this)));
     }
     
     public void setFileName(String fileName) {
@@ -67,11 +68,12 @@ public abstract class ParserBase implements Parser {
         return this.getCurrentToken().beginColumn;
     }
     
-    protected void skipToNextToken(int kind) {
+    protected Token skipToNextToken(int kind) {
         Token t;
         do {
           t = getNextToken();
-        } while (t.kind != kind);
+        } while (t.kind != kind && kind != -1);
+        return t;
     }
 
     public void provideInfo(ParsedElement element, boolean fromNextToken) {
@@ -97,7 +99,7 @@ public abstract class ParserBase implements Parser {
     }
 
     private String errorMessage(String message) {
-        return "[" + this.getLine() + ":" + this.getColumn() + "] " + message;
+        return SourceProblem.errorMessage(this.getLine(), this.getColumn(), message);
     }
 
     protected ParseException generateParseException(Token token, String message) {
@@ -130,9 +132,21 @@ public abstract class ParserBase implements Parser {
         try {
             return toRun.parse();
         } catch (ParseException e) {
-            collectParsingError(e);
+            // we will already have collected any exception
             return null;
         }
     }
+    
+    protected abstract Block StatementSequence() throws ParseException;
+    
+    protected abstract Block StatementSequenceEOF() throws ParseException;
+    
+    protected abstract Expression Expression() throws ParseException;
+    
+    protected abstract Expression ExpressionEOF() throws ParseException;
+    
+    protected abstract UnitDefinition UnitDefinition() throws ParseException;
+    
+    protected abstract UnitDefinition UnitDefinitionEOF() throws ParseException;
 }
 

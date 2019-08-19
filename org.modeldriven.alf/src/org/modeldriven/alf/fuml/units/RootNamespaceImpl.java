@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.modeldriven.alf.parser.ParserFactory;
-import org.modeldriven.alf.parser.ParserFactoryImpl;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.MissingMember;
@@ -48,7 +47,7 @@ public class RootNamespaceImpl extends ModelNamespaceImpl {
     }
     
     public RootNamespaceImpl() {
-        this(new ParserFactoryImpl());
+        this(ParserFactory.defaultImplementation());
     }
     
     public void setParserFactory(ParserFactory parserFactory) {

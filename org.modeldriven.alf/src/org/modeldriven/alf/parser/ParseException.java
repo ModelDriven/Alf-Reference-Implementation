@@ -10,6 +10,10 @@
 /* JavaCCOptions:KEEP_LINE_COL=null */
 package org.modeldriven.alf.parser;
 
+import java.util.function.Supplier;
+
+import org.modeldriven.alf.syntax.common.SourceProblem;
+
 /**
  * This exception is thrown when parse errors are encountered.
  * You can explicitly create objects of this exception type by
@@ -60,10 +64,6 @@ public class ParseException extends Exception {
     super();
   }
   
-  public ParseException(String message) {
-    super(message);
-  }
-
   /** Constructor with message. */
   public ParseException(Token currentToken, String message) {
     super(message);
@@ -117,7 +117,7 @@ public class ParseException extends Exception {
       }
     }
     Token tok = currentToken.next;
-    String retval = "[" + tok.beginLine + ":" + tok.beginColumn + "] Encountered \"";
+    String retval = "Encountered \"";
     for (int i = 0; i < maxSize; i++) {
       if (i != 0) retval += " ";
       if (tok.kind == 0) {
@@ -131,7 +131,7 @@ public class ParseException extends Exception {
       tok = tok.next;
     }
     retval += "\".";
-    return retval;
+    return SourceProblem.errorMessage(currentToken.beginLine, currentToken.beginColumn, retval);
   }
 
   /**
