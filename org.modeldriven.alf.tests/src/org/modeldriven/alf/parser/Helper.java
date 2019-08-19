@@ -3,8 +3,11 @@ package org.modeldriven.alf.parser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.modeldriven.alf.parser.Helper.SAMPLE_LOCATION;
 
 import java.io.StringReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
@@ -18,6 +21,9 @@ import org.modeldriven.alf.syntax.expressions.PositionalTuple;
 
 @SuppressWarnings("unchecked")
 public class Helper {
+    
+    public static final String DEFAULT_SAMPLE_LOCATION = "../org.modeldriven.alf/tests/";
+    static final String SAMPLE_LOCATION = System.getProperty("alf.samples.dir", DEFAULT_SAMPLE_LOCATION);
 
     public static <T> List<T> getArguments(BehaviorInvocationExpression behaviorInvocation, int expectedCount,
             Function<Expression, T> mapper) {
@@ -90,6 +96,12 @@ public class Helper {
         return map(input, mapper);
     }
 
+    public static <T extends S, S> List<T> requireAtLeast(int minimumExpected, Collection<S> input) {
+        final int actual = input.size();
+        assertTrue(input.size() + " < " + minimumExpected + " - " + input.toString(), minimumExpected <=  actual);
+        return cast(input);
+    }
+    
     public static <T extends S, S> List<T> require(int expected, Collection<S> input) {
         assertEquals(expected, input.size());
         return cast(input);
@@ -101,15 +113,33 @@ public class Helper {
     }
 
     public static <T extends S, S> List<T> assertAndMap(int expected, Collection<S> input) {
-        assertEquals(expected, input.size());
+        assertTrue(expected <= input.size());
         return map(input, (S s) -> (T) s);
     }
 
     public static Parser newParser(String input) {
-        return new ParserFactoryImpl().createParser(new StringReader(input));
+        return ParserFactory.defaultImplementation().createParser(new StringReader(input));
     }
 
     public static void checkConstraints(SyntaxElement syntaxElement) {
         requireEmpty(syntaxElement.checkConstraints(), it -> it.getProblemKey());
+    }
+    
+    interface SafeRunnable<T> {
+        T run() throws Exception; 
+    }
+    
+    public static <T> T safeRun(SafeRunnable<T> runnable) {
+        try {
+            return runnable.run();
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Path getSampleLocationPath() {
+        return Paths.get(SAMPLE_LOCATION).toAbsolutePath();
     }
 }

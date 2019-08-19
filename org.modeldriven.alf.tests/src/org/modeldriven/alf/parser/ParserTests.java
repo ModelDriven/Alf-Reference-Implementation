@@ -14,7 +14,7 @@ import org.modeldriven.alf.syntax.units.UnitDefinition;
 
 public class ParserTests {
     /**
-     * A simple happy path test to exercise the parsing of a simple activity.
+     * A simple happy path test to exercise the parsing of a simple packaged activity.
      */
     @Test
     void packagedActivity() {
@@ -35,6 +35,26 @@ public class ParserTests {
         ActivityDefinition activity = single(asPackage.getMember());
         checkSimpleActivity(activity);
     }
+    
+    /**
+     * A simple happy path test to exercise the parsing of a simple standalone activity.
+     */
+    @Test
+    void standaloneActivity() {
+        String model =
+            "activity Hello() {\n" +
+            "  WriteLine(\"Hello World!\");\n" +
+            "};"; 
+
+        Parser parser = newParser(model);
+        UnitDefinition unitDefinition = parser.parseUnitDefinition(false);
+        
+        assertTrue(parser.getProblems().isEmpty());
+
+        ActivityDefinition activity = safeGet(unitDefinition, u -> u.getDefinition());
+        checkSimpleActivity(activity);
+    }
+
 
     private void checkSimpleActivity(ActivityDefinition activity) {
         assertEquals("Hello", activity.getName());

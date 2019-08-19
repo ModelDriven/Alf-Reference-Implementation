@@ -18,6 +18,13 @@ public class ParserFactoryImpl implements ParserFactory {
     public Parser createParser(String fileName) throws FileNotFoundException {
         return new ParserImpl(fileName);
     }
+    
+    @Override
+    public Parser createParser(String fileName, Reader contents) {
+        ParserImpl newParser = new ParserImpl(contents);
+        newParser.setFileName(fileName);
+        return newParser;
+    }
 
     @Override
     public Parser createParser(Reader contents){
