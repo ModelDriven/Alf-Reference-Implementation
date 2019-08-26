@@ -23,6 +23,7 @@ import org.modeldriven.alf.fuml.units.RootNamespaceImpl;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.syntax.common.ConstraintViolation;
 import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.SourceProblem;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.MissingUnit;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
@@ -229,13 +230,13 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
     
     protected String getErrorMessageFilePath() {
         return this.getRootScopeImpl().getLibraryDirectory() + "/" + 
-                ConstraintViolation.DEFAULT_ERROR_MESSAGE_FILE_PATH;
+                SourceProblem.DEFAULT_ERROR_MESSAGE_FILE_PATH;
     }
     
     protected void loadResources() {
         String errorMessageFilePath = this.getErrorMessageFilePath();
         try {
-            ConstraintViolation.loadErrorMessageFile(errorMessageFilePath);
+            SourceProblem.loadErrorMessageFile(errorMessageFilePath);
             this.printVerbose("Loaded " + errorMessageFilePath);
         } catch (IOException e) {
             this.printVerbose("Error reading error message file: " + errorMessageFilePath);

@@ -11,6 +11,7 @@ package org.modeldriven.alf.parser;
 
 import java.util.Collection;
 
+import org.modeldriven.alf.syntax.common.SourceProblem;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
@@ -59,5 +60,5 @@ public interface Parser {
    * 
    * @return the errors collected since the last call to a parse operation.
    */
-  public Collection<ParsingProblem> getProblems();
+  public Collection<SourceProblem> getProblems();
 }

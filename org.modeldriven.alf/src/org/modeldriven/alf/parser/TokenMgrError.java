@@ -14,7 +14,7 @@ import org.modeldriven.alf.syntax.common.SourceProblem;
 
 /** Token Manager Error. */
 @SuppressWarnings("all")
-public class TokenMgrError extends Error
+class TokenMgrError extends RuntimeException
 {
 
   /**
@@ -116,7 +116,7 @@ public class TokenMgrError extends Error
    * Note: You can customize the lexical error message by modifying this method.
    */
   protected static String LexicalError(boolean EOFSeen, int lexState, int errorLine, int errorColumn, String errorAfter, char curChar) {
-    return SourceProblem.errorMessage(errorLine, errorColumn, "Encountered: " +
+    return ("Encountered: " +
           (EOFSeen ? "<EOF> " : ("\"" + addEscapes(String.valueOf(curChar)) + "\"") + " (" + (int)curChar + "), ") +
           "after: \"" + addEscapes(errorAfter) + "\"");
   }

@@ -26,7 +26,7 @@ public abstract class ParserBase implements Parser {
 
     protected String fileName = "";
     
-    private Collection<ParsingProblem> collectedProblems = new ArrayList<>();
+    private Collection<SourceProblem> collectedProblems = new ArrayList<>();
 
     protected abstract SimpleCharStream getCharStream();
     
@@ -36,12 +36,16 @@ public abstract class ParserBase implements Parser {
     
     protected abstract Token getNextToken();
     
-    public Collection<ParsingProblem> getProblems() {
+    public Collection<SourceProblem> getProblems() {
         return new ArrayList<>(this.collectedProblems);
     }
     
     protected void collectParsingError(ParseException e) {
         collectedProblems.add(new ParsingProblem(e.getMessage(), new UnexpectedElement(this)));
+    }
+    
+    protected void collectParsingError(TokenMgrError e) {
+        collectedProblems.add(new LexicalProblem(e.getMessage(), new UnexpectedElement(fileName, e.getLine(), e.getColumn())));
     }
     
     public void setFileName(String fileName) {
@@ -98,12 +102,12 @@ public abstract class ParserBase implements Parser {
         element.setEnd(token.endLine, token.endColumn);
     }
 
-    private String errorMessage(String message) {
-        return SourceProblem.errorMessage(this.getLine(), this.getColumn(), message);
+    private String formatErrorMessage(String message) {
+        return SourceProblem.formatErrorMessage(this.getLine(), this.getColumn(), message);
     }
 
     protected ParseException generateParseException(Token token, String message) {
-        return new ParseException(token, errorMessage(message));
+        return new ParseException(token, formatErrorMessage(message));
     }
     
     @Override
@@ -131,6 +135,9 @@ public abstract class ParserBase implements Parser {
         collectedProblems.clear();
         try {
             return toRun.parse();
+        } catch (TokenMgrError e) {
+            collectParsingError(e);
+            return null;
         } catch (ParseException e) {
             // we will already have collected any exception
             return null;

@@ -1,6 +1,6 @@
 package org.modeldriven.alf.parser;
 
-import static org.junit.Assert.*;
+ import static org.junit.jupiter.api.Assertions.*;
 import static org.modeldriven.alf.parser.Helper.*;
 
 import java.util.Arrays;
@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
+import org.modeldriven.alf.syntax.common.SourceProblem;
 import org.modeldriven.alf.syntax.expressions.BehaviorInvocationExpression;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.expressions.ExpressionPlaceholder;
@@ -22,11 +23,61 @@ import org.modeldriven.alf.syntax.statements.EmptyStatement;
 import org.modeldriven.alf.syntax.statements.ExpressionStatement;
 import org.modeldriven.alf.syntax.statements.Statement;
 import org.modeldriven.alf.syntax.units.ActivityDefinition;
+import org.modeldriven.alf.syntax.units.ClassifierDefinition;
 import org.modeldriven.alf.syntax.units.PackageDefinition;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
 
 public class ErrorRecoveryTests {
+    
+    @Test
+    void badToken() {
+        String model = "package\n\"";
+        Parser parser = newParser(model);
+        UnitDefinition unit = parser.parseUnitDefinition(false);
+        assertNull(unit);
+        SourceProblem problem = single(parser.getProblems());
+        assertTrue(problem instanceof LexicalProblem, () -> problem.getClass().getSimpleName());
+        assertEquals(2, problem.getBeginLine());
+    }
 	
+    @Test
+    //TODO-RC this test is failing
+    void badPackageDefinition() {
+        String model = "\n packag A{}\n  ";
+
+        Parser parser = newParser(model);
+        
+        UnitDefinition unitDefinition = parser.parseUnitDefinition(true);
+        ParsingProblem problem = single(parser.getProblems());
+        assertNull(unitDefinition);
+        assertEquals(2, problem.getBeginLine());
+    }
+    
+    //@Test
+    //TODO-RC this test is failing
+    void badPackagedMember() {
+        String model = //
+                "package SomePackage {\n" + //
+                "  public activity Good1() {\n" + //
+                "    WriteLine(foo);\n" + //
+                "  }\n" + //
+                "  public activit Bad { }\n" + //
+                "  public activity Good2() {\n" + //
+                "    WriteLine(foo);\n" + //
+                "  }\n" + //
+                "}";
+
+        Parser parser = newParser(model);
+        
+        UnitDefinition unitDefinition = parser.parseUnitDefinition(false);
+        List<ParsingProblem> problems = requireAtLeast(1, parser.getProblems());
+        
+        PackageDefinition asPackage = require(unitDefinition.getDefinition());
+        List<ClassifierDefinition> activities = assertAndMap(2, asPackage.getOwnedMember());
+        assertEquals("Good1", activities.get(0).getName());
+        assertEquals("Good2", activities.get(1).getName());
+    }
+    
 	@Test
 	void badActivity() {
 		String model =
@@ -42,7 +93,7 @@ public class ErrorRecoveryTests {
 
 		Parser parser = newParser(model);
 		
-		UnitDefinition unitDefinition = parser.parseUnitDefinition(false);
+		UnitDefinition unitDefinition = parser.parseUnitDefinition(true);
 		ParsingProblem problem = single(parser.getProblems());
 		assertEquals(5, problem.getBeginLine());
 		
@@ -57,7 +108,7 @@ public class ErrorRecoveryTests {
 		String model =
 			"activity Bad() {\n" +
 			"  WriteLine(foo);\n" +		
-			"  -;\n" +
+			"  wr(ite()-;\n" +
 			"  ReadLine(bar);\n" +					
 			"}";
 		Parser parser = newParser(model);

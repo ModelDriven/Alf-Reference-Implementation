@@ -19,9 +19,6 @@ import org.modeldriven.alf.fuml.mapping.units.MemberMapping;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.parser.Parser;
 import org.modeldriven.alf.parser.ParserFactory;
-import org.modeldriven.alf.parser.ParserImpl;
-import org.modeldriven.alf.parser.ParsingProblem;
-import org.modeldriven.alf.parser.TokenMgrError;
 import org.modeldriven.alf.syntax.common.ConstraintViolation;
 import org.modeldriven.alf.syntax.common.SourceProblem;
 import org.modeldriven.alf.syntax.common.impl.ElementReferenceImpl;
@@ -117,23 +114,19 @@ public class AlfOpaqueBehaviorExecution extends
 		Parser parser = ParserFactory.defaultImplementation().createParser(
 		        behavior.name, new StringReader(textualRepresentation));
 
-		try {
-            Block body = parser.parseStatementSequence(true);
+        Block body = parser.parseStatementSequence(true);
 
-            Collection<ParsingProblem> parsingProblems = parser.getProblems();
-            checkForProblems(parsingProblems);
+        Collection<SourceProblem> parsingProblems = parser.getProblems();
+        checkForProblems(parsingProblems);
 
-            UnitDefinition unit = makeUnitForBehavior(behavior, body);
+        UnitDefinition unit = makeUnitForBehavior(behavior, body);
 
-            NamespaceDefinition modelScope = RootNamespace.getModelScope(unit);
-            modelScope.deriveAll();
+        NamespaceDefinition modelScope = RootNamespace.getModelScope(unit);
+        modelScope.deriveAll();
 
-            Collection<ConstraintViolation> violations = modelScope.checkConstraints();
-            checkForProblems(violations);
-            return unit;
-        } catch (TokenMgrError e) {
-            throw new FumlException(e.getMessage());
-        }
+        Collection<ConstraintViolation> violations = modelScope.checkConstraints();
+        checkForProblems(violations);
+        return unit;
 	}
 
 	protected static UnitDefinition makeUnitForBehavior(Behavior behavior,

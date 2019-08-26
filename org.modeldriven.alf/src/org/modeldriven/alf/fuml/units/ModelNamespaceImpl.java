@@ -16,7 +16,6 @@ import java.util.stream.Stream;
 
 import org.modeldriven.alf.parser.Parser;
 import org.modeldriven.alf.parser.ParserFactory;
-import org.modeldriven.alf.parser.TokenMgrError;
 import org.modeldriven.alf.syntax.expressions.NameBinding;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.ExternalNamespace;
@@ -144,16 +143,26 @@ public class ModelNamespaceImpl extends
                 }
                 if (!parser.getProblems().isEmpty()) {
                     reportProblems(path, parser.getProblems().stream().map(p -> p.getErrorMessage()));
+                    cacheMissingUnit(path);
+                    return null;
                 }
                 unit.getImpl().addImplicitImports();
-                this.parsedUnitCache.put(path, unit);
+                cacheUnit(path, unit);
                 return unit;
-            } catch (TokenMgrError e) {
+            } catch (RuntimeException e) {
                 reportProblems(path, Stream.of(e.getMessage()));
-                this.parsedUnitCache.put(path, new MissingUnit(path));
+                cacheMissingUnit(path);
                 return null;
             }
         }
+    }
+
+    private void cacheMissingUnit(String path) {
+        cacheUnit(path, new MissingUnit(path));
+    }
+
+    private void cacheUnit(String path, UnitDefinition unit) {
+        this.parsedUnitCache.put(path, unit);
     }
     
     private void reportProblems(String path, Stream<String> problems) {

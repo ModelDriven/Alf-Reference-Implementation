@@ -24,7 +24,7 @@ import org.modeldriven.alf.syntax.common.SourceProblem;
  * mechanisms so long as you retain the public fields.
  */
 @SuppressWarnings("all")
-public class ParseException extends Exception {
+class ParseException extends Exception {
 
   /**
    * The version identifier for this Serializable class.
@@ -131,7 +131,7 @@ public class ParseException extends Exception {
       tok = tok.next;
     }
     retval += "\".";
-    return SourceProblem.errorMessage(currentToken.beginLine, currentToken.beginColumn, retval);
+    return retval;
   }
 
   /**

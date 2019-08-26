@@ -23,6 +23,7 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
+import org.modeldriven.alf.syntax.common.SourceProblem;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
 
 /**
@@ -50,6 +51,7 @@ public class SampleTests {
         return Files.list(getSampleLocationPath()).map(it -> it.toUri());
     }
 
+    // TODO-RC consider use this approach for obtaining sample files from the classpath for better build portability
     private Stream<URI> getSampleFilesFromClasspath(String path) throws IOException, URISyntaxException {
         List<String> paths = new ArrayList<>();
         InputStream entries = getClass().getResourceAsStream(path);
@@ -85,7 +87,7 @@ public class SampleTests {
         }
     }
     
-    private String generateProblemString(Collection<ParsingProblem> problems) {
+    private String generateProblemString(Collection<SourceProblem> problems) {
         return problems.stream().map(it -> it.toString()).collect(Collectors.joining(", "));
     }
 }
