@@ -17,7 +17,7 @@ import java.util.BitSet;
  * assert peek(100) == 0
  * 
  */
-public interface TokenSource {
+public interface TokenSequence {
     int skip();
 
     /** Skips multiple times. */

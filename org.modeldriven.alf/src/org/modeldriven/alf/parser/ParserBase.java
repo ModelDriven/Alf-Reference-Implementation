@@ -26,7 +26,7 @@ public abstract class ParserBase implements Parser {
         T parse() throws ParseException;
     }
     
-    private class ParserTokenSource implements TokenSource {
+    private class ParserTokenSequence implements TokenSequence {
 
         @Override
         public int skip() {
@@ -40,7 +40,7 @@ public abstract class ParserBase implements Parser {
         
     }
     
-    private TokenSource tokenSource = new ParserTokenSource();
+    private TokenSequence tokenSource = new ParserTokenSequence();
 
     protected String fileName = "";
     
