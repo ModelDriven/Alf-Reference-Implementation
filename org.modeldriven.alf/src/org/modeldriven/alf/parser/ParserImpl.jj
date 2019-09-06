@@ -36,12 +36,20 @@ import org.modeldriven.alf.syntax.units.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+
+import static org.modeldriven.alf.parser.TokenSource.tokens;
 
 public class ParserImpl extends ParserBase {
 
   public ParserImpl(String fileName) throws java.io.FileNotFoundException {
     this(fileName == null? System.in: new java.io.FileInputStream(fileName));
     this.setFileName(fileName == null? "System.in": fileName);
+  }
+
+  protected void installCustomTokenManager(Consumer<TokenMgrError> errorReporter) {
+    // overwrite the default token manager so it never chokes on tokens  
+    this.token_source = new CustomTokenManager(jj_input_stream, errorReporter);
   }
   
   @Override
@@ -550,6 +558,7 @@ Expression Expression():
     e = ExpressionCompletion(e)
   } catch (ParseException exc) {
     collectParsingError(exc);
+    skipToOrPast(tokens(RBRACE, COMMA, SEMICOLON), tokens());
     e = new ExpressionPlaceholder();
   }
   
@@ -2045,6 +2054,7 @@ Block StatementSequence():
     ( s = DocumentedStatement() { b.addStatement(s); } )*
   } catch (ParseException exc) {
     collectParsingError(exc);
+    skipToOrPast(tokens(RBRACE), tokens(SEMICOLON));
   }
   { this.provideEnd(b);
     return b; }
@@ -2978,8 +2988,16 @@ Member PackagedElement():
     m.setVisibility(v);
   }
 
-  } catch (ParseException exc) {
-    collectParsingError(exc);
+  } catch(ParseException e) {
+      UnknownClassifierDefinition ud = new UnknownClassifierDefinition(this);
+      m = ud;
+      if (e.isIncomplete()) {
+          collectParsingError("Incomplete element", ud);
+          skipToOrPast(tokens(tokens(PUBLIC, PRIVATE, RBRACE), e.getExpectedTokens()), tokens());
+      } else {
+          collectParsingError("Unknown element", ud);
+          skipToOrPast(tokens(PUBLIC, PRIVATE), tokens());
+      }      
   }
 
   {
@@ -3022,6 +3040,7 @@ NamespaceDefinition ClassifierDefinition():
   { return d; }
 }
 
+
 NamespaceDefinition ClassifierDefinitionOrStub():
 {
   NamespaceDefinition d;
@@ -3036,7 +3055,6 @@ NamespaceDefinition ClassifierDefinitionOrStub():
   | LOOKAHEAD(2) d = SignalDefinitionOrStub()
   |              d = ActivityDefinitionOrStub()
   )
-  
   { return d; }
 }
 

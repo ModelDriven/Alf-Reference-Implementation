@@ -10,6 +10,7 @@
 /* JavaCCOptions:KEEP_LINE_COL=null */
 package org.modeldriven.alf.parser;
 
+import java.util.Arrays;
 import java.util.function.Supplier;
 
 import org.modeldriven.alf.syntax.common.SourceProblem;
@@ -77,6 +78,8 @@ class ParseException extends Exception {
    * values) that is expected at this point of the parse.
    */
   public int[][] expectedTokenSequences;
+  
+  public String[] expectedTokenImages;
 
   /**
    * This is a reference to the "tokenImage" array of the generated
@@ -89,6 +92,18 @@ class ParseException extends Exception {
   protected int beginColumn = 0;
   protected int endLine = 0;
   protected int endColumn = 0;
+  
+  public boolean isIncomplete() {
+      return expectedTokenSequences != null; 
+  }
+  
+  public int[] getExpectedTokens() {
+      return Arrays.stream(expectedTokenSequences).mapToInt(sequence -> sequence[0]).toArray();
+  }
+  
+  public String[] getExpectedTokenImages() {
+      return Arrays.stream(expectedTokenSequences).map(sequence -> tokenImage[sequence[0]]).toArray(sz -> new String[sz]);
+  }
   
   public int getBeginLine() {
       return this.beginLine;

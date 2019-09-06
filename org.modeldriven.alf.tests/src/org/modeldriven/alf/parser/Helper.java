@@ -14,6 +14,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.junit.jupiter.api.Assertions;
+import org.modeldriven.alf.syntax.common.SourceProblem;
 import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.expressions.BehaviorInvocationExpression;
 import org.modeldriven.alf.syntax.expressions.Expression;
@@ -141,5 +143,17 @@ public class Helper {
 
     public static Path getSampleLocationPath() {
         return Paths.get(SAMPLE_LOCATION).toAbsolutePath();
+    }
+    
+    public static <SP extends SourceProblem> void ensureNoProblems(Collection<SP> problems) {
+        assertProblems(problems.isEmpty(), problems);
+    }
+    
+    public static <SP extends SourceProblem> void assertProblems(boolean condition, Collection<SP> problems) {
+        Assertions.assertTrue(condition, () -> generateProblemString(problems));
+    }
+    
+    public static String generateProblemString(Collection<? extends SourceProblem> problems) {
+        return problems.stream().map(it -> it.toString()).collect(Collectors.joining(", "));
     }
 }

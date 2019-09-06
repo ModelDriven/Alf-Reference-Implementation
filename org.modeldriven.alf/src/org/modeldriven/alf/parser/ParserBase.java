@@ -1,7 +1,9 @@
 package org.modeldriven.alf.parser;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Collection;
+import java.util.List;
 
 import org.modeldriven.alf.syntax.common.SourceProblem;
 import org.modeldriven.alf.syntax.expressions.Expression;
@@ -23,10 +25,26 @@ public abstract class ParserBase implements Parser {
     private static interface ParseOperation<T> {
         T parse() throws ParseException;
     }
+    
+    private class ParserTokenSource implements TokenSource {
+
+        @Override
+        public int skip() {
+            return getNextToken().kind;
+        }
+
+        @Override
+        public int peek(int index) {
+            return getToken(index).kind;
+        }
+        
+    }
+    
+    private TokenSource tokenSource = new ParserTokenSource();
 
     protected String fileName = "";
     
-    private Collection<SourceProblem> collectedProblems = new ArrayList<>();
+    private List<SourceProblem> collectedProblems = new ArrayList<>();
 
     protected abstract SimpleCharStream getCharStream();
     
@@ -41,12 +59,31 @@ public abstract class ParserBase implements Parser {
     }
     
     protected void collectParsingError(ParseException e) {
-        collectedProblems.add(new ParsingProblem(e.getMessage(), new UnexpectedElement(this)));
+        collectParsingError(e.getMessage(), new UnexpectedElement(this));
     }
     
-    protected void collectParsingError(TokenMgrError e) {
-        collectedProblems.add(new LexicalProblem(e.getMessage(), new UnexpectedElement(fileName, e.getLine(), e.getColumn())));
+    protected void collectParsingError(String message, ParsedElement element) {
+        ParsingProblem problem = new ParsingProblem(message, element);
+        collectProblem(problem);
     }
+
+    protected void collectLexicalError(TokenMgrError e) {
+        LexicalProblem problem = new LexicalProblem(e.getMessage(), new UnexpectedElement(fileName, e.getLine(), e.getColumn()));
+        collectProblem(problem);
+    }
+
+    private void collectProblem(SourceProblem problem) {
+        if (!collectedProblems.isEmpty()) {
+            SourceProblem previousProblem = collectedProblems.get(collectedProblems.size()-1);
+            boolean sameAsPrevious = previousProblem.compareTo(problem) == 0;
+            if (sameAsPrevious) {
+                // ignore - parser may report the same problem twice due to error recovery
+                return;
+            }
+        }
+        collectedProblems.add(problem);
+    }
+    
     
     public void setFileName(String fileName) {
         this.fileName = fileName;
@@ -72,14 +109,6 @@ public abstract class ParserBase implements Parser {
         return this.getCurrentToken().beginColumn;
     }
     
-    protected Token skipToNextToken(int kind) {
-        Token t;
-        do {
-          t = getNextToken();
-        } while (t.kind != kind && kind != -1);
-        return t;
-    }
-
     public void provideInfo(ParsedElement element, boolean fromNextToken) {
         Token token = this.getToken(0);
         if (fromNextToken && token.next != null) {
@@ -136,7 +165,7 @@ public abstract class ParserBase implements Parser {
         try {
             return toRun.parse();
         } catch (TokenMgrError e) {
-            collectParsingError(e);
+            collectLexicalError(e);
             return null;
         } catch (ParseException e) {
             // we will already have collected any exception
@@ -155,5 +184,10 @@ public abstract class ParserBase implements Parser {
     protected abstract UnitDefinition UnitDefinition() throws ParseException;
     
     protected abstract UnitDefinition UnitDefinitionEOF() throws ParseException;
+
+    protected boolean skipToOrPast(BitSet skipTo, BitSet skipPast) {
+        return tokenSource.skipToOrPast(skipTo, skipPast);
+    }
+    
 }
 

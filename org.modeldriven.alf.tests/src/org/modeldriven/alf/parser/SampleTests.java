@@ -2,6 +2,7 @@ package org.modeldriven.alf.parser;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.modeldriven.alf.parser.Helper.ensureNoProblems;
 import static org.modeldriven.alf.parser.Helper.getSampleLocationPath;
 import static org.modeldriven.alf.parser.Helper.safeRun;
 
@@ -21,6 +22,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 import org.modeldriven.alf.syntax.common.SourceProblem;
@@ -79,15 +81,9 @@ public class SampleTests {
         try (InputStreamReader contents = new InputStreamReader(sampleFile.openStream())) {
             Parser parser = ParserFactory.defaultImplementation().createParser(contents);
             UnitDefinition parsed = parser.parseUnitDefinition(true);
-            Supplier<String> problemString = () -> generateProblemString(parser.getProblems());
-            assertNotNull(parsed, problemString);
-            if (!parser.getProblems().isEmpty()) {
-                fail(problemString);
-            }
+            ensureNoProblems(parser.getProblems());
+            assertNotNull(parsed);
+//            ensureNoProblems(parsed.checkConstraints());
         }
-    }
-    
-    private String generateProblemString(Collection<SourceProblem> problems) {
-        return problems.stream().map(it -> it.toString()).collect(Collectors.joining(", "));
     }
 }
