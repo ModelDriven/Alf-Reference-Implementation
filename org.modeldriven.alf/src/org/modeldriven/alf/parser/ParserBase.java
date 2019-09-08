@@ -131,12 +131,8 @@ public abstract class ParserBase implements Parser {
         element.setEnd(token.endLine, token.endColumn);
     }
 
-    private String formatErrorMessage(String message) {
-        return SourceProblem.formatErrorMessage(this.getLine(), this.getColumn(), message);
-    }
-
     protected ParseException generateParseException(Token token, String message) {
-        return new ParseException(token, formatErrorMessage(message));
+        return new ParseException(token, message);
     }
     
     @Override
@@ -168,7 +164,7 @@ public abstract class ParserBase implements Parser {
             collectLexicalError(e);
             return null;
         } catch (ParseException e) {
-            // we will already have collected any exception
+            collectParsingError(e);
             return null;
         }
     }
