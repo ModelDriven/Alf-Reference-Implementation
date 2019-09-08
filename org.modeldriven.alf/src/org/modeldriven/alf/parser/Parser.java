@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2018 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright (c) 2018-2019 Data Access Technologies, Inc. (Model Driven Solutions)
  *  All rights reserved worldwide. This program and the accompanying materials
  *  are made available for use under the terms of the GNU General Public License 
  *  (GPL) version 3 that accompanies this distribution and is available at 
@@ -13,6 +13,7 @@ import java.util.Collection;
 
 import org.modeldriven.alf.syntax.common.SourceProblem;
 import org.modeldriven.alf.syntax.expressions.Expression;
+import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
 
@@ -31,24 +32,51 @@ public interface Parser {
   /**
    * Parses the next unit definition, even if there are errors. 
    * 
-   * Use {@link #getProblems()} to query any errors that may have arised.
+   * Use {@link #getProblems()} to query any errors that may have arisen.
    * 
-   * @param eof whether EOF is expected after the unit 
-   * @return the parsed unit
+   * @param     eof     whether EOF is expected after the unit 
+   * @return    the parsed unit
+   * 
    * @see #getProblems()
    */
   public UnitDefinition parseUnitDefinition(boolean eof);
+  
   /**
-   * Parses the next unit definition, even if there are errors. 
+   * Parses the next sequence of statements, even if there are errors. 
    * 
-   * Use {@link #getProblems()} to query any errors that may have arised.
+   * Use {@link #getProblems()} to query any errors that may have arisen.
    * 
-   * @param eof whether EOF is expected after the unit 
-   * @return the parsed unit
+   * @param     eof     whether EOF is expected after the statement sequence 
+   * @return    the parsed statement sequence
+   * 
    * @see #getProblems()
    */
   public Block parseStatementSequence(boolean eof);
+  
+  
+  /**
+   * Parses the next expression, even if there are errors. 
+   * 
+   * Use {@link #getProblems()} to query any errors that may have arisen.
+   * 
+   * @param     eof     whether EOF is expected after the expression 
+   * @return    the parsed expression
+   * 
+   * @see #getProblems()
+   */
   public Expression parseExpression(boolean eof);
+  
+  /**
+   * Parses the next type name (qualified name, possibly including template bindings, or "any"), 
+   * even if there are errors. 
+   * 
+   * Use {@link #getProblems()} to query any errors that may have arisen.
+   * 
+   * @return    the parsed type name
+   * 
+   * @see #getProblems()
+   */
+  public QualifiedName parseTypeName();
 
   
   /**

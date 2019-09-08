@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.modeldriven.alf.syntax.common.SourceProblem;
 import org.modeldriven.alf.syntax.expressions.Expression;
+import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
 
@@ -136,6 +137,11 @@ public abstract class ParserBase implements Parser {
     }
     
     @Override
+    public QualifiedName parseTypeName() {
+        return performParseOperation(this::TypeName);
+    }
+    
+    @Override
     public Expression parseExpression(boolean eof) {
         return performParseOperation(eof ? this::ExpressionEOF : this::Expression);
     }
@@ -168,6 +174,8 @@ public abstract class ParserBase implements Parser {
             return null;
         }
     }
+    
+    protected abstract QualifiedName TypeName() throws ParseException;
     
     protected abstract Block StatementSequence() throws ParseException;
     
