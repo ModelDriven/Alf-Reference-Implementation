@@ -556,6 +556,7 @@ public class ExternalNamespaceImpl extends NamespaceDefinitionImpl {
                if (reference != null && reference.getImpl().isClassifierTemplateParameter()) {
                    reference = reference.getImpl().getParameteredElement();
                }
+               break;
            }
        }
        return reference;
