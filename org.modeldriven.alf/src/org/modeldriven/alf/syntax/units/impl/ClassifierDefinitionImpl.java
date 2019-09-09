@@ -390,7 +390,7 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
                 if (isFirst) {
                     commonAncestors.add(classifier);
                     for (ElementReference ancestor: ancestors) {
-                    commonAncestors.add(ancestor.getImpl());
+                        commonAncestors.add(ancestor.getImpl());
                     }
                     isFirst = false;
                 } else {
@@ -432,7 +432,7 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
             if (classifier == null) {
                 return null;
             } else {
-                classifierSet.add(classifier.getImpl());
+                classifierSet.add(implForClassifier(classifier));
             }
         }
         return commonAncestorImpl(classifierSet);
@@ -444,10 +444,19 @@ public abstract class ClassifierDefinitionImpl extends NamespaceDefinitionImpl {
             if (classifier == null) {
                 return null;
             } else {
-                classifierSet.add(classifier.getImpl());
+                classifierSet.add(implForClassifier(classifier));
             }
         }
         return commonAncestorImpl(classifierSet);
+    }
+    
+    private static ElementReferenceImpl implForClassifier(ElementReference classifier) {
+        ElementReferenceImpl impl = classifier.getImpl();
+        ElementReference parameteredElement = impl.getParameteredElement();
+        if (parameteredElement != null) {
+            impl = parameteredElement.getImpl();
+        }
+        return impl;
     }
     
     @Override
