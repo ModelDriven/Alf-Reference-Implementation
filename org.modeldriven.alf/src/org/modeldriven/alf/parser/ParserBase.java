@@ -69,7 +69,11 @@ public abstract class ParserBase implements Parser {
     }
 
     protected void collectLexicalError(TokenMgrError e) {
-        LexicalProblem problem = new LexicalProblem(e.getMessage(), new UnexpectedElement(fileName, e.getLine(), e.getColumn()));
+        collectLexicalError(e.getMessage(), e.getLine(), e.getColumn());
+    }
+    
+    protected void collectLexicalError(String message, int lineNumber, int columnNumber) {
+        LexicalProblem problem = new LexicalProblem(message, new UnexpectedElement(fileName, lineNumber, columnNumber));
         collectProblem(problem);
     }
 
@@ -138,43 +142,57 @@ public abstract class ParserBase implements Parser {
     
     @Override
     public QualifiedName parseTypeName() {
-        return performParseOperation(this::TypeName);
+        return performParseOperation(this::TypeName, false);
     }
     
     @Override
     public Expression parseExpression(boolean eof) {
-        return performParseOperation(eof ? this::ExpressionEOF : this::Expression);
+        Expression parsed = performParseOperation(this::Expression, eof);
+        return parsed;
     }
     
     @Override
     public Block parseStatementSequence(boolean eof) {
-        return performParseOperation(eof ? this::StatementSequenceEOF : this::StatementSequence);
+        Block parsed = performParseOperation(this::StatementSequence, eof);
+        return parsed;
     }
     
     @Override
     public UnitDefinition parseUnitDefinition(boolean eof) {
-        return performParseOperation(eof ? this::UnitDefinitionEOF : this::UnitDefinition);
+        UnitDefinition parsed = performParseOperation(this::UnitDefinition, eof);
+        return parsed;
     }
     
     /**
      * Performs a parsing operation collecting any potentially generated exceptions.
      *  
      * @param toRun
-     * @return 
+     * @param eofExpected whether the parsed element should be the last one
+     * @return a partially parsed element, never null (bugs aside)
      */
-    private <T> T performParseOperation(ParseOperation<T> toRun) {
+    private <T> T performParseOperation(ParseOperation<T> toRun, boolean eofExpected) {
         collectedProblems.clear();
+        T parsed = null;
         try {
-            return toRun.parse();
+            parsed = toRun.parse();
         } catch (TokenMgrError e) {
             collectLexicalError(e);
-            return null;
+            return parsed;
         } catch (ParseException e) {
+            // a case we can't recover from
+            // (a bug or a missing feature)
             collectParsingError(e);
             return null;
         }
+        if (eofExpected && collectedProblems.isEmpty()) {
+            parseEOF();
+        }
+        return parsed;
+
     }
     
+    protected abstract void parseEOF();
+
     protected abstract QualifiedName TypeName() throws ParseException;
     
     protected abstract Block StatementSequence() throws ParseException;

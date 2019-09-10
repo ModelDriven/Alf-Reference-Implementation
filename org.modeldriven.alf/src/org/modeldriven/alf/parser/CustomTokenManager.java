@@ -21,12 +21,14 @@ public class CustomTokenManager extends ParserImplTokenManager {
             return super.getNextToken();
         } catch (TokenMgrError e) {
             lexicalProblemReporter.accept(e);
+            // unrecoverable error - consume remaining input 
+            // to avoid spurious errors afterwards
             try {
-                input_stream.readChar();
+                while (true) input_stream.readChar();
             } catch (IOException e1) {
-                //
+                // expected: thrown by readChar when hitting EOF
             }
-            jjmatchedKind = EOL;
+            jjmatchedKind = EOF;
             Token placeholder = jjFillToken();
             return placeholder;
         }

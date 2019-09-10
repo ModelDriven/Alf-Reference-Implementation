@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -20,6 +21,7 @@ import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.expressions.BehaviorInvocationExpression;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.expressions.PositionalTuple;
+import org.modeldriven.alf.syntax.statements.Block;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
 
 @SuppressWarnings("unchecked")
@@ -158,10 +160,30 @@ public class Helper {
         return problems.stream().map(it -> it.toString()).collect(Collectors.joining(", "));
     }
 
-    public static UnitDefinition parse(Parser parser, boolean eof) {
-        UnitDefinition parsedUnit = parser.parseUnitDefinition(eof);
+    public static UnitDefinition parseUnit(Parser parser) {
+        return parseUnit(parser, true);
+    }
+    
+    public static UnitDefinition parseUnit(Parser parser, boolean eof) {
+        return parse(parser, parser::parseUnitDefinition, eof);
+    }
+    
+    public static Expression parseExpression(Parser parser) {
+        return parseExpression(parser, true);
+    }
+    
+    public static Expression parseExpression(Parser parser, boolean eof) {
+        return parse(parser, parser::parseExpression, eof);
+    }
+    
+    public static Block parseStatementSequence(Parser parser, boolean eof) {
+        return parse(parser, parser::parseStatementSequence, eof);
+    }
+    
+    public static <T> T parse(Parser parser, Function<Boolean, T> parserOperation, boolean eof) {
+        T parsed = parserOperation.apply(true);
         checkProblemMessages(parser.getProblems());
-        return parsedUnit;
+        return parsed;
     }
 
     public static void checkProblemMessages(Collection<SourceProblem> problems) {

@@ -61,6 +61,15 @@ public class ParserImpl extends ParserBase {
   protected Token getCurrentToken() {
     return token;
   }
+
+  @Override
+  protected void parseEOF() {
+      getNextToken();      
+      if (token.kind != EOF) {
+          collectParsingError(generateParseException());
+      }
+  }
+
 }
 
 PARSER_END(ParserImpl)
@@ -2111,6 +2120,7 @@ Statement Statement():
   } catch (ParseException exc) {
     collectParsingError(exc);
     s = new EmptyStatement();
+    skipToOrPast(tokens(RBRACE), tokens(SEMICOLON));
   }
   { return s; }
 }
@@ -2123,8 +2133,15 @@ Block Block():
   Block b;
 }
 {
-  t = <LBRACE> b = StatementSequence() <RBRACE>
-  
+  t = <LBRACE>
+  try { 
+  b = StatementSequence()
+  } catch (ParseException e) {
+    b = new Block(this);
+    collectParsingError(e);
+    skipToOrPast(tokens(RBRACE), tokens());
+  }
+  <RBRACE>
   { this.provideBegin(b, t);
     this.provideEnd(b);
     return b; }

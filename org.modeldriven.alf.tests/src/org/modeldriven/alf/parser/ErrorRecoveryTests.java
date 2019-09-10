@@ -2,6 +2,7 @@ package org.modeldriven.alf.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.modeldriven.alf.parser.Helper.*;
 
@@ -37,7 +38,7 @@ public class ErrorRecoveryTests {
     void badToken() {
         String model = "package\n\"";
         Parser parser = newParser(model);
-        UnitDefinition unit = parse(parser, false);
+        UnitDefinition unit = parseUnit(parser);
         assertNotNull(unit);
         SourceProblem problem = single(parser.getProblems());
         assertTrue(problem instanceof LexicalProblem, () -> problem.getClass().getSimpleName());
@@ -47,7 +48,7 @@ public class ErrorRecoveryTests {
     @Test
     void badTokenAfterParsingProblem() {
         String model =
-                "package SomePackage {\n" +
+                  "package SomePackage {\n" +
                   "public activity Good1() {\n" +
                   "  WriteLine(foo);\n" +
                   "}\n" +
@@ -61,10 +62,10 @@ public class ErrorRecoveryTests {
                   "// Invalid chars (guillemets) to cause lexical problem \n" +
                   "\u00AB \u00BB\n" +
                   "// end of invalid chars\n" + 
-                "}";
+                  "}";
 
         Parser parser = newParser(model);
-        UnitDefinition unitDefinition = parse(parser, false);
+        UnitDefinition unitDefinition = parseUnit(parser);
         ParsingProblem parsingProblem = search(parser.getProblems(), p -> p instanceof ParsingProblem);
         assertEquals(5, parsingProblem.getBeginLine());
         LexicalProblem lexicalProblem = search(parser.getProblems(), p -> p instanceof LexicalProblem);
@@ -87,7 +88,7 @@ public class ErrorRecoveryTests {
 
         Parser parser = newParser(model);
         
-        UnitDefinition unitDefinition = parse(parser, false);
+        UnitDefinition unitDefinition = parseUnit(parser);
         List<ParsingProblem> problems = requireAtLeast(1, parser.getProblems());
         PackageDefinition asPackage = require(unitDefinition.getDefinition());
         List<ClassifierDefinition> activities = assertAndMap(2, asPackage.getOwnedMember());
@@ -116,7 +117,7 @@ public class ErrorRecoveryTests {
 
 		Parser parser = newParser(model);
 		
-		UnitDefinition unitDefinition = parse(parser, false);
+		UnitDefinition unitDefinition = parseUnit(parser);
 		List<SourceProblem> problems = new ArrayList<>(parser.getProblems());
 		assertProblems(problems.size() >= 3, problems);
 		assertEquals(2, problems.get(0).getBeginLine());
@@ -130,7 +131,129 @@ public class ErrorRecoveryTests {
 		assertEquals("Good2", activities.get(3).getName());
 		Arrays.asList(0, 2, 4).forEach(i -> assertTrue(activities.get(i) instanceof UnknownClassifierDefinition));
 	}
-	
+
+   @Test
+    void badActivityBody() {
+        String model =
+          "package SomePackage {\n" + //
+            "public activity Bad1() {\n" + //
+            "-\n" + //
+            "}\n" + //
+            "public activity Good1() {\n" + //
+            "  WriteLine(foo);\n" + //
+            "}\n" + //
+            "public activity Bad2() {\n" + //
+            "-\n" + //
+            "}\n" + //
+            "public activity Good2() {\n" + //
+            "  WriteLine(foo);\n" + //
+            "}\n" + //
+            "public activity Bad3() {\n" + //
+            "-\n" + //
+            "}\n" + //
+          "}";
+
+        Parser parser = newParser(model);
+        
+        UnitDefinition unitDefinition = parseUnit(parser);
+        List<SourceProblem> problems = new ArrayList<>(parser.getProblems());
+        assertProblems(problems.size() >= 3, problems);
+        assertEquals(3, problems.get(0).getBeginLine());
+        assertEquals(9, problems.get(1).getBeginLine());
+        assertEquals(15, problems.get(2).getBeginLine());
+        
+        assertNotNull(unitDefinition);
+        PackageDefinition asPackage = require(unitDefinition.getDefinition());
+        List<ActivityDefinition> activities = assertAndMap(5, asPackage.getOwnedMember());
+        assertEquals("Good1", activities.get(1).getName());
+        assertEquals("Good2", activities.get(3).getName());
+        Arrays.asList(0, 2, 4).forEach(i -> {
+            EmptyStatement empty = single(activities.get(i).getBody().getStatement());
+        });
+    }
+   
+   @Test
+   void badActivityUnit_additionalInput() {
+       String model =
+           "activity Good() { }\n" +
+           "x";
+       Parser parser = newParser(model);
+       UnitDefinition unitDefinition = parseUnit(parser);
+       
+       ActivityDefinition asActivity = (ActivityDefinition) unitDefinition.getDefinition();
+       ParsingProblem problem = single(parser.getProblems());
+       assertEquals(2, problem.getBeginLine());
+
+       assertEquals("Good", asActivity.getName());
+   }
+   
+   @Test
+   void badPackageUnit_additionalInput() {
+       String model =
+           "package Good {\n" +
+           "}\n" +
+           "x";
+       Parser parser = newParser(model);
+       UnitDefinition unitDefinition = parseUnit(parser);
+       
+       PackageDefinition asPackage = (PackageDefinition) unitDefinition.getDefinition();
+       ParsingProblem problem = single(parser.getProblems());
+       assertEquals(3, problem.getBeginLine());
+
+       assertEquals("Good", asPackage.getName());
+   }
+   
+   @Test
+   void badUnit_notAUnit() {
+       String model =
+           "x";
+       Parser parser = newParser(model);
+       UnitDefinition unitDefinition = parseUnit(parser);
+       
+       ParsingProblem problem = single(parser.getProblems());
+       assertEquals(0, problem.getBeginLine());
+       
+       assertNull(unitDefinition.getDefinition());
+   }
+
+   void badUnit_empty() {
+       String model =
+           "";
+       Parser parser = newParser(model);
+       UnitDefinition unitDefinition = parseUnit(parser);
+       
+       assertNotNull(unitDefinition);
+       
+       ParsingProblem problem = single(parser.getProblems());
+       assertEquals(0, problem.getBeginLine());
+   }
+   
+   void badExpression_empty() {
+       String model =
+           "";
+       Parser parser = newParser(model);
+       Expression expression = parseExpression(parser);
+       assertNotNull(expression);
+       
+       ParsingProblem problem = single(parser.getProblems());
+       assertEquals(0, problem.getBeginLine());
+   }
+   
+   void badExpression_additionalInput() {
+       String model =
+           "\nx\ny";
+       Parser parser = newParser(model);
+       Expression expression = parseExpression(parser);
+       NameExpression name = assertIsA(expression, NameExpression.class);
+       assertEquals("x", name.getName().getUnqualifiedName().getName());
+       
+       ParsingProblem problem = single(parser.getProblems());
+       assertEquals(2, problem.getBeginLine());
+   }
+   
+   
+   
+
 	@Test
 	void badStatement() {
 		String model =
@@ -142,7 +265,7 @@ public class ErrorRecoveryTests {
 			"  bad3(exp()-;\n" +			
 			"}";
 		Parser parser = newParser(model);
-		UnitDefinition unitDefinition = parse(parser, false);
+		UnitDefinition unitDefinition = parseUnit(parser);
 		
         ActivityDefinition asActivity = (ActivityDefinition) unitDefinition.getDefinition();
 		List<SourceProblem> problems = new ArrayList<>(parser.getProblems());
@@ -177,7 +300,7 @@ public class ErrorRecoveryTests {
             "  bad3(exp)-;\n" + //
             "}";
         Parser parser = newParser(model);
-        UnitDefinition unitDefinition = parse(parser, false);
+        UnitDefinition unitDefinition = parseUnit(parser);
 
         ActivityDefinition asActivity = (ActivityDefinition) unitDefinition.getDefinition();
         List<SourceProblem> problems = new ArrayList<>(parser.getProblems());
@@ -211,7 +334,7 @@ public class ErrorRecoveryTests {
 
         Parser parser = newParser(model);
 
-        UnitDefinition unitDefinition = parse(parser, false);
+        UnitDefinition unitDefinition = parseUnit(parser);
         List<SourceProblem> problems = new ArrayList<>(parser.getProblems());
         assertProblems(problems.size() > 0, problems);
         assertEquals(2, problems.get(0).getBeginLine());
@@ -233,7 +356,7 @@ public class ErrorRecoveryTests {
 
         Parser parser = newParser(model);
 
-        UnitDefinition unitDefinition = parse(parser, false);
+        UnitDefinition unitDefinition = parseUnit(parser);
         List<SourceProblem> problems = new ArrayList<>(parser.getProblems());
         assertProblems(problems.size() > 0, problems);
         assertEquals(2, problems.get(0).getBeginLine());
@@ -241,13 +364,10 @@ public class ErrorRecoveryTests {
 
         assertNotNull(unitDefinition);
         ActivityDefinition asActivity = require(unitDefinition.getDefinition());
-        List<Statement> statements = require(2, asActivity.getBody().getStatement());
-        ExpressionStatement goodStatement = getAt(1, statements, 1);
-        BehaviorInvocationExpression invocation = (BehaviorInvocationExpression) goodStatement.getExpression();
-        assertEquals("y", invocation.getTarget().getPathName());
+        Statement badStatement = single(asActivity.getBody().getStatement());
         
     }    
-	   
+    
 	@Test
 	void badArgument() {
 		String model =
@@ -260,7 +380,7 @@ public class ErrorRecoveryTests {
 		  "}";
 
 		Parser parser = newParser(model);
-		UnitDefinition unitDefinition = parse(parser, false);
+		UnitDefinition unitDefinition = parseUnit(parser);
 		
 		ParsingProblem problem = single(parser.getProblems());
 		assertEquals(4, problem.getBeginLine());
@@ -289,9 +409,9 @@ public class ErrorRecoveryTests {
 	@Test
 	void badAccept_badSignalName() {
 		String model =
-				  "package SomePackage {\n" +
-					"public activity Simple() {\n" +
-					"  accept (s : Signal1) {\n" + 
+				    "package SomePackage {\n" +
+					"  public activity Simple() {\n" +
+					"    accept (s : Signal1) {\n" + 
 					"      Activity1();\n" + 
 					"    } or accept (s : ) {\n" + 
 					"      Activity2();\n" + 
@@ -299,10 +419,9 @@ public class ErrorRecoveryTests {
 					"      Activity3();\n" + 
 					"    }\n" + 
 					"  }\n" + 
-					"}\n" +
-				  "}";
+					"}";
 		Parser parser = newParser(model);
-		UnitDefinition unitDefinition = parse(parser, false);
+		UnitDefinition unitDefinition = parseUnit(parser);
 		
 		search(parser.getProblems(), it -> it.getBeginLine() == 5);
 		
@@ -323,11 +442,11 @@ public class ErrorRecoveryTests {
 	}
 	
 	@Test
-	void badAccept_badClause() {
+	void badAccept_badStatementInClause() {
 		String model =
-				  "package SomePackage {\n" +
-					"public activity Simple() {\n" +
-					"  accept (s : Signal1) {\n" + 
+				    "package SomePackage {\n" +
+					"  public activity Simple() {\n" +
+					"    accept (s : Signal1) {\n" + 
 					"      Activity1();\n" + 
 					"    } or accept (s : Signal2) {\n" + 
 					"      -\n" + 
@@ -335,10 +454,9 @@ public class ErrorRecoveryTests {
 					"      Activity3();\n" + 
 					"    }\n" + 
 					"  }\n" + 
-					"}\n" +
-				  "}";
+					"}";
 		Parser parser = newParser(model);
-		UnitDefinition unitDefinition = parse(parser, false);
+		UnitDefinition unitDefinition = parseUnit(parser);
 		
 		search(parser.getProblems(), it -> it.getBeginLine() == 6);
 		
