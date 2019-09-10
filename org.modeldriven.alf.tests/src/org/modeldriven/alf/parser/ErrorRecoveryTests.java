@@ -158,9 +158,9 @@ public class ErrorRecoveryTests {
         UnitDefinition unitDefinition = parseUnit(parser);
         List<SourceProblem> problems = new ArrayList<>(parser.getProblems());
         assertProblems(problems.size() >= 3, problems);
-        assertEquals(3, problems.get(0).getBeginLine());
-        assertEquals(9, problems.get(1).getBeginLine());
-        assertEquals(15, problems.get(2).getBeginLine());
+        assertEquals(4, problems.get(0).getBeginLine());
+        assertEquals(10, problems.get(1).getBeginLine());
+        assertEquals(16, problems.get(2).getBeginLine());
         
         assertNotNull(unitDefinition);
         PackageDefinition asPackage = require(unitDefinition.getDefinition());
@@ -168,7 +168,8 @@ public class ErrorRecoveryTests {
         assertEquals("Good1", activities.get(1).getName());
         assertEquals("Good2", activities.get(3).getName());
         Arrays.asList(0, 2, 4).forEach(i -> {
-            EmptyStatement empty = single(activities.get(i).getBody().getStatement());
+            @SuppressWarnings("unused")
+			EmptyStatement empty = single(activities.get(i).getBody().getStatement());
         });
     }
    
@@ -211,7 +212,7 @@ public class ErrorRecoveryTests {
        UnitDefinition unitDefinition = parseUnit(parser);
        
        ParsingProblem problem = single(parser.getProblems());
-       assertEquals(0, problem.getBeginLine());
+       assertEquals(1, problem.getBeginLine());
        
        assertNull(unitDefinition.getDefinition());
    }
@@ -364,7 +365,8 @@ public class ErrorRecoveryTests {
 
         assertNotNull(unitDefinition);
         ActivityDefinition asActivity = require(unitDefinition.getDefinition());
-        Statement badStatement = single(asActivity.getBody().getStatement());
+        @SuppressWarnings("unused")
+		Statement badStatement = single(asActivity.getBody().getStatement());
         
     }    
     
@@ -458,13 +460,14 @@ public class ErrorRecoveryTests {
 		Parser parser = newParser(model);
 		UnitDefinition unitDefinition = parseUnit(parser);
 		
-		search(parser.getProblems(), it -> it.getBeginLine() == 6);
+		search(parser.getProblems(), it -> it.getBeginLine() == 7);
 		
 		PackageDefinition asPackage = require(unitDefinition.getDefinition());
 		ActivityDefinition activity = single(asPackage.getOwnedMember());
 		List<AcceptBlock> accept = single(activity.getBody().getStatement(), (AcceptStatement s) -> assertAndMap(3, s.getAcceptBlock()));
 		
-        EmptyStatement statementPlaceholder = single(accept.get(1).getBlock().getStatement());
+        @SuppressWarnings("unused")
+		EmptyStatement statementPlaceholder = single(accept.get(1).getBlock().getStatement());
         
         IntStream.of(0, 2).forEach(i -> {
             AcceptBlock acceptBlock = accept.get(i);

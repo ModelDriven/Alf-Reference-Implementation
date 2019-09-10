@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2018 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright (c) 2018-2019 Data Access Technologies, Inc. (Model Driven Solutions)
  *  All rights reserved worldwide. This program and the accompanying materials
  *  are made available for use under the terms of the GNU General Public License 
  *  (GPL) version 3 that accompanies this distribution and is available at 
@@ -132,20 +132,19 @@ class ParseException extends Exception {
       }
     }
     Token tok = currentToken.next;
-    String retval = "Encountered \"";
+    String retval = "Syntax Error: Unexpected";
     for (int i = 0; i < maxSize; i++) {
       if (i != 0) retval += " ";
       if (tok.kind == 0) {
-        retval += tokenImage[0];
+        retval += " " + tokenImage[0];
         break;
       }
       retval += " " + tokenImage[tok.kind];
-      retval += " \"";
-      retval += add_escapes(tok.image);
-      retval += " \"";
+//      retval += " \"";
+//      retval += add_escapes(tok.image);
+//      retval += "\"";
       tok = tok.next;
     }
-    retval += "\".";
     return retval;
   }
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2018 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2019 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -12,10 +12,10 @@ import java.io.FileNotFoundException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import org.modeldriven.alf.parser.Parser;
 import org.modeldriven.alf.parser.ParserFactory;
+import org.modeldriven.alf.syntax.common.SourceProblem;
 import org.modeldriven.alf.syntax.expressions.NameBinding;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.ExternalNamespace;
@@ -142,16 +142,17 @@ public class ModelNamespaceImpl extends
                     System.out.println("Parsed " + path);
                 }
                 if (!parser.getProblems().isEmpty()) {
-                    reportProblems(path, parser.getProblems().stream().map(p -> p.getErrorMessage()));
-                    cacheMissingUnit(path);
+                    this.addProblems(parser.getProblems());
+                    this.cacheMissingUnit(path);
                     return null;
                 }
                 unit.getImpl().addImplicitImports();
-                cacheUnit(path, unit);
+                this.cacheUnit(path, unit);
                 return unit;
             } catch (RuntimeException e) {
-                reportProblems(path, Stream.of(e.getMessage()));
-                cacheMissingUnit(path);
+                System.out.println("Parse failed: " + path);
+                System.out.println(e);
+                this.cacheMissingUnit(path);
                 return null;
             }
         }
@@ -165,9 +166,8 @@ public class ModelNamespaceImpl extends
         this.parsedUnitCache.put(path, unit);
     }
     
-    private void reportProblems(String path, Stream<String> problems) {
-        System.out.println("Parse failed: " + path);
-        problems.forEach(System.out::println);
+    private void addProblems(Collection<SourceProblem> problems) {
+        this.getRootNamespaceImpl().addParsingErrors(problems);
     }
 
     public UnitDefinition resolveUnit(QualifiedName qualifiedName) {
@@ -178,11 +178,14 @@ public class ModelNamespaceImpl extends
         
         if (unit instanceof MissingUnit) {
             // If not found in the model, look for the unit in the library.
-            unit = ((RootNamespaceImpl)this.getSelf().getNamespace().getImpl()).
-                    resolveModelUnit(qualifiedName);
+            unit = this.getRootNamespaceImpl().resolveModelUnit(qualifiedName);
         }
         
         // Return a MissingUnit rather than null if parsing failed.
         return unit == null? new MissingUnit(qualifiedName): unit;
+    }
+    
+    protected RootNamespaceImpl getRootNamespaceImpl() {
+        return (RootNamespaceImpl)this.getSelf().getNamespace().getImpl();
     }
 }

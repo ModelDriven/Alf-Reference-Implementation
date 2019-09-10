@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright (c) 2017-2019 Data Access Technologies, Inc. (Model Driven Solutions)
  *  All rights reserved worldwide. This program and the accompanying materials
  *  are made available for use under the terms of the GNU General Public License 
  *  (GPL) version 3 that accompanies this distribution and is available at 
@@ -116,7 +116,7 @@ class TokenMgrError extends RuntimeException
    * Note: You can customize the lexical error message by modifying this method.
    */
   protected static String LexicalError(boolean EOFSeen, int lexState, int errorLine, int errorColumn, String errorAfter, char curChar) {
-    return ("Encountered: " +
+    return ("Lexical Error: " +
           (EOFSeen ? "<EOF> " : ("\"" + addEscapes(String.valueOf(curChar)) + "\"") + " (" + (int)curChar + "), ") +
           "after: \"" + addEscapes(errorAfter) + "\"");
   }

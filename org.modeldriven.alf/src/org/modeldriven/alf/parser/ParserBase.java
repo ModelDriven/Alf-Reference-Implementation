@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright 2019 Data Access Technologies, Inc. (Model Driven Solutions)
+ * 
+ * All rights reserved worldwide. This program and the accompanying materials
+ * are made available for use under the terms of the GNU General Public License 
+ * (GPL) version 3 that accompanies this distribution and is available at 
+ * http://www.gnu.org/licenses/gpl-3.0.html. 
+ *******************************************************************************/
+
 package org.modeldriven.alf.parser;
 
 import java.util.ArrayList;
@@ -166,9 +175,10 @@ public abstract class ParserBase implements Parser {
     /**
      * Performs a parsing operation collecting any potentially generated exceptions.
      *  
-     * @param toRun
-     * @param eofExpected whether the parsed element should be the last one
-     * @return a partially parsed element, never null (bugs aside)
+     * @param   toRun           the parsing operation to be run
+     * @param   eofExpected     whether the parsed element should be the last one
+     * 
+     * @return  a partially     parsed element, never null (bugs aside)
      */
     private <T> T performParseOperation(ParseOperation<T> toRun, boolean eofExpected) {
         collectedProblems.clear();
