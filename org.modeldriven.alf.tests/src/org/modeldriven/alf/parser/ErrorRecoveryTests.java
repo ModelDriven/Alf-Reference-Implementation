@@ -7,7 +7,6 @@ import static org.modeldriven.alf.parser.Helper.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -16,7 +15,6 @@ import org.modeldriven.alf.syntax.common.SourceProblem;
 import org.modeldriven.alf.syntax.expressions.BehaviorInvocationExpression;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.expressions.ExpressionPlaceholder;
-import org.modeldriven.alf.syntax.expressions.InvocationExpression;
 import org.modeldriven.alf.syntax.expressions.LiteralExpression;
 import org.modeldriven.alf.syntax.expressions.NameExpression;
 import org.modeldriven.alf.syntax.expressions.NaturalLiteralExpression;
@@ -39,7 +37,7 @@ public class ErrorRecoveryTests {
     void badToken() {
         String model = "package\n\"";
         Parser parser = newParser(model);
-        UnitDefinition unit = parser.parseUnitDefinition(false);
+        UnitDefinition unit = parse(parser, false);
         assertNotNull(unit);
         SourceProblem problem = single(parser.getProblems());
         assertTrue(problem instanceof LexicalProblem, () -> problem.getClass().getSimpleName());
@@ -66,7 +64,7 @@ public class ErrorRecoveryTests {
                 "}";
 
         Parser parser = newParser(model);
-        UnitDefinition unitDefinition = parser.parseUnitDefinition(false);
+        UnitDefinition unitDefinition = parse(parser, false);
         ParsingProblem parsingProblem = search(parser.getProblems(), p -> p instanceof ParsingProblem);
         assertEquals(5, parsingProblem.getBeginLine());
         LexicalProblem lexicalProblem = search(parser.getProblems(), p -> p instanceof LexicalProblem);
@@ -89,7 +87,7 @@ public class ErrorRecoveryTests {
 
         Parser parser = newParser(model);
         
-        UnitDefinition unitDefinition = parser.parseUnitDefinition(false);
+        UnitDefinition unitDefinition = parse(parser, false);
         List<ParsingProblem> problems = requireAtLeast(1, parser.getProblems());
         PackageDefinition asPackage = require(unitDefinition.getDefinition());
         List<ClassifierDefinition> activities = assertAndMap(2, asPackage.getOwnedMember());
@@ -118,7 +116,7 @@ public class ErrorRecoveryTests {
 
 		Parser parser = newParser(model);
 		
-		UnitDefinition unitDefinition = parser.parseUnitDefinition(false);
+		UnitDefinition unitDefinition = parse(parser, false);
 		List<SourceProblem> problems = new ArrayList<>(parser.getProblems());
 		assertProblems(problems.size() >= 3, problems);
 		assertEquals(2, problems.get(0).getBeginLine());
@@ -144,7 +142,7 @@ public class ErrorRecoveryTests {
 			"  bad3(exp()-;\n" +			
 			"}";
 		Parser parser = newParser(model);
-		UnitDefinition unitDefinition = parser.parseUnitDefinition(false);
+		UnitDefinition unitDefinition = parse(parser, false);
 		
         ActivityDefinition asActivity = (ActivityDefinition) unitDefinition.getDefinition();
 		List<SourceProblem> problems = new ArrayList<>(parser.getProblems());
@@ -179,7 +177,7 @@ public class ErrorRecoveryTests {
             "  bad3(exp)-;\n" + //
             "}";
         Parser parser = newParser(model);
-        UnitDefinition unitDefinition = parser.parseUnitDefinition(false);
+        UnitDefinition unitDefinition = parse(parser, false);
 
         ActivityDefinition asActivity = (ActivityDefinition) unitDefinition.getDefinition();
         List<SourceProblem> problems = new ArrayList<>(parser.getProblems());
@@ -213,7 +211,29 @@ public class ErrorRecoveryTests {
 
         Parser parser = newParser(model);
 
-        UnitDefinition unitDefinition = parser.parseUnitDefinition(true);
+        UnitDefinition unitDefinition = parse(parser, false);
+        List<SourceProblem> problems = new ArrayList<>(parser.getProblems());
+        assertProblems(problems.size() > 0, problems);
+        assertEquals(2, problems.get(0).getBeginLine());
+        assertProblems(problems.stream().allMatch(problem -> problem.getEndLine() == 2), problems);
+
+        assertNotNull(unitDefinition);
+        ActivityDefinition asActivity = require(unitDefinition.getDefinition());
+        List<Statement> statements = require(2, asActivity.getBody().getStatement());
+        ExpressionStatement goodStatement = getAt(1, statements, 1);
+        BehaviorInvocationExpression invocation = (BehaviorInvocationExpression) goodStatement.getExpression();
+        assertEquals("y", invocation.getTarget().getPathName());
+    }
+    
+    @Test
+    void badStatement4() {
+        String model = "activity ParsingError1() {\n" + //
+                "       x->selec y (true);\n" + //
+                "}";
+
+        Parser parser = newParser(model);
+
+        UnitDefinition unitDefinition = parse(parser, false);
         List<SourceProblem> problems = new ArrayList<>(parser.getProblems());
         assertProblems(problems.size() > 0, problems);
         assertEquals(2, problems.get(0).getBeginLine());
@@ -226,7 +246,7 @@ public class ErrorRecoveryTests {
         BehaviorInvocationExpression invocation = (BehaviorInvocationExpression) goodStatement.getExpression();
         assertEquals("y", invocation.getTarget().getPathName());
         
-    }
+    }    
 	   
 	@Test
 	void badArgument() {
@@ -240,7 +260,7 @@ public class ErrorRecoveryTests {
 		  "}";
 
 		Parser parser = newParser(model);
-		UnitDefinition unitDefinition = parser.parseUnitDefinition(false);
+		UnitDefinition unitDefinition = parse(parser, false);
 		
 		ParsingProblem problem = single(parser.getProblems());
 		assertEquals(4, problem.getBeginLine());
@@ -282,7 +302,7 @@ public class ErrorRecoveryTests {
 					"}\n" +
 				  "}";
 		Parser parser = newParser(model);
-		UnitDefinition unitDefinition = parser.parseUnitDefinition(false);
+		UnitDefinition unitDefinition = parse(parser, false);
 		
 		search(parser.getProblems(), it -> it.getBeginLine() == 5);
 		
@@ -318,7 +338,7 @@ public class ErrorRecoveryTests {
 					"}\n" +
 				  "}";
 		Parser parser = newParser(model);
-		UnitDefinition unitDefinition = parser.parseUnitDefinition(false);
+		UnitDefinition unitDefinition = parse(parser, false);
 		
 		search(parser.getProblems(), it -> it.getBeginLine() == 6);
 		

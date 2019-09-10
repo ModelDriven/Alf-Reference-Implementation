@@ -1,9 +1,9 @@
 package org.modeldriven.alf.parser;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.modeldriven.alf.parser.Helper.SAMPLE_LOCATION;
 
 import java.io.StringReader;
 import java.nio.file.Path;
@@ -20,6 +20,7 @@ import org.modeldriven.alf.syntax.common.SyntaxElement;
 import org.modeldriven.alf.syntax.expressions.BehaviorInvocationExpression;
 import org.modeldriven.alf.syntax.expressions.Expression;
 import org.modeldriven.alf.syntax.expressions.PositionalTuple;
+import org.modeldriven.alf.syntax.units.UnitDefinition;
 
 @SuppressWarnings("unchecked")
 public class Helper {
@@ -156,4 +157,20 @@ public class Helper {
     public static String generateProblemString(Collection<? extends SourceProblem> problems) {
         return problems.stream().map(it -> it.toString()).collect(Collectors.joining(", "));
     }
+
+    public static UnitDefinition parse(Parser parser, boolean eof) {
+        UnitDefinition parsedUnit = parser.parseUnitDefinition(eof);
+        checkProblemMessages(parser.getProblems());
+        return parsedUnit;
+    }
+
+    public static void checkProblemMessages(Collection<SourceProblem> problems) {
+        problems.forEach(Helper::checkProblemMessage);
+    }
+    
+    public static void checkProblemMessage(SourceProblem problem) {
+        assertTrue(problem.getErrorMessage(), problem.getErrorMessage().startsWith("[" + problem.getBeginLine() + ":" + problem.getBeginColumn()));
+        assertFalse(problem.getProblemKey(), problem.getProblemKey().startsWith("["));
+    }
+    
 }
