@@ -175,7 +175,10 @@ public abstract class ParserBase implements Parser {
         T parsed = null;
         try {
             parsed = toRun.parse();
-        } catch (TokenMgrError e) {
+            if (eofExpected) {
+                EndOfFile();
+            }
+       } catch (TokenMgrError e) {
             collectLexicalError(e);
             return parsed;
         } catch (ParseException e) {
@@ -184,14 +187,11 @@ public abstract class ParserBase implements Parser {
             collectParsingError(e);
             return null;
         }
-        if (eofExpected && collectedProblems.isEmpty()) {
-            parseEOF();
-        }
         return parsed;
 
     }
     
-    protected abstract void parseEOF();
+    protected abstract void EndOfFile() throws ParseException;
 
     protected abstract QualifiedName TypeName() throws ParseException;
     

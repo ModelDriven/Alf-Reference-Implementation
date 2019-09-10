@@ -62,14 +62,6 @@ public class ParserImpl extends ParserBase {
     return token;
   }
 
-  @Override
-  protected void parseEOF() {
-      getNextToken();      
-      if (token.kind != EOF) {
-          collectParsingError(generateParseException());
-      }
-  }
-
 }
 
 PARSER_END(ParserImpl)
@@ -367,6 +359,22 @@ TOKEN:
 | < LSHIFTASSIGN: "<<=" >
 | < RSHIFTASSIGN: ">>=" >
 | < URSHIFTASSIGN: ">>>=" >
+}
+
+/*********************
+ *    END OF FILE    *
+ *********************/
+
+void EndOfFile():
+{
+}
+{
+	try {
+		<EOF>
+	} catch (ParseException e) {
+	  	getNextToken();
+		collectParsingError(e);
+	}
 }
 
 /***************

@@ -36,12 +36,17 @@ public class ParserImpl extends ParserBase implements ParserImplConstants {
     return token;
   }
 
-  @Override
-  protected void parseEOF() {
-      getNextToken();
-      if (token.kind != EOF) {
-          collectParsingError(generateParseException());
-      }
+/*********************
+ *    END OF FILE    *
+ *********************/
+  final public 
+void EndOfFile() throws ParseException {
+    try {
+      jj_consume_token(0);
+    } catch (ParseException e) {
+getNextToken();
+                collectParsingError(e);
+    }
   }
 
 /***************
@@ -5939,91 +5944,6 @@ this.provideEnd(d);
     finally { jj_save(44, xla); }
   }
 
-  private boolean jj_3R_147()
- {
-    if (jj_scan_token(ENUM)) return true;
-    if (jj_3R_52()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_60()
- {
-    if (jj_scan_token(ASSIGN)) return true;
-    if (jj_3R_99()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_204()
- {
-    if (jj_scan_token(THIS)) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_228()) jj_scanpos = xsp;
-    return false;
-  }
-
-  private boolean jj_3R_179()
- {
-    if (jj_scan_token(SC_OR)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_246()
- {
-    if (jj_3R_248()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_61()
- {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(56)) jj_scanpos = xsp;
-    if (jj_scan_token(LBRACE)) return true;
-    if (jj_3R_100()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_243()
- {
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_246()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_167()
- {
-    if (jj_3R_178()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_179()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_63()
- {
-    if (jj_scan_token(FROM)) return true;
-    if (jj_3R_101()) return true;
-    return false;
-  }
-
-  private boolean jj_3_35()
- {
-    if (jj_3R_71()) return true;
-    return false;
-  }
-
-  private boolean jj_3_34()
- {
-    if (jj_3R_70()) return true;
-    return false;
-  }
-
   private boolean jj_3_33()
  {
     if (jj_3R_69()) return true;
@@ -7966,6 +7886,91 @@ this.provideEnd(d);
   private boolean jj_3R_228()
  {
     if (jj_3R_57()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_147()
+ {
+    if (jj_scan_token(ENUM)) return true;
+    if (jj_3R_52()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_60()
+ {
+    if (jj_scan_token(ASSIGN)) return true;
+    if (jj_3R_99()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_204()
+ {
+    if (jj_scan_token(THIS)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_228()) jj_scanpos = xsp;
+    return false;
+  }
+
+  private boolean jj_3R_179()
+ {
+    if (jj_scan_token(SC_OR)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_246()
+ {
+    if (jj_3R_248()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_61()
+ {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(56)) jj_scanpos = xsp;
+    if (jj_scan_token(LBRACE)) return true;
+    if (jj_3R_100()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_243()
+ {
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_246()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_167()
+ {
+    if (jj_3R_178()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_179()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_63()
+ {
+    if (jj_scan_token(FROM)) return true;
+    if (jj_3R_101()) return true;
+    return false;
+  }
+
+  private boolean jj_3_35()
+ {
+    if (jj_3R_71()) return true;
+    return false;
+  }
+
+  private boolean jj_3_34()
+ {
+    if (jj_3R_70()) return true;
     return false;
   }
 
