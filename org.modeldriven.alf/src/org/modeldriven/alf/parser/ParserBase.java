@@ -60,7 +60,7 @@ public abstract class ParserBase implements Parser {
      * In this mode, we will not collect additional errors. Useful to set after we hit a fatal error, 
      * after which there is no point in reporting additional problems.
      */
-    private boolean ignoredRemainingProblems;
+    private boolean ignoreRemainingProblems;
 
     protected abstract SimpleCharStream getCharStream();
     
@@ -90,12 +90,12 @@ public abstract class ParserBase implements Parser {
     protected void collectLexicalError(String message, int lineNumber, int columnNumber) {
         LexicalProblem problem = new LexicalProblem(message, new UnexpectedElement(fileName, lineNumber, columnNumber));
         collectProblem(problem);
-        ignoredRemainingProblems = true;
+        ignoreRemainingProblems = true;
     }
 
     private void collectProblem(SourceProblem problem) {
         if (!collectedProblems.isEmpty()) {
-            if (ignoredRemainingProblems) {
+            if (ignoreRemainingProblems) {
                 return;
             }
             SourceProblem previousProblem = collectedProblems.get(collectedProblems.size()-1);
