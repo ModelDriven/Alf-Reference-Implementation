@@ -17,6 +17,7 @@ import java.nio.file.Paths;
 import java.util.Collection;
 
 import org.modeldriven.alf.syntax.common.ConstraintViolation;
+import org.modeldriven.alf.syntax.common.SourceProblem;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.RootNamespace;
@@ -24,7 +25,7 @@ import org.modeldriven.alf.syntax.units.UnitDefinition;
 
 public abstract class AlfBase {
     
-    public static final String ALF_VERSION = "1.1.0g/maint-1";
+    public static final String ALF_VERSION = "1.1.0g/maint-2";
     
     protected boolean isVerbose = false;
 
@@ -58,11 +59,10 @@ public abstract class AlfBase {
     
             RootNamespace root = RootNamespace.getRootScope();
             root.deriveAll();
-            violations = root.checkConstraints();
             
-            if (!violations.isEmpty()) {
-                this.printConstraintViolations(violations);   
-            } else {
+            violations = root.checkConstraints();  
+            
+            if (violations.isEmpty()) {
                 this.printVerbose("No constraint violations.");
             }    
         }
@@ -70,15 +70,15 @@ public abstract class AlfBase {
         return violations;
     }
     
-    // NOTE: Presumes that the violations are ordered by file name and then by line
+    // NOTE: Presumes that the problems are ordered by file name and then by line
     // under each file name.
-    public void printConstraintViolations(Collection<ConstraintViolation> violations) {
+    public void printSourceProblems(Collection<? extends SourceProblem> problems) {
         String fileName = null;
         BufferedReader reader = null;
         String line = "";
         int lineNum = 0;
-        for (ConstraintViolation violation: violations) {
-            String nextFileName = violation.getFileName();
+        for (SourceProblem problem: problems) {
+            String nextFileName = problem.getFileName();
             if (fileName == null || !fileName.equals(nextFileName)) {
                 fileName = nextFileName;
                 if (reader != null) {
@@ -99,9 +99,9 @@ public abstract class AlfBase {
                 this.println("\n" + (fileName == null? "": fileName) + ":");
             }
             int prevLineNum = lineNum;
-            lineNum = violation.getBeginLine();
+            lineNum = problem.getBeginLine();
             line = this.getLine(reader, line, prevLineNum, lineNum);
-            this.printConstraintViolation(line, violation);
+            this.printSourceProblem(line, problem);
         }
     }
     
@@ -122,18 +122,18 @@ public abstract class AlfBase {
         return line;
     }
     
-    protected void printConstraintViolation(String line, ConstraintViolation violation) {
+    protected void printSourceProblem(String line, SourceProblem problem) {
         this.println("");
         if (line != null) {
             this.println(line);
             StringBuffer marker = new StringBuffer();
-            int beginColumn = violation.getBeginColumn();
-            int endColumn = violation.getEndColumn();
+            int beginColumn = problem.getBeginColumn();
+            int endColumn = problem.getEndColumn();
             for (int n = beginColumn; n > 1; n--) {
                 marker.append(" ");
             }
             marker.append("^");
-            if (violation.getBeginLine() == violation.getEndLine() && endColumn > beginColumn) {
+            if (problem.getBeginLine() == problem.getEndLine() && endColumn > beginColumn) {
                 for (int n = beginColumn+1; n < endColumn; n++ ) {
                     marker.append("-");
                 }
@@ -141,7 +141,7 @@ public abstract class AlfBase {
             }
             this.println(marker.toString());
        }
-        this.println(violation.getErrorMessage());
+        this.println(problem.getErrorMessage());
     }
     
     protected void printVerbose(String message) {

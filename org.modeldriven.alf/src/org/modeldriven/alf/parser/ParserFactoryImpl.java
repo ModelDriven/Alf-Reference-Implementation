@@ -10,12 +10,30 @@
 package org.modeldriven.alf.parser;
 
 import java.io.FileNotFoundException;
+import java.io.Reader;
 
 public class ParserFactoryImpl implements ParserFactory {
 
     @Override
     public Parser createParser(String fileName) throws FileNotFoundException {
-        return new ParserImpl(fileName);
+        ParserImpl parserImpl = new ParserImpl(fileName);
+        parserImpl.installCustomTokenManager(parserImpl::collectLexicalError);
+        return parserImpl;
+    }
+    
+    @Override
+    public Parser createParser(String fileName, Reader contents) {
+        ParserImpl newParser = new ParserImpl(contents);
+        newParser.setFileName(fileName);
+        newParser.installCustomTokenManager(newParser::collectLexicalError);
+        return newParser;
     }
 
+    @Override
+    public Parser createParser(Reader contents){
+        ParserImpl parserImpl = new ParserImpl(contents);
+        parserImpl.installCustomTokenManager(parserImpl::collectLexicalError);
+        return parserImpl;
+    }
+    
 }

@@ -10,9 +10,23 @@
 package org.modeldriven.alf.parser;
 
 import java.io.FileNotFoundException;
+import java.io.Reader;
 
 public interface ParserFactory {
     
     public Parser createParser(String fileName) throws FileNotFoundException;
-
+    
+    public default Parser createParser(String fileName, Reader contents) {
+        Parser newParser = createParser(contents);
+        newParser.setFileName(fileName);
+        return newParser;
+    }
+    
+    public default Parser createParser(Reader contents) {
+        throw new UnsupportedOperationException();
+    }
+    
+    public static ParserFactory defaultImplementation() {
+        return new ParserFactoryImpl();
+    }
 }

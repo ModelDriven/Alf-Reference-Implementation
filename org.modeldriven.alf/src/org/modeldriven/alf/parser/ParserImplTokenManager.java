@@ -7,6 +7,8 @@ import org.modeldriven.alf.syntax.statements.*;
 import org.modeldriven.alf.syntax.units.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+import static org.modeldriven.alf.parser.TokenSequence.tokens;
 
 /** Token Manager. */
 @SuppressWarnings("all")

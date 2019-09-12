@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2013-2018 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2013-2019 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -11,9 +11,10 @@ package org.modeldriven.alf.fuml.units;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.TreeSet;
 
 import org.modeldriven.alf.parser.ParserFactory;
-import org.modeldriven.alf.parser.ParserFactoryImpl;
+import org.modeldriven.alf.syntax.common.SourceProblem;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.Member;
 import org.modeldriven.alf.syntax.units.MissingMember;
@@ -34,6 +35,7 @@ public class RootNamespaceImpl extends ModelNamespaceImpl {
     private String libraryDirectory = null;
     
     private ParserFactory parserFactory;
+    private Collection<SourceProblem> parsingErrors = new TreeSet<>();
     
     protected RootNamespaceImpl(RootNamespace self) {
         super(self);
@@ -48,7 +50,7 @@ public class RootNamespaceImpl extends ModelNamespaceImpl {
     }
     
     public RootNamespaceImpl() {
-        this(new ParserFactoryImpl());
+        this(ParserFactory.defaultImplementation());
     }
     
     public void setParserFactory(ParserFactory parserFactory) {
@@ -86,6 +88,18 @@ public class RootNamespaceImpl extends ModelNamespaceImpl {
         self.addOwnedMember(modelNamespace);
         self.addMember(modelNamespace);
         modelNamespace.setNamespace(self);
+    }
+    
+    public void clearParsingErrors() {
+        this.parsingErrors.clear();
+    }
+    
+    public void addParsingErrors(Collection<SourceProblem> problems) {
+        this.parsingErrors.addAll(problems);
+    }
+    
+    public Collection<SourceProblem> getParsingErrors() {
+        return this.parsingErrors;
     }
 
     public ModelNamespace getModelNamespace() {

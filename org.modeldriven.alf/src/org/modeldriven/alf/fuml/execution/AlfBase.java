@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2015-2017 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2015-2019 Data Access Technologies, Inc. (Model Driven Solutions)
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -23,6 +23,7 @@ import org.modeldriven.alf.fuml.units.RootNamespaceImpl;
 import org.modeldriven.alf.mapping.MappingError;
 import org.modeldriven.alf.syntax.common.ConstraintViolation;
 import org.modeldriven.alf.syntax.common.ElementReference;
+import org.modeldriven.alf.syntax.common.SourceProblem;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.MissingUnit;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
@@ -59,7 +60,7 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
         this.isPrint = isPrint;
     }
 
-   public void setIsFileName(boolean isFileName) {
+    public void setIsFileName(boolean isFileName) {
         this.isFileName = isFileName;
     }
     
@@ -76,20 +77,24 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
    protected abstract ElementFactory createElementFactory();
 
     public UnitDefinition parse(String unitName, boolean isFileName) {
+        RootNamespaceImpl rootScopeImpl = this.getRootScopeImpl();
+        rootScopeImpl.clearParsingErrors();
+        
         BoundClassifierImpl.clearBoundClassifiers();
         
         UnitDefinition unit = null;
         
         if (isFileName) {
             try {
-                unit = this.getRootScopeImpl().getModelNamespaceImpl().
-                        resolveModelFile(unitName);
+                unit = rootScopeImpl.getModelNamespaceImpl().resolveModelFile(unitName);
             } catch (FileNotFoundException e) {
                 this.println("File not found: " + unitName);
             }
         } else {        
             unit = this.resolve(unitName);
         }
+        
+        this.printSourceProblems(rootScopeImpl.getParsingErrors());
         
         return unit instanceof MissingUnit? null: unit;        
     }
@@ -190,10 +195,13 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
     
     public UnitDefinition process(UnitDefinition unit) {
         if (unit != null) {
+            this.getRootScopeImpl().clearParsingErrors();
             Collection<ConstraintViolation> violations = this.check(unit);
+            Collection<SourceProblem> parsingErrors = this.getRootScopeImpl().getParsingErrors();
+            this.printSourceProblems(parsingErrors.isEmpty()? violations: parsingErrors);
             if (this.isPrint) {
                 unit.print(true);
-            } else if (!this.isParseOnly && violations.isEmpty()) {
+            } else if (!this.isParseOnly && parsingErrors.isEmpty() && violations.isEmpty()) {
                 NamespaceDefinition definition = unit.getDefinition();
                 if (definition.getImpl().isTemplate()) {
                     this.println(definition.getName() + " is a template.");
@@ -229,13 +237,13 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
     
     protected String getErrorMessageFilePath() {
         return this.getRootScopeImpl().getLibraryDirectory() + "/" + 
-                ConstraintViolation.DEFAULT_ERROR_MESSAGE_FILE_PATH;
+                SourceProblem.DEFAULT_ERROR_MESSAGE_FILE_PATH;
     }
     
     protected void loadResources() {
         String errorMessageFilePath = this.getErrorMessageFilePath();
         try {
-            ConstraintViolation.loadErrorMessageFile(errorMessageFilePath);
+            SourceProblem.loadErrorMessageFile(errorMessageFilePath);
             this.printVerbose("Loaded " + errorMessageFilePath);
         } catch (IOException e) {
             this.printVerbose("Error reading error message file: " + errorMessageFilePath);

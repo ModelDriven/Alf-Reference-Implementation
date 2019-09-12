@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2018 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011-2019 Data Access Technologies, Inc. (Model Driven Solutions)
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -17,7 +17,11 @@ public abstract class ParsedElement {
     private int endColumn = 0;
 
     protected void init(Parser parser) {
-        parser.provideInfo(this, true);        
+        parser.provideInfo(this, getInfoFromNextToken());        
+    }
+
+    protected boolean getInfoFromNextToken() {
+        return true;
     }
     
     protected void init(ParsedElement element) {
