@@ -8,6 +8,7 @@ import static org.modeldriven.alf.parser.Helper.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -40,7 +41,7 @@ public class ErrorRecoveryTests {
         Parser parser = newParser(model);
         UnitDefinition unit = parseUnit(parser);
         assertNotNull(unit);
-        SourceProblem problem = single(parser.getProblems());
+        SourceProblem problem = require(1, parser.getProblems()).get(0);
         assertTrue(problem instanceof LexicalProblem, () -> problem.getClass().getSimpleName());
         assertEquals(2, problem.getBeginLine());
     }
@@ -66,7 +67,8 @@ public class ErrorRecoveryTests {
 
         Parser parser = newParser(model);
         UnitDefinition unitDefinition = parseUnit(parser);
-        ParsingProblem parsingProblem = search(parser.getProblems(), p -> p instanceof ParsingProblem);
+        Collection<SourceProblem> problems = require(2, parser.getProblems());
+        ParsingProblem parsingProblem = search(problems, p -> p instanceof ParsingProblem);
         assertEquals(5, parsingProblem.getBeginLine());
         LexicalProblem lexicalProblem = search(parser.getProblems(), p -> p instanceof LexicalProblem);
         assertEquals(13, lexicalProblem.getBeginLine());
