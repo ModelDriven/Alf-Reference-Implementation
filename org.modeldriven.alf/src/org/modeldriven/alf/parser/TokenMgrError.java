@@ -116,9 +116,8 @@ class TokenMgrError extends RuntimeException
    * Note: You can customize the lexical error message by modifying this method.
    */
   protected static String LexicalError(boolean EOFSeen, int lexState, int errorLine, int errorColumn, String errorAfter, char curChar) {
-    return ("Lexical Error: " +
-          (EOFSeen ? "<EOF> " : ("\"" + addEscapes(String.valueOf(curChar)) + "\"") + " (" + (int)curChar + "), ") +
-          "after: \"" + addEscapes(errorAfter) + "\"");
+    return ("Lexical Error: Unexpected " +
+          (EOFSeen ? "<EOF>" : ("\"" + addEscapes(String.valueOf(curChar)) + "\"") + " (" + (int)curChar + ")"));
   }
   
   private int errorLine = 0;
