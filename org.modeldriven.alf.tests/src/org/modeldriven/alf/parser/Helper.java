@@ -1,3 +1,11 @@
+/*******************************************************************************
+ *  Copyright 2019 Model Driven Solutions, Inc.
+ *  All rights reserved worldwide. This program and the accompanying materials
+ *  are made available for use under the terms of the GNU General Public License 
+ *  (GPL) version 3 that accompanies this distribution and is available at 
+ *  http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
+ *  contact Model Driven Solutions.
+ *******************************************************************************/
 package org.modeldriven.alf.parser;
 
 import static org.junit.Assert.assertEquals;
@@ -10,7 +18,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;

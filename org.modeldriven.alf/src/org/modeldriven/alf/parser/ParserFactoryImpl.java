@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2018 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright (c) 2018, 2019 Model Driven Solutions, Inc.
  *  All rights reserved worldwide. This program and the accompanying materials
  *  are made available for use under the terms of the GNU General Public License 
  *  (GPL) version 3 that accompanies this distribution and is available at 

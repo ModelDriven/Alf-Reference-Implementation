@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2013 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2011, 2013 Model Driven Solutions, Inc.
  * Copyright 2013 Ivar Jacobson International
  * 
  * All rights reserved worldwide. This program and the accompanying materials

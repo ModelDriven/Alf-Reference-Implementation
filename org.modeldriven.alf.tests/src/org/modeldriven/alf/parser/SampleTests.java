@@ -1,3 +1,11 @@
+/*******************************************************************************
+ *  Copyright 2019 Model Driven Solutions, Inc.
+ *  All rights reserved worldwide. This program and the accompanying materials
+ *  are made available for use under the terms of the GNU General Public License 
+ *  (GPL) version 3 that accompanies this distribution and is available at 
+ *  http://www.gnu.org/licenses/gpl-3.0.html. For alternative licensing terms, 
+ *  contact Model Driven Solutions.
+ *******************************************************************************/
 package org.modeldriven.alf.parser;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -16,16 +24,12 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
-import org.modeldriven.alf.syntax.common.SourceProblem;
 import org.modeldriven.alf.syntax.units.UnitDefinition;
 
 /**
@@ -54,7 +58,8 @@ public class SampleTests {
     }
 
     // TODO-RC consider use this approach for obtaining sample files from the classpath for better build portability
-    private Stream<URI> getSampleFilesFromClasspath(String path) throws IOException, URISyntaxException {
+    @SuppressWarnings("unused")
+	private Stream<URI> getSampleFilesFromClasspath(String path) throws IOException, URISyntaxException {
         List<String> paths = new ArrayList<>();
         InputStream entries = getClass().getResourceAsStream(path);
         if (entries == null) {

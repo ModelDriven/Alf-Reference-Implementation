@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2015 Data Access Technologies, Inc. (Model Driven Solutions)
+ * Copyright 2015 Model Driven Solutions, Inc.
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
