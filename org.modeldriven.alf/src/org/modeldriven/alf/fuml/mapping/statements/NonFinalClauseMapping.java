@@ -113,7 +113,8 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
 	}
 	
 	public static Clause createClause(
-	        Collection<Element> testElements, ActivityNode decider,
+	        Collection<Element> testElements, 
+	        ActivityNode decider,
 	        Collection<Element> bodyElements,
 	        Map<String, AssignedSource> bodyAssignments,
 	        List<AssignedSource> assignmentsAfter,
@@ -121,7 +122,13 @@ public class NonFinalClauseMapping extends SyntaxElementMapping {
 	        FumlMapping parentMapping) throws MappingError {
         Clause clause = parentMapping.create(Clause.class);
         
-        if (testElements.size() == 1 && 
+        if (decider == null) {
+            ValueSpecificationAction valueAction = parentMapping.createActivityGraph().
+                    addBooleanValueSpecificationAction(false);
+            clause.addTest(valueAction);
+            modelElements.add(valueAction);
+            decider = valueAction.getResult();
+        } else if (testElements.size() == 1 && 
                 testElements.toArray()[0] instanceof ExecutableNode && 
                 decider instanceof OutputPin) {
             modelElements.addAll(testElements);
