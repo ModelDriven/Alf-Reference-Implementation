@@ -192,4 +192,7 @@ public class RootNamespaceImpl extends ModelNamespaceImpl {
         return this.getModelNamespace().resolveUnit(qualifiedName);
     }
 
+    protected RootNamespaceImpl getRootNamespaceImpl() {
+        return this;
+    }
 }

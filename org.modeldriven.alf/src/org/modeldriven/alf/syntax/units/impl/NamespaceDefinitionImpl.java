@@ -610,16 +610,18 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
     }
     
     protected static void addMember(Member member, Map<String, Collection<Member>> map) {
-        String name = member.getName();
-        if (name == null) {
-            name = "";
+        if (member != null) {
+            String name = member.getName();
+            if (name == null) {
+                name = "";
+            }
+            Collection<Member> members = map.get(name);
+            if (members == null) {
+                members = new ArrayList<Member>();
+                map.put(name, members);
+            }
+            members.add(member);
         }
-        Collection<Member> members = map.get(name);
-        if (members == null) {
-            members = new ArrayList<Member>();
-            map.put(name, members);
-        }
-        members.add(member);
     }
     
     @Override

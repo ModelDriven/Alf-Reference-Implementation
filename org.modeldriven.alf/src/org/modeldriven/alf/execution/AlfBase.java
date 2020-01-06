@@ -16,7 +16,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collection;
 
-import org.modeldriven.alf.syntax.common.ConstraintViolation;
 import org.modeldriven.alf.syntax.common.SourceProblem;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
 import org.modeldriven.alf.syntax.units.NamespaceDefinition;
@@ -25,7 +24,7 @@ import org.modeldriven.alf.syntax.units.UnitDefinition;
 
 public abstract class AlfBase {
     
-    public static final String ALF_VERSION = "1.1.0h";
+    public static final String ALF_VERSION = "1.1.0i/maint-1";
     
     protected boolean isVerbose = false;
 
@@ -46,10 +45,7 @@ public abstract class AlfBase {
         }
     }
     
-    public Collection<ConstraintViolation> check(
-            UnitDefinition unit) {
-        Collection<ConstraintViolation> violations = null;
-        
+    public void check(UnitDefinition unit, Collection<SourceProblem> problems) {
         if (unit != null) {
             NamespaceDefinition definition = unit.getDefinition();
             if (unit.getImpl().resolveStub()) {
@@ -58,16 +54,9 @@ public abstract class AlfBase {
             }
     
             RootNamespace root = RootNamespace.getRootScope();
-            root.deriveAll();
-            
-            violations = root.checkConstraints();  
-            
-            if (violations.isEmpty()) {
-                this.printVerbose("No constraint violations.");
-            }    
+            root.deriveAll();           
+            problems.addAll(root.checkConstraints());
         }
-        
-        return violations;
     }
     
     // NOTE: Presumes that the problems are ordered by file name and then by line

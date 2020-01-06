@@ -96,11 +96,13 @@ public class ModelNamespaceImpl extends
             UnitDefinition unit = this.resolveModelUnit(qualifiedName);
             if (unit != null && !(unit instanceof MissingUnit)) {
                 Member member = unit.getDefinition();
-                members.add(member);
-                NamespaceDefinition self = this.getSelf();
-                self.addOwnedMember(member);
-                self.addMember(member);
-                member.setNamespace(self);
+                if (member != null) {
+                    members.add(member);
+                    NamespaceDefinition self = this.getSelf();
+                    self.addOwnedMember(member);
+                    self.addMember(member);
+                    member.setNamespace(self);
+                }
             }
         }
         return members;
@@ -131,7 +133,7 @@ public class ModelNamespaceImpl extends
     
     public UnitDefinition resolveModelFile(String path) 
             throws java.io.FileNotFoundException {
-        UnitDefinition unit = this.parsedUnitCache.get(path);
+        UnitDefinition unit = this.parsedUnitCache.get(path.toLowerCase());
         if (unit != null) {
             return unit instanceof MissingUnit? null: unit;
         } else {
@@ -141,18 +143,14 @@ public class ModelNamespaceImpl extends
                 if (isVerbose) {
                     System.out.println("Parsed " + path);
                 }
-                if (!parser.getProblems().isEmpty()) {
-                    this.addProblems(parser.getProblems());
-                    this.cacheMissingUnit(path);
-                    return null;
-                }
-                unit.getImpl().addImplicitImports();
-                this.cacheUnit(path, unit);
-                return unit;
+               unit.getImpl().addImplicitImports();
+               this.cacheUnit(path.toLowerCase(), unit);
+               this.addProblems(parser.getProblems());
+               return unit;
             } catch (RuntimeException e) {
                 System.out.println("Parse failed: " + path);
                 System.out.println(e);
-                this.cacheMissingUnit(path);
+                this.cacheMissingUnit(path.toLowerCase());
                 return null;
             }
         }
@@ -163,6 +161,9 @@ public class ModelNamespaceImpl extends
     }
 
     private void cacheUnit(String path, UnitDefinition unit) {
+        if (unit == null) {
+            unit = new MissingUnit(path);
+        }
         this.parsedUnitCache.put(path, unit);
     }
     

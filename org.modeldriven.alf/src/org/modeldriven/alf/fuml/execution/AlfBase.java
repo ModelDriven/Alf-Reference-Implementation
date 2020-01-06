@@ -12,6 +12,7 @@ package org.modeldriven.alf.fuml.execution;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.TreeSet;
 
 import org.modeldriven.alf.uml.ElementFactory;
 import org.modeldriven.alf.uml.StereotypeApplication;
@@ -21,7 +22,6 @@ import org.modeldriven.alf.fuml.mapping.common.ElementReferenceMapping;
 import org.modeldriven.alf.fuml.mapping.units.ClassifierDefinitionMapping;
 import org.modeldriven.alf.fuml.units.RootNamespaceImpl;
 import org.modeldriven.alf.mapping.MappingError;
-import org.modeldriven.alf.syntax.common.ConstraintViolation;
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.common.SourceProblem;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
@@ -93,8 +93,6 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
         } else {        
             unit = this.resolve(unitName);
         }
-        
-        this.printSourceProblems(rootScopeImpl.getParsingErrors());
         
         return unit instanceof MissingUnit? null: unit;        
     }
@@ -195,13 +193,13 @@ public abstract class AlfBase extends org.modeldriven.alf.execution.AlfBase {
     
     public UnitDefinition process(UnitDefinition unit) {
         if (unit != null) {
-            this.getRootScopeImpl().clearParsingErrors();
-            Collection<ConstraintViolation> violations = this.check(unit);
-            Collection<SourceProblem> parsingErrors = this.getRootScopeImpl().getParsingErrors();
-            this.printSourceProblems(parsingErrors.isEmpty()? violations: parsingErrors);
+            Collection<SourceProblem> problems = new TreeSet<>();
+            this.check(unit, problems);
+            problems.addAll(this.getRootScopeImpl().getParsingErrors());
+            this.printSourceProblems(problems);
             if (this.isPrint) {
                 unit.print(true);
-            } else if (!this.isParseOnly && parsingErrors.isEmpty() && violations.isEmpty()) {
+            } else if (!this.isParseOnly && problems.isEmpty()) {
                 NamespaceDefinition definition = unit.getDefinition();
                 if (definition.getImpl().isTemplate()) {
                     this.println(definition.getName() + " is a template.");
