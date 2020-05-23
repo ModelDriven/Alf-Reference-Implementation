@@ -8,10 +8,10 @@
  *******************************************************************************/
 package org.modeldriven.alf.parser;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.StringReader;
 import java.nio.file.Path;
@@ -98,7 +98,7 @@ public class Helper {
 
     public static <T extends S, S> T assertIsA(S input, Class<T> type) {
         assertNotNull(input);
-        assertTrue(input.getClass().getSimpleName(), type.isInstance(input));
+        assertTrue(type.isInstance(input), () -> input.getClass().getSimpleName());
         return (T) input;
     }
 
@@ -110,7 +110,7 @@ public class Helper {
 
     public static <T extends S, S> List<T> requireAtLeast(int minimumExpected, Collection<S> input) {
         final int actual = input.size();
-        assertTrue(input.size() + " < " + minimumExpected + " - " + input.toString(), minimumExpected <=  actual);
+        assertTrue(minimumExpected <=  actual, () -> input.size() + " < " + minimumExpected + " - " + input.toString());
         return cast(input);
     }
     
@@ -121,7 +121,7 @@ public class Helper {
 
     public static <T extends S, S> void requireEmpty(Collection<S> input, Function<T, String> toStringMapper) {
         String message = input.stream().map(it -> toStringMapper.apply((T) it)).collect(Collectors.joining(", "));
-        assertTrue(message, input.isEmpty());
+        assertTrue(input.isEmpty(), message);
     }
 
     public static <T extends S, S> List<T> assertAndMap(int expected, Collection<S> input) {
@@ -198,8 +198,8 @@ public class Helper {
     }
     
     public static void checkProblemMessage(SourceProblem problem) {
-        assertTrue(problem.getErrorMessage(), problem.getErrorMessage().startsWith("[" + problem.getBeginLine() + ":" + problem.getBeginColumn()));
-        assertFalse(problem.getProblemKey(), problem.getProblemKey().startsWith("["));
+        assertTrue(problem.getErrorMessage().startsWith("[" + problem.getBeginLine() + ":" + problem.getBeginColumn()), problem.getErrorMessage());
+        assertFalse(problem.getProblemKey().startsWith("["), problem.getProblemKey());
     }
     
 }

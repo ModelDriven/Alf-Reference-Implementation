@@ -8,7 +8,7 @@
  *******************************************************************************/
 package org.modeldriven.alf.parser;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.modeldriven.alf.parser.TokenSequence.tokens;
 
 import java.util.Arrays;

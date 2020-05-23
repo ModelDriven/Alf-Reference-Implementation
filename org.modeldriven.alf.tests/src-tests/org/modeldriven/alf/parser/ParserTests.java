@@ -8,8 +8,7 @@
  *******************************************************************************/
 package org.modeldriven.alf.parser;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.modeldriven.alf.parser.Helper.assertIsA;
 import static org.modeldriven.alf.parser.Helper.ensureNoProblems;
 import static org.modeldriven.alf.parser.Helper.newParser;

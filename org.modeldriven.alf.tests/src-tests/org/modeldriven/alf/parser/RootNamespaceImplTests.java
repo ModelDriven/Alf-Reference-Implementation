@@ -15,12 +15,12 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Collections;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.modeldriven.alf.fuml.units.ModelNamespaceImpl;
 import org.modeldriven.alf.fuml.units.RootNamespaceImpl;
 import org.modeldriven.alf.syntax.units.MissingUnit;
@@ -28,8 +28,12 @@ import org.modeldriven.alf.syntax.units.UnitDefinition;
 
 public class RootNamespaceImplTests {
     
-    @Rule
-    public TemporaryFolder privateDir = new TemporaryFolder(); 
+    private File baseDir;
+    
+    @BeforeEach
+    public void createBaseDir() throws IOException {
+        baseDir = Files.createTempDirectory(null).toFile(); 
+    }
     
     @Test
     public void resolveModelFile() throws Exception {
@@ -55,9 +59,9 @@ public class RootNamespaceImplTests {
     @Test
     public void resolveModelFile_parsingError() throws Exception {
         ModelNamespaceImpl rootNamespace = new RootNamespaceImpl();
-        File badFile = privateDir.newFile("foo.alf");
+        File badFile = new File(baseDir, "foo.alf");
         Files.write(badFile.toPath(), Collections.singletonList("namespace bar"));
-        rootNamespace.setModelDirectory(privateDir.getRoot().getAbsolutePath());
+        rootNamespace.setModelDirectory(baseDir.getAbsolutePath());
         UnitDefinition resolved = rootNamespace.resolveModelFile(badFile.getAbsolutePath());
         assertNull(resolved);
     }
