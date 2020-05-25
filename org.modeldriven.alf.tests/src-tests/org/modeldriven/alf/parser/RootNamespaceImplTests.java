@@ -60,10 +60,10 @@ public class RootNamespaceImplTests {
     public void resolveModelFile_parsingError() throws Exception {
         ModelNamespaceImpl rootNamespace = new RootNamespaceImpl();
         File badFile = new File(baseDir, "foo.alf");
-        Files.write(badFile.toPath(), Collections.singletonList("namespace bar"));
+        Files.write(badFile.toPath(), Collections.singletonList("foo bar"));
         rootNamespace.setModelDirectory(baseDir.getAbsolutePath());
         UnitDefinition resolved = rootNamespace.resolveModelFile(badFile.getAbsolutePath());
-        assertNull(resolved);
+        assertNotNull(resolved);
     }
     
 }
