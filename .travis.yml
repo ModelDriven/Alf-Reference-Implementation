@@ -4,7 +4,9 @@ jdk:
 - oraclejdk8
 install: skip
 script:
-- mvn clean verify
+- mvn clean install -f master
+- mvn clean install
+- mvn clean install -f tycho-parent
 notifications:
   email:
     on_success: change
