@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Automatic-Module-Name: org.modeldriven.alf.base
-Bnd-LastModified: 1591565744384
+Bnd-LastModified: 1591501306475
 Build-Jdk: 1.8.0_251
 Built-By: rafael
 Bundle-ClassPath: .,jars/org.modeldriven.alf-1.0.0-SNAPSHOT.jar,jars/org
