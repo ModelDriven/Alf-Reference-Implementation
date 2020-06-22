@@ -33,6 +33,7 @@
 							<overWriteReleases>false</overWriteReleases>
 							<overWriteSnapshots>true</overWriteSnapshots>
 							<excludeTransitive>true</excludeTransitive>
+							<excludeGroupIds>com.bea.xml</excludeGroupIds>
 						</configuration>
 					</execution>
 				</executions>
