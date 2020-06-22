@@ -8,17 +8,20 @@
 	<packaging>pom</packaging>
 	<version>1.0.0-SNAPSHOT</version>
 	<parent>
-		<artifactId>master</artifactId>
 		<groupId>org.modeldriven</groupId>
+		<artifactId>master</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 		<relativePath>master</relativePath>
 	</parent>
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
+		<alf.package.dist>${project.artifactId}-dist.jar</alf.package.dist>
+		<alf.package.classifier>dist</alf.package.classifier>
 	</properties>
 	<scm>
-		<developerConnection>scm:git:https://github.com/ModelDriven/Alf-Reference-Implementation.git</developerConnection>
+		<developerConnection>scm:git:https://github.com/ModelDriven/Alf-Reference-Implementation.git
+		</developerConnection>
 	</scm>
 	<modules>
 		<module>org.modeldriven.alf.fuml.impl</module>
@@ -29,6 +32,38 @@
 	<build>
 		<pluginManagement>
 			<plugins>
+				<!--
+				This copies the artifact JAR into the dist JAR with the expected version-less name.
+				  
+				TODO-RC - this is intended as an intermediate step, 
+				remove when Alf RI release distribution is fully implemented. 
+				-->
+				<plugin>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>3.1.2</version>
+					<executions>
+						<execution>
+							<id>generate-dist</id>
+							<phase>none</phase>
+							<goals>
+								<goal>copy</goal>
+							</goals>
+							<configuration>
+								<outputDirectory>${project.basedir}/dist</outputDirectory>
+								<overWriteIfNewer>true</overWriteIfNewer>
+								<artifactItems>
+									<artifactItem>
+										<groupId>${project.groupId}</groupId>
+										<artifactId>${project.artifactId}</artifactId>
+										<version>${project.version}</version>
+										<classifier>${alf.package.classifier}</classifier>
+										<destFileName>${alf.package.dist}</destFileName>
+									</artifactItem>
+								</artifactItems>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
 				<plugin>
 					<artifactId>maven-jar-plugin</artifactId>
 					<version>3.2.0</version>
@@ -48,7 +83,7 @@
 								<goal>manifest</goal>
 							</goals>
 						</execution>
-				</executions>
+					</executions>
 				</plugin>
 			</plugins>
 		</pluginManagement>

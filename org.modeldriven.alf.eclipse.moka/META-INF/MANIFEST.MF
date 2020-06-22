@@ -5,25 +5,14 @@ Bundle-SymbolicName: org.modeldriven.alf.eclipse.moka;singleton:=true
 Bundle-Version: 0.6.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.uml2;bundle-version="4.0.2";resolution:=optional,
- org.eclipse.uml2.uml.ecore.exporter;bundle-version="2.6.1";resolution:=optional,
- org.eclipse.uml2.uml.ecore.importer;bundle-version="2.6.0";resolution:=optional,
- org.eclipse.uml2.uml.resources;bundle-version="4.0.1",
  org.apache.log4j;bundle-version="1.2.15",
- org.apache.commons.logging;bundle-version="1.0.4",
- org.eclipse.equinox.registry,
- org.junit,
- org.eclipse.debug.core,
- org.eclipse.core.runtime;bundle-version="3.10.0",
  org.eclipse.papyrus.moka;bundle-version="2.0.100",
  org.eclipse.papyrus.moka.fuml,
  org.eclipse.papyrus.moka.fuml.interfaces;bundle-version="2.0.0",
  org.eclipse.papyrus.moka.fuml.standardlibrary;bundle-version="2.0.100",
- org.eclipse.papyrus.moka.service;bundle-version="2.0.0",
- org.eclipse.papyrus.moka.utils;bundle-version="2.0.0",
  org.eclipse.papyrus.uml.tools.utils;bundle-version="1.0.0",
- org.aspectj.runtime;bundle-version="1.8.9",
- org.modeldriven.alf.base,
- org.modeldriven.alf.eclipse
+ org.modeldriven.alf.eclipse,
+ org.modeldriven.alf.base
 Bundle-Vendor: Model Driven Solutions
 Bundle-ClassPath: .
 Export-Package: org.modeldriven.alf.eclipse.moka.execution,

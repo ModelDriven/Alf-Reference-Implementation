@@ -1,19 +1,17 @@
 Manifest-Version: 1.0
 Automatic-Module-Name: org.modeldriven.alf.base
-Bnd-LastModified: 1591637280625
+Bnd-LastModified: 1592799893262
 Build-Jdk: 1.8.0_251
 Built-By: rafael
 Bundle-ClassPath: .,jars/org.modeldriven.alf-1.0.0-SNAPSHOT.jar,jars/log
  4j-1.2.17.jar,jars/commons-logging-1.2.jar,jars/org.modeldriven.alf.fum
- l.impl-1.0.0-SNAPSHOT.jar,jars/fuml-1.3.0.jar,jars/commons-collections-
- 3.2.jar,jars/commons-lang-2.1.jar,jars/xercesImpl-2.11.0.jar,jars/xml-a
- pis-1.4.01.jar,jars/xalan-2.6.0.jar,jars/stax-utils-20040917.jar,jars/s
- jsxp-1.0.1.jar,jars/stax-api-1.0.jar
+ l.impl-1.0.0-SNAPSHOT.jar,jars/fuml-1.3.0.jar,jars/stax-utils-20070216.
+ jar
 Bundle-ManifestVersion: 2
 Bundle-Name: org.modeldriven.alf.base
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-SymbolicName: org.modeldriven.alf.base
-Bundle-Version: 1.0.0.20200608172756
+Bundle-Version: 1.0.0.20200622042446
 Created-By: Apache Maven Bundle Plugin
 Embed-Dependency: *;scope=compile
 Embed-Directory: jars
@@ -24,15 +22,8 @@ Embedded-Artifacts: jars/org.modeldriven.alf-1.0.0-SNAPSHOT.jar;g="org.m
  ="commons-logging";a="commons-logging";v="1.2",jars/org.modeldriven.alf
  .fuml.impl-1.0.0-SNAPSHOT.jar;g="org.modeldriven.alf";a="org.modeldrive
  n.alf.fuml.impl";v="1.0.0-SNAPSHOT",jars/fuml-1.3.0.jar;g="org.modeldri
- ven";a="fuml";v="1.3.0",jars/commons-collections-3.2.jar;g="commons-col
- lections";a="commons-collections";v="3.2",jars/commons-lang-2.1.jar;g="
- commons-lang";a="commons-lang";v="2.1",jars/xercesImpl-2.11.0.jar;g="xe
- rces";a="xercesImpl";v="2.11.0",jars/xml-apis-1.4.01.jar;g="xml-apis";a
- ="xml-apis";v="1.4.01",jars/xalan-2.6.0.jar;g="xalan";a="xalan";v="2.6.
- 0",jars/stax-utils-20040917.jar;g="net.java.dev.stax-utils";a="stax-uti
- ls";v="20040917",jars/sjsxp-1.0.1.jar;g="com.sun.xml.stream";a="sjsxp";
- v="1.0.1",jars/stax-api-1.0.jar;g="javax.xml.stream";a="stax-api";v="1.
- 0"
+ ven";a="fuml";v="1.3.0",jars/stax-utils-20070216.jar;g="net.java.dev.st
+ ax-utils";a="stax-utils";v="20070216"
 Export-Package: 
  org.modeldriven.alf.execution;version="1.0.0",
  org.modeldriven.alf.fuml.execution;version="1.0.0",

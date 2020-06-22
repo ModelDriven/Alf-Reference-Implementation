@@ -13,6 +13,11 @@
 		<version>1.0.0-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
+	<properties>
+		<alf.package.dist>new-alf-base.jar</alf.package.dist>
+		<!-- For this artifact, we distribute the vanilla JAR -->
+		<alf.package.classifier></alf.package.classifier>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>log4j</groupId>
@@ -25,8 +30,18 @@
 			<version>1.2</version>
 		</dependency>
 	</dependencies>
-    <build>
-        <sourceDirectory>src</sourceDirectory>
-        <plugins />
-    </build>
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<plugins>
+			<plugin>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>generate-dist</id>
+						<phase>package</phase>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>

@@ -1,5 +1,4 @@
-.classpath
-.project
-.settings/
 bin/
 target/
+.DS_Store
+.settings/
