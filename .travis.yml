@@ -7,6 +7,7 @@ script:
 - ./mvnw -v
 - ./mvnw clean install -f master
 - ./mvnw clean install
+- ./mvnw clean install -f tycho-pom.xml
 notifications:
   email:
     on_success: change
