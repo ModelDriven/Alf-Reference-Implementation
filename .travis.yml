@@ -4,10 +4,9 @@ jdk:
 - oraclejdk8
 install: skip
 script:
-- mvn -v
-- mvn clean install -f master
-- mvn clean install
-- mvn clean install -f tycho-pom.xml
+- ./mvnw -v
+- ./mvnw clean install -f master
+- ./mvnw clean install
 notifications:
   email:
     on_success: change
