@@ -16,7 +16,34 @@
 		<relativePath>..</relativePath>
 	</parent>
 
-
+	<properties>
+		<eclipse.uberJar.jarName>uber-jar</eclipse.uberJar.jarName>
+		<eclipse.uberJar.mainClass></eclipse.uberJar.mainClass>
+		<!-- eclipse.default.dependencies - Basic set of plug-ins that should be 
+			in the all-in-one JAR. Plugin projects deriving from this should redefine 
+			eclipse.dependencies to include also their own dependencies. -->
+		<eclipse.uberJar.default.dependencies>
+			org.eclipse.uml2,
+			org.eclipse.uml2.uml,
+			org.eclipse.uml2.common,
+			org.eclipse.uml2.types,
+			org.eclipse.uml2.uml.resources,
+			org.eclipse.uml2.uml.profile.standard,
+			org.eclipse.emf.ecore,
+			org.eclipse.emf.common,
+			org.eclipse.emf.ecore.xmi,
+			org.eclipse.emf.mapping.ecore2xml,
+			org.apache.log4j,
+			org.eclipse.equinox.common,
+			org.eclipse.core.jobs,
+			org.eclipse.osgi,
+		</eclipse.uberJar.default.dependencies>
+		<!-- eclipse.dependencies - All upstream plug-ins that should be in the 
+			all-in-one JAR. Plugin projects deriving from this should override to include 
+			also their own dependencies. -->
+		<eclipse.uberJar.dependencies>${eclipse.uberJar.default.dependencies}
+		</eclipse.uberJar.dependencies>
+	</properties>
 
 	<dependencies>
 		<dependency>
@@ -47,7 +74,7 @@
 							<classifier>alf-ri</classifier>
 						</artifact>
 					</target>
-					<resolver>p2</resolver>			
+					<resolver>p2</resolver>
 					<pomDependencies>consider</pomDependencies>
 				</configuration>
 			</plugin>
@@ -61,8 +88,57 @@
 					<configuration>
 						<source>1.8</source>
 						<target>1.8</target>
-						<useProjectSettings>false</useProjectSettings>						
+						<useProjectSettings>false</useProjectSettings>
 					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<executions>
+						<execution>
+							<id>unpack-dependencies</id>
+							<phase>package</phase>
+							<goals>
+								<goal>unpack-dependencies</goal>
+							</goals>
+							<configuration>
+								<outputDirectory>${project.build.directory}/dependency
+								</outputDirectory>
+								<overWriteReleases>false</overWriteReleases>
+								<overWriteSnapshots>true</overWriteSnapshots>
+								<excludeTransitive>true</excludeTransitive>
+								<includeArtifactIds>
+									${eclipse.uberJar.dependencies}
+								</includeArtifactIds>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<configuration>
+						<descriptors>
+							<descriptor>assembly.xml</descriptor>
+						</descriptors>
+						<archive>
+							<manifest>
+								<mainClass>
+									${eclipse.uberJar.mainClass}
+								</mainClass>
+							</manifest>
+						</archive>
+						<outputDirectory>${project.basedir}/dist</outputDirectory>
+						<finalName>${eclipse.uberJar.jarName}</finalName>
+						<appendAssemblyId>false</appendAssemblyId>
+					</configuration>
+					<executions>
+						<execution>
+							<id>make-assembly</id>
+							<phase>package</phase>
+							<goals>
+								<goal>single</goal>
+							</goals>
+						</execution>
+					</executions>
 				</plugin>
 			</plugins>
 		</pluginManagement>

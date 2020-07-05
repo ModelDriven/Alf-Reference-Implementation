@@ -15,6 +15,23 @@
 		<relativePath>../tycho-parent/pom.xml</relativePath>
 	</parent>
 	<properties>
+		<!--  Redefining placeholders -->
+		<!--  TODO-RC: remove new- prefix when validated -->
+		<eclipse.uberJar.jarName>new-fuml-eclipse</eclipse.uberJar.jarName>
+		<eclipse.uberJar.mainClass>org.modeldriven.alf.eclipse.moka.execution.Fuml</eclipse.uberJar.mainClass>
+
+		<!-- Expand on the default dependencies -->
+		<eclipse.uberJar.dependencies>
+			${eclipse.uberJar.default.dependencies},
+			org.modeldriven.alf.eclipse,
+			org.eclipse.papyrus.moka,
+			org.eclipse.papyrus.moka.fuml,
+			org.eclipse.papyrus.moka.fuml.interfaces,
+			org.eclipse.papyrus.moka.fuml.standardlibrary,
+			org.eclipse.papyrus.moka.service,
+			org.eclipse.papyrus.moka.utils,
+			org.aspectj.runtime,
+		</eclipse.uberJar.dependencies>
 	</properties>
 	<build>
 		<plugins>
@@ -27,41 +44,11 @@
 						<goals>
 							<goal>unpack-dependencies</goal>
 						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/dependency</outputDirectory>
-							<overWriteReleases>false</overWriteReleases>
-							<overWriteSnapshots>true</overWriteSnapshots>
-							<excludeTransitive>true</excludeTransitive>							
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptors>
-						<descriptor>assembly.xml</descriptor>
-					</descriptors>
-					<archive>
-						<manifest>
-							<mainClass>
-								org.modeldriven.alf.eclipse.moka.execution.Fuml
-							</mainClass>
-						</manifest>
-					</archive>
-					<outputDirectory>${project.basedir}/dist</outputDirectory>
-					<finalName>new-fuml-eclipse</finalName>
-					<appendAssemblyId>false</appendAssemblyId>
-				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>

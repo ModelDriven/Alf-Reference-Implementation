@@ -1,29 +1,23 @@
 Manifest-Version: 1.0
 Automatic-Module-Name: org.modeldriven.alf.base
-Bnd-LastModified: 1592799893262
+Bnd-LastModified: 1593967837161
 Build-Jdk: 1.8.0_251
 Built-By: rafael
-Bundle-ClassPath: .,jars/org.modeldriven.alf-1.0.0-SNAPSHOT.jar,jars/log
- 4j-1.2.17.jar,jars/commons-logging-1.2.jar,jars/org.modeldriven.alf.fum
- l.impl-1.0.0-SNAPSHOT.jar,jars/fuml-1.3.0.jar,jars/stax-utils-20070216.
- jar
+Bundle-ClassPath: .,jars/org.modeldriven.alf-1.0.0-SNAPSHOT.jar,jars/org
+ .modeldriven.alf.fuml.impl-1.0.0-SNAPSHOT.jar
 Bundle-ManifestVersion: 2
 Bundle-Name: org.modeldriven.alf.base
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-SymbolicName: org.modeldriven.alf.base
-Bundle-Version: 1.0.0.20200622042446
+Bundle-Version: 1.0.0.20200705165031
 Created-By: Apache Maven Bundle Plugin
-Embed-Dependency: *;scope=compile
+Embed-Dependency: *;scope=compile;groupId=!org.modeldriven
 Embed-Directory: jars
-Embed-Transitive: true
+Embed-Transitive: false
 Embedded-Artifacts: jars/org.modeldriven.alf-1.0.0-SNAPSHOT.jar;g="org.m
- odeldriven.alf";a="org.modeldriven.alf";v="1.0.0-SNAPSHOT",jars/log4j-1
- .2.17.jar;g="log4j";a="log4j";v="1.2.17",jars/commons-logging-1.2.jar;g
- ="commons-logging";a="commons-logging";v="1.2",jars/org.modeldriven.alf
- .fuml.impl-1.0.0-SNAPSHOT.jar;g="org.modeldriven.alf";a="org.modeldrive
- n.alf.fuml.impl";v="1.0.0-SNAPSHOT",jars/fuml-1.3.0.jar;g="org.modeldri
- ven";a="fuml";v="1.3.0",jars/stax-utils-20070216.jar;g="net.java.dev.st
- ax-utils";a="stax-utils";v="20070216"
+ odeldriven.alf";a="org.modeldriven.alf";v="1.0.0-SNAPSHOT",jars/org.mod
+ eldriven.alf.fuml.impl-1.0.0-SNAPSHOT.jar;g="org.modeldriven.alf";a="or
+ g.modeldriven.alf.fuml.impl";v="1.0.0-SNAPSHOT"
 Export-Package: 
  org.modeldriven.alf.execution;version="1.0.0",
  org.modeldriven.alf.fuml.execution;version="1.0.0",
