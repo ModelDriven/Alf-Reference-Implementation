@@ -11,18 +11,6 @@
 		<bintray.package>${project.artifactId}</bintray.package>
 	</properties>
 
-      <repositories>
-        <repository>
-          <id>central</id>
-          <url>https://repo.maven.apache.org/maven</url>
-          <releases>
-            <enabled>true</enabled>
-          </releases>
-		  <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-        </repository>
-      </repositories>
 
 	<distributionManagement>
 		<repository>

@@ -23,6 +23,9 @@
 		<!-- Expand on the default dependencies -->
 		<eclipse.uberJar.dependencies>
 			${eclipse.uberJar.default.dependencies},
+			org.eclipse.equinox.common,
+			org.eclipse.core.jobs,
+			org.eclipse.osgi,
 			org.modeldriven.alf.eclipse,
 			org.eclipse.papyrus.moka,
 			org.eclipse.papyrus.moka.fuml,
@@ -33,6 +36,13 @@
 			org.aspectj.runtime,
 		</eclipse.uberJar.dependencies>
 	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.modeldriven.alf</groupId>
+			<artifactId>org.modeldriven.alf.fuml.impl.bundle</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
 	<build>
 		<plugins>
 			<plugin>

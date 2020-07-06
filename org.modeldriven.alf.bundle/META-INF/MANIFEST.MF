@@ -1,33 +1,24 @@
 Manifest-Version: 1.0
-Automatic-Module-Name: org.modeldriven.alf.base
-Bnd-LastModified: 1593967837161
+Automatic-Module-Name: org.modeldriven.alf.bundle
+Bnd-LastModified: 1593997742157
 Build-Jdk: 1.8.0_251
 Built-By: rafael
-Bundle-ClassPath: .,jars/org.modeldriven.alf-1.0.0-SNAPSHOT.jar,jars/org
- .modeldriven.alf.fuml.impl-1.0.0-SNAPSHOT.jar
+Bundle-ClassPath: .,jars/org.modeldriven.alf-1.0.0-SNAPSHOT.jar
 Bundle-ManifestVersion: 2
-Bundle-Name: org.modeldriven.alf.base
+Bundle-Name: org.modeldriven.alf.bundle
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Bundle-SymbolicName: org.modeldriven.alf.base
-Bundle-Version: 1.0.0.20200705165031
+Bundle-SymbolicName: org.modeldriven.alf.bundle
+Bundle-Version: 1.0.0.20200706010854
 Created-By: Apache Maven Bundle Plugin
 Embed-Dependency: *;scope=compile;groupId=!org.modeldriven
 Embed-Directory: jars
 Embed-Transitive: false
 Embedded-Artifacts: jars/org.modeldriven.alf-1.0.0-SNAPSHOT.jar;g="org.m
- odeldriven.alf";a="org.modeldriven.alf";v="1.0.0-SNAPSHOT",jars/org.mod
- eldriven.alf.fuml.impl-1.0.0-SNAPSHOT.jar;g="org.modeldriven.alf";a="or
- g.modeldriven.alf.fuml.impl";v="1.0.0-SNAPSHOT"
+ odeldriven.alf";a="org.modeldriven.alf";v="1.0.0-SNAPSHOT"
 Export-Package: 
  org.modeldriven.alf.execution;version="1.0.0",
  org.modeldriven.alf.fuml.execution;version="1.0.0",
  org.modeldriven.alf.fuml.execution.test;version="1.0.0",
- org.modeldriven.alf.fuml.impl.environment;version="1.0.0",
- org.modeldriven.alf.fuml.impl.execution;version="1.0.0",
- org.modeldriven.alf.fuml.impl.execution.test;version="1.0.0",
- org.modeldriven.alf.fuml.impl.library;version="1.0.0",
- org.modeldriven.alf.fuml.impl.uml;version="1.0.0",
- org.modeldriven.alf.fuml.impl.units;version="1.0.0",
  org.modeldriven.alf.fuml.library;version="1.0.0",
  org.modeldriven.alf.fuml.library.bitstringfunctions;version="1.0.0",
  org.modeldriven.alf.fuml.library.integerfunctions;version="1.0.0",

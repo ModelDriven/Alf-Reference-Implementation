@@ -34,9 +34,6 @@
 			org.eclipse.emf.ecore.xmi,
 			org.eclipse.emf.mapping.ecore2xml,
 			org.apache.log4j,
-			org.eclipse.equinox.common,
-			org.eclipse.core.jobs,
-			org.eclipse.osgi,
 		</eclipse.uberJar.default.dependencies>
 		<!-- eclipse.dependencies - All upstream plug-ins that should be in the 
 			all-in-one JAR. Plugin projects deriving from this should override to include 
@@ -44,14 +41,19 @@
 		<eclipse.uberJar.dependencies>${eclipse.uberJar.default.dependencies}
 		</eclipse.uberJar.dependencies>
 	</properties>
-
-	<dependencies>
-		<dependency>
-			<groupId>org.modeldriven.alf</groupId>
-			<artifactId>org.modeldriven.alf.base</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-		</dependency>
-	</dependencies>
+	
+      <repositories>
+        <repository>
+          <id>central</id>
+          <url>https://repo.maven.apache.org/maven</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+		  <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+        </repository>
+      </repositories>	
 
 	<build>
 		<plugins>

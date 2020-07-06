@@ -15,11 +15,20 @@
 		<relativePath>../tycho-parent/pom.xml</relativePath>
 	</parent>
 	<properties>
-		<!--  Redefining placeholders -->
-		<!--  TODO-RC: remove new- prefix when validated -->
+		<!-- Redefining placeholders -->
+		<!-- TODO-RC: remove new- prefix when validated -->
 		<eclipse.uberJar.jarName>new-alf-eclipse</eclipse.uberJar.jarName>
-		<eclipse.uberJar.mainClass>org.modeldriven.alf.eclipse.fuml.execution.AlfCompiler</eclipse.uberJar.mainClass>
+		<eclipse.uberJar.mainClass>org.modeldriven.alf.eclipse.fuml.execution.AlfCompiler
+		</eclipse.uberJar.mainClass>
 	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.modeldriven.alf</groupId>
+			<artifactId>org.modeldriven.alf.bundle</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
