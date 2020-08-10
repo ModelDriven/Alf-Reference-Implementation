@@ -16,7 +16,7 @@
 	</parent>
 	<properties>
 		<!--  Redefining placeholders -->
-		<!--  TODO-RC: remove new- prefix when validated -->
+		<!--  TODO-RC: remove new- prefix once validated -->
 		<eclipse.uberJar.jarName>new-fuml-eclipse</eclipse.uberJar.jarName>
 		<eclipse.uberJar.mainClass>org.modeldriven.alf.eclipse.moka.execution.Fuml</eclipse.uberJar.mainClass>
 

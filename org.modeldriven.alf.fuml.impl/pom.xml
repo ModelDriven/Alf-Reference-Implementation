@@ -14,6 +14,7 @@
 		<relativePath>..</relativePath>
 	</parent>
 	<properties>
+		<!-- TODO-RC: remove new- prefix once validated -->	
 		<alf.package.dist>new-alf.jar</alf.package.dist>
 		<alf.package.classifier>dist</alf.package.classifier>
 	</properties>
