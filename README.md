@@ -1,5 +1,5 @@
 # Action Language for UML (Alf) <br> Open Source Reference Implementation
-_Copyright &copy; 2011-2019 Model Driven Solutions, Inc._
+_Copyright &copy; 2011-2020 Model Driven Solutions, Inc._
 
 Alf is an action language for UML developed in response to the OMG <em>Concrete 
 Syntax for a UML Action Language</em> Request for Proposals. The Alf specification 
@@ -76,9 +76,12 @@ It depends on Eclipse plugins and must be built in an Eclipse environment. (Note
 
 The project structure under Maven has a structure that allows building the regular Java modules and the Eclipse-based modules (using [Tycho](https://www.eclipse.org/tycho/)).
 
+#### Master module build
+
+* `./master/pom.xml` - a module that provides standard configurations to be shared by all modules, including the root module.
+
 #### Regular Java build
 
-* `./master/pom.xml` - a module that provides standard configurationsto be shared by all modules, including the root module.
 * `./pom.xml` - the parent module for the regular Java modules
 * `./org.modeldriven.alf` - see [Projects](#Projects) above.
 * `./org.modeldriven.alf.fuml.impl` - see [Projects](#Projects) above.
@@ -95,16 +98,19 @@ The project structure under Maven has a structure that allows building the regul
 
 ### Steps
 
-To perform the regular Java build, execute from the root directory:
+1. Master module build (required only once):
 
 ```
-# Only once
 mvn clean install -f master
-# Regular build
+```
+
+2. To perform the regular Java build, execute from the root directory:
+
+```
 mvn clean install
 ```
 
-To perform the Tycho build, execute from the root directory:
+3. To perform the Tycho build, execute from the root directory:
 
 ```
 mvn clean install -f tycho-pom.xml
@@ -112,7 +118,32 @@ mvn clean install -f tycho-pom.xml
 
 ## Importing the projects into Eclipse
 
-TBD
+### Prerequisites
+
+1. Eclipse JDT - Java development tools
+2. Eclipse PDE - Plug-in development environment
+3. Eclipse M2E - Maven Integration in Eclipse
+
+By downloading the Eclipse SDK, you should have all those components.
+
+### Importing as Eclipse projects
+
+That is the simplest way to import the codebase into Eclipse.
+
+1. Import the root directory location using the "Existing Projects into Worspace" option, making sure to select the "Search for nested projects" option.
+2. Configure the [target platform](https://help.eclipse.org/latest/index.jsp?topic=%2Forg.eclipse.pde.doc.user%2Fguide%2Ftools%2Fpreference_pages%2Ftarget_platform.htm) preferences to use the alf-ri.target definition you just imported
+3. You may be asked to install M2E extensions to support Tycho projects - that is recommended.
+
+
+### Importing as Maven modules
+
+Alternately, you can import the code as Maven modules, which is recommended to obtain a configuration that is consistent with how the Maven build operates on the codebase.
+
+1. Import the repository root directory and all its children artifacts as "Existing Maven projects" (note that will *not* include the alf.eclipse and alf.eclipse.moka projects, as they are *not* modules for the base Maven build). **Note** : if you see a build problem with the message "*Duplicate bundle executions found. Please remove any explicitly defined bundle executions in your pom.xml.*", make any non-content change to the pom file and save it, that should make it go away.
+2. Import the `tycho-parent` directory and all its children artifacts as "Existing Maven projects"
+3. Configure the [target platform](https://help.eclipse.org/latest/index.jsp?topic=%2Forg.eclipse.pde.doc.user%2Fguide%2Ftools%2Fpreference_pages%2Ftarget_platform.htm) preferences to use the alf-ri.target definition you just imported
+4. You may be asked to install M2E extensions to support Tycho projects - that is recommended.
+
 
 ## Further Information
 
