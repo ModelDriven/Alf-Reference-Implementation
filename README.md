@@ -43,7 +43,7 @@ If you move it, set the environment variable `ALF_LIB` to its path.
 
 ## Projects
 
-The implementation source is organized into four [Eclipse](http://www.eclipse.org) projects. Eclipse 4.6 or later is required.
+The base implementation source is organized into the following [Eclipse](http://www.eclipse.org) projects. Eclipse 4.6 or later is required.
 
 * `org.modeldriven.alf` - This is the base project, including the
 Alf parser, static semantic checking and generic mapping to fUML.
@@ -67,6 +67,52 @@ using the fUML execution engine from the [Moka framework](http://wiki.eclipse.or
 for model execution in the [Eclipse Papyrus](http://www.eclipse.org/papyrus) modeling tool (v3.1.0 or later).
 It depends on Eclipse plugins and must be built in an Eclipse environment. (Note: This project was called
 `org.modeldriven.alf.eclipse.papyrus` in previous versions of the reference implementation.)
+
+* `org.modeldriven.alf.tests` - This project provides automated tests.
+
+## Building
+
+### Maven project structure
+
+The project structure under Maven has a structure that allows building the regular Java modules and the Eclipse-based modules (using [Tycho](https://www.eclipse.org/tycho/)).
+
+#### Regular Java build
+
+* `./master/pom.xml` - a module that provides standard configurationsto be shared by all modules, including the root module.
+* `./pom.xml` - the parent module for the regular Java modules
+* `./org.modeldriven.alf` - see [Projects](#Projects) above.
+* `./org.modeldriven.alf.fuml.impl` - see [Projects](#Projects) above.
+* `./org.modeldriven.alf.tests` - see [Projects](#Projects) above.
+* `./org.modeldriven.alf.bundle` - produces a OSGi-bundle from org.modeldriven.alf
+* `./org.modeldriven.alf.fuml.impl.bundle` - produces a OSGi-bundle from org.modeldriven.alf.fuml.impl
+
+#### Tycho build
+
+* `./tycho-pom.xml` - a convenience module that can be used for performing the Tycho (OSGi) aware part of the build. Equivalent to building `./tycho-parent/pom.xml`
+* `./tycho-parent/pom.xml` - the parent module for the Tycho/Eclipse modules
+* `./org.modeldriven.alf.eclipse` - see [Projects](#Projects) above.
+* `./org.modeldriven.alf.eclipse.moka` - see [Projects](#Projects) above.
+
+### Steps
+
+To perform the regular Java build, execute from the root directory:
+
+```
+# Only once
+mvn clean install -f master
+# Regular build
+mvn clean install
+```
+
+To perform the Tycho build, execute from the root directory:
+
+```
+mvn clean install -f tycho-pom.xml
+```
+
+## Importing the projects into Eclipse
+
+TBD
 
 ## Further Information
 
