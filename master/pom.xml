@@ -12,14 +12,15 @@
 	</properties>
 
 
+<!--
 	<distributionManagement>
 		<repository>
-			<!-- TODO-RC use ModelDriven's own credentials -->
 			<id>bintray-abstratt-modeldriven-oss</id>
 			<url>https://api.bintray.com/maven/abstratt/modeldriven-oss/${bintray.package}/;publish=1;override=1</url>
 		</repository>
 	</distributionManagement>
-
+-->
+  
 	<build>
 		<pluginManagement>
 			<plugins>

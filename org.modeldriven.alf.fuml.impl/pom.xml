@@ -15,7 +15,7 @@
 	</parent>
 	<properties>
 		<!-- TODO-RC: remove new- prefix once validated -->	
-		<alf.package.dist>new-alf.jar</alf.package.dist>
+		<alf.package.dist>alf.jar</alf.package.dist>
 		<alf.package.classifier>dist</alf.package.classifier>
 	</properties>
 	<dependencies>
@@ -24,7 +24,7 @@
 			<artifactId>fuml</artifactId>
 			<version>1.3.0</version>
 			<exclusions>
-				<!-- Exclude fuml's transitive dependencies (we add the essential ones below -->
+				<!-- Exclude fuml's transitive dependencies (we add the essential ones below) -->
 				<exclusion>
 					<groupId>*</groupId>
 					<artifactId>*</artifactId>

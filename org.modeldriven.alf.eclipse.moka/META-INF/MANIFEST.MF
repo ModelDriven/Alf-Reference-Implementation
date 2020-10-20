@@ -7,7 +7,8 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.uml2,
  org.eclipse.uml2.uml,
  org.eclipse.uml2.uml.resources,
- org.apache.log4j;bundle-version="1.2.15"
+ org.apache.log4j;bundle-version="1.2.15",
+ org.modeldriven.alf.eclipse;bundle-version="0.6.0"
 Import-Package: org.eclipse.papyrus.moka.fuml,
  org.eclipse.papyrus.moka.fuml.Semantics.Classes.Kernel,
  org.eclipse.papyrus.moka.fuml.Semantics.CommonBehaviors.BasicBehaviors,
