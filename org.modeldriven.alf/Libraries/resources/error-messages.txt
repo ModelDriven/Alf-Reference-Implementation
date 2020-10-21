@@ -170,6 +170,10 @@ If invocation is a sequence feature invocation, then the assignments after the t
 isUniqueExpressionExpressionArgument
 Argument must have a multiplicity upper bound of 1.
 The argument of an isUnique expression must have a multiplicity upper bound of 1.
+
+leftHandSideDataValueUpdateLegality
+Illegal data value update.
+If a left-hand side is for a feature reference whose expression is a data type, then it must be a legal data value update.
  
 leftHandSideIndexExpression
 Index expression must have a multiplicity upper bound no greater than 1.

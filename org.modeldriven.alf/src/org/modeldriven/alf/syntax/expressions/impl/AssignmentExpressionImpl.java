@@ -660,14 +660,16 @@ public class AssignmentExpressionImpl extends ExpressionImpl {
      * update.
      **/
     public boolean assignmentExpressionDataValueUpdateLegality() {
-        AssignmentExpression self = this.getSelf();
-        LeftHandSide leftHandSide = self.getLeftHandSide();
-        FeatureReference feature = leftHandSide == null? null: 
-            leftHandSide.getImpl().getFeature();
-        Expression primary = feature == null? null: feature.getExpression();
-        ElementReference type = primary == null? null: primary.getType();
-        return type == null || !type.getImpl().isDataType() || 
-                    self.getIsDataValueUpdate();
+    	// This is now checked by leftHandSideDataValueUpdateLegality.
+    	return true;
+//        AssignmentExpression self = this.getSelf();
+//        LeftHandSide leftHandSide = self.getLeftHandSide();
+//        FeatureReference feature = leftHandSide == null? null: 
+//            leftHandSide.getImpl().getFeature();
+//        Expression primary = feature == null? null: feature.getExpression();
+//        ElementReference type = primary == null? null: primary.getType();
+//        return type == null || !type.getImpl().isDataType() || 
+//                    self.getIsDataValueUpdate();
     }
 
 	/*

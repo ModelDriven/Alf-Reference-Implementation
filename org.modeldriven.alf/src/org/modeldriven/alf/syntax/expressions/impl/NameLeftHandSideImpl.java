@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2017 Model Driven Solutions, Inc.
+ * Copyright 2011, 2017, 2020 Model Driven Solutions, Inc.
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -190,16 +190,6 @@ public class NameLeftHandSideImpl extends LeftHandSideImpl {
 	        return true;
 	    } else if (referent.getImpl().isParameter()) {
 	        return !"in".equals(referent.getImpl().getDirection());
-	    } else if (referent.getImpl().isProperty()) {
-            // Note: This constraint ensures that there will be an
-            // assigned name for an assignment to an attribute of a
-            // data type.
-	        FeatureReference feature = this.getFeature();
-	        Expression expression = feature == null? null: feature.getExpression();
-	        ElementReference expressionType = expression == null? null: expression.getType();
-	        return expressionType == null ||
-                    !expressionType.getImpl().isDataType() ||
-                    this.isDataValueUpdate();
 	    } else {
 	        SyntaxElement source = referent.getImpl().getAlf();
             return !(source instanceof LoopVariableDefinition ||

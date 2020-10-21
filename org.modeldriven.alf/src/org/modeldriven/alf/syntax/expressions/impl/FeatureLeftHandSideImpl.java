@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2017 Model Driven Solutions, Inc.
+ * Copyright 2011, 2017, 2020 Model Driven Solutions, Inc.
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -136,11 +136,7 @@ public class FeatureLeftHandSideImpl extends LeftHandSideImpl {
         FeatureReference feature = self.getFeature();
         Expression expression = feature == null? null: feature.getExpression();
         ElementReference targetType = expression == null? null: expression.getType();
-		return targetType == null || expression.getUpper() == 1 &&
-		            // Note: This constraint ensures that there will be an
-		            // assigned name for an assignment to an attribute of a
-		            // data type.
-		            (!targetType.getImpl().isDataType() || this.isDataValueUpdate());
+		return targetType == null || expression.getUpper() == 1;
 	}
 
 	/**
