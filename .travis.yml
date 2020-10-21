@@ -1,0 +1,17 @@
+dist: trusty
+language: java
+jdk:
+- oraclejdk8
+install: skip
+script:
+- ./mvnw -v
+- ./mvnw clean install -f master
+- ./mvnw clean install
+- ./mvnw clean install -f tycho-pom.xml
+notifications:
+  email:
+    on_success: change
+    on_failure: change
+cache:
+  directories:
+  - "$HOME/.m2"

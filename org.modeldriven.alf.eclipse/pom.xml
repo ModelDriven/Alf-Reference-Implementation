@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.modeldriven.alf</groupId>
+	<artifactId>org.modeldriven.alf.eclipse</artifactId>
+	<packaging>eclipse-plugin</packaging>
+	<parent>
+		<groupId>org.modeldriven.alf</groupId>
+		<artifactId>tycho-parent</artifactId>
+		<version>1.1.0-SNAPSHOT</version>
+		<relativePath>../tycho-parent/pom.xml</relativePath>
+	</parent>
+	<properties>
+		<!-- Redefining placeholders -->
+		<eclipse.uberJar.jarName>alf-eclipse</eclipse.uberJar.jarName>
+		<eclipse.uberJar.mainClass>org.modeldriven.alf.eclipse.fuml.execution.AlfCompiler
+		</eclipse.uberJar.mainClass>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.modeldriven.alf</groupId>
+			<artifactId>org.modeldriven.alf.bundle</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-dependency-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+</project>

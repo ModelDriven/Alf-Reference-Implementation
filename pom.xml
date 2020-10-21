@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.modeldriven.alf</groupId>
+	<artifactId>alf-ri</artifactId>
+	<packaging>pom</packaging>
+	<version>1.0.0-SNAPSHOT</version>
+	<parent>
+		<groupId>org.modeldriven</groupId>
+		<artifactId>master</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+		<relativePath>master</relativePath>
+	</parent>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<alf.package.dist>${project.artifactId}-dist.jar</alf.package.dist>
+		<alf.package.classifier>dist</alf.package.classifier>
+
+		<manifest-location>META-INF</manifest-location>
+		<maven.build.timestamp.format>yyyyMMddHHmmss
+		</maven.build.timestamp.format>
+		<osgi.qualifier>${maven.build.timestamp}</osgi.qualifier>
+		
+	</properties>
+	<scm>
+		<developerConnection>scm:git:https://github.com/ModelDriven/Alf-Reference-Implementation.git
+		</developerConnection>
+	</scm>
+	<modules>
+		<module>org.modeldriven.alf.fuml.impl</module>
+		<module>org.modeldriven.alf</module>
+		<module>org.modeldriven.alf.tests</module>
+		<module>org.modeldriven.alf.bundle</module>
+		<module>org.modeldriven.alf.fuml.impl.bundle</module>
+	</modules>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+				<version>1.2.17</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-logging</groupId>
+				<artifactId>commons-logging</artifactId>
+				<version>1.2</version>
+			</dependency>
+		</dependencies>
+
+	</dependencyManagement>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<!-- This copies the artifact JAR into the dist JAR with the expected 
+					version-less name. TODO-RC - this is intended as an intermediate step, remove 
+					when Alf RI release distribution is fully implemented. -->
+				<plugin>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>3.1.2</version>
+					<executions>
+						<execution>
+							<id>generate-dist</id>
+							<phase>none</phase>
+							<goals>
+								<goal>copy</goal>
+							</goals>
+							<configuration>
+								<outputDirectory>${project.basedir}/dist</outputDirectory>
+								<overWriteIfNewer>true</overWriteIfNewer>
+								<artifactItems>
+									<artifactItem>
+										<groupId>${project.groupId}</groupId>
+										<artifactId>${project.artifactId}</artifactId>
+										<version>${project.version}</version>
+										<classifier>${alf.package.classifier}</classifier>
+										<destFileName>${alf.package.dist}</destFileName>
+									</artifactItem>
+								</artifactItems>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>3.2.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.felix</groupId>
+					<artifactId>maven-bundle-plugin</artifactId>
+					<version>4.2.1</version>
+					<configuration>
+						<niceManifest>true</niceManifest>
+					</configuration>
+					<executions>
+						<execution>
+							<id>bundle-manifest</id>
+							<phase>process-classes</phase>
+							<goals>
+								<goal>manifest</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+</project>
