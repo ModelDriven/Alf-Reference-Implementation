@@ -48,7 +48,7 @@ see the [wiki](https://github.com/ModelDriven/Alf-Reference-Implementation/wiki/
 
 ## Projects
 
-The base implementation source is organized into the following [Eclipse](http://www.eclipse.org) projects. Eclipse 4.6 or later is required.
+The base implementation source is organized into the following [Eclipse](http://www.eclipse.org) projects. The build is currently tested on Eclipse 2020-06 (4.16).
 
 * `org.modeldriven.alf` - This is the base project, including the
 Alf parser, static semantic checking and generic mapping to fUML.
@@ -69,7 +69,7 @@ metamodel implementation (v5.2.0 or later). It depends on Eclipse plugins and mu
 * `org.modeldriven.alf.eclipse.moka` - This project extends the 
 `org.modeldriven.alf.eclipse` project to allow compiled Alf text to be executed
 using the fUML execution engine from the [Moka framework](http://wiki.eclipse.org/Papyrus/UserGuide/ModelExecution)
-for model execution in the [Eclipse Papyrus](http://www.eclipse.org/papyrus) modeling tool (v3.1.0 or later).
+for model execution in the [Eclipse Papyrus](http://www.eclipse.org/papyrus) modeling tool (specifically v3.1.0).
 It depends on Eclipse plugins and must be built in an Eclipse environment. (Note: This project was called
 `org.modeldriven.alf.eclipse.papyrus` in previous versions of the reference implementation.)
 
