@@ -27,8 +27,8 @@ The latest version of the implementation is available at http://alf.modeldriven.
 
 ## Licensing
 
-Data Access Technology, Inc. is copyright owner of the source code for this implementation. For licensing terms, see 
-the file [`LICENSING.txt`](https://github.com/ModelDriven/Alf-Reference-Implementation/blob/master/dist/LICENSING.txt).
+Model Driven Solutions, Inc., (formerly Data Access Technology, Inc.) is copyright owner of the source code for this implementation. 
+For licensing terms, see the file [`LICENSING.txt`](https://github.com/ModelDriven/Alf-Reference-Implementation/blob/master/dist/LICENSING.txt).
 
 ## Installation
 
@@ -40,6 +40,11 @@ Within this directory, the file `alf.zip` unzips into the installation directory
 The installation directory includes Unix (BASH) shell scripts and DOS batch files for running Alf. 
 By default, the `Libraries` subdirectory is expected  to be in the same directory as the scripts. 
 If you move it, set the environment variable `ALF_LIB` to its path.
+
+## Further Information
+
+The following sections describe the project structure and build steps for the implementation. For further information on using it, 
+see the [wiki](https://github.com/ModelDriven/Alf-Reference-Implementation/wiki/Home). 
 
 ## Projects
 
@@ -74,7 +79,7 @@ It depends on Eclipse plugins and must be built in an Eclipse environment. (Note
 
 ### Maven project structure
 
-The project structure under Maven has a structure that allows building the regular Java modules and the Eclipse-based modules (using [Tycho](https://www.eclipse.org/tycho/)).
+The project structure under Maven allows building the regular Java modules and the Eclipse-based modules (using [Tycho](https://www.eclipse.org/tycho/)).
 
 #### Master module build
 
@@ -116,7 +121,7 @@ mvn clean install
 mvn clean install -f tycho-pom.xml
 ```
 
-## Importing the projects into Eclipse
+## Importing into Eclipse
 
 ### Prerequisites
 
@@ -130,21 +135,22 @@ By downloading the Eclipse SDK, you should have all those components.
 
 That is the simplest way to import the codebase into Eclipse.
 
-1. Import the root directory location using the "Existing Projects into Worspace" option, making sure to select the "Search for nested projects" option.
-2. Configure the [target platform](https://help.eclipse.org/latest/index.jsp?topic=%2Forg.eclipse.pde.doc.user%2Fguide%2Ftools%2Fpreference_pages%2Ftarget_platform.htm) preferences to use the alf-ri.target definition you just imported
-3. You may be asked to install M2E extensions to support Tycho projects - that is recommended.
+1. Import the root directory location using the "Existing Projects into Workspace" option, making sure to select the "Search for nested projects" option.
+2. Configure the [target platform](https://help.eclipse.org/latest/index.jsp?topic=%2Forg.eclipse.pde.doc.user%2Fguide%2Ftools%2Fpreference_pages%2Ftarget_platform.htm) 
+preferences to use the `alf-ri.target` definition you just imported
+3. You may be asked to install M2E extensions to support Tycho projects - this is recommended.
 
 
 ### Importing as Maven modules
 
 Alternately, you can import the code as Maven modules, which is recommended to obtain a configuration that is consistent with how the Maven build operates on the codebase.
 
-1. Import the repository root directory and all its children artifacts as "Existing Maven projects" (note that will *not* include the alf.eclipse and alf.eclipse.moka projects, as they are *not* modules for the base Maven build). **Note** : if you see a build problem with the message "*Duplicate bundle executions found. Please remove any explicitly defined bundle executions in your pom.xml.*", make any non-content change to the pom file and save it, that should make it go away.
-2. Import the `tycho-parent` directory and all its children artifacts as "Existing Maven projects"
-3. Configure the [target platform](https://help.eclipse.org/latest/index.jsp?topic=%2Forg.eclipse.pde.doc.user%2Fguide%2Ftools%2Fpreference_pages%2Ftarget_platform.htm) preferences to use the alf-ri.target definition you just imported
-4. You may be asked to install M2E extensions to support Tycho projects - that is recommended.
+1. Import the repository root directory and all its children artifacts as "Existing Maven projects" (note that will *not* include the `alf.eclipse` and `alf.eclipse.moka projects`, 
+as they are *not* modules for the base Maven build). 
+**Note:** If you see a build problem with the message "*Duplicate bundle executions found. Please remove any explicitly defined bundle executions in your pom.xml.*", 
+make any non-content change to the POM file and save it, which should make the error go away.
+2. Import the `tycho-parent` directory and all its children artifacts as "Existing Maven projects".
+3. Configure the [target platform](https://help.eclipse.org/latest/index.jsp?topic=%2Forg.eclipse.pde.doc.user%2Fguide%2Ftools%2Fpreference_pages%2Ftarget_platform.htm) preferences 
+to use the `alf-ri.target` definition you just imported
+4. You may be asked to install M2E extensions to support Tycho projects - this is recommended.
 
-
-## Further Information
-
-For further information on using the implementation, see the [wiki](https://github.com/ModelDriven/Alf-Reference-Implementation/wiki/Home). 

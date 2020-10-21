@@ -1,8 +1,8 @@
 Action Language for UML (Alf) Open Source Reference Implementation
 Licensing Information
 
-Data Access Technologies Inc.(Model Driven Solutions) is the copyright owner
-of the source code in this software entitled the Action Language for UML (Alf) 
+Model Driven Solutions, Inc. (formerly Data Access Technologies Inc.) is the copyright 
+owner of the source code in this software entitled the Action Language for UML (Alf) 
 Open Source Reference Implementation (the "Software"). The copyright owner hereby 
 licenses such Software to you for use under the GNU General Public License (GPL) 
 version 3 (at http://www.gnu.org/licenses/gpl-3.0.html and attached hereto as 
