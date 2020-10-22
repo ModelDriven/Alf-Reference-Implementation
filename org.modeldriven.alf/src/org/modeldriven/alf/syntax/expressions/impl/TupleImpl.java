@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011-2017 Model Driven Solutions, Inc.
+ * Copyright 2011-2020 Model Driven Solutions, Inc.
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -375,7 +375,8 @@ public abstract class TupleImpl extends SyntaxElementImpl {
                                         makeAssignment(assignmentBefore);
                                 assignment.setSource(self.getInvocation());
                                 assignment.getImpl().setProperSubtype(
-                                        output.getImpl().hasConversions(parameter)? null: 
+                                        output.getImpl().hasConversions(parameter) ||
+                                        	lhs.getImpl().isDataValueUpdate()? null: 
                                             parameter.getImpl().getType());
                                 assignmentsAfter.put(assignedName, assignment);
                             }
