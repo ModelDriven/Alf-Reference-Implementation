@@ -22,6 +22,7 @@
 		<eclipse.uberJar.dependencies>
 			${eclipse.uberJar.default.dependencies},
 			org.eclipse.equinox.common,
+			org.eclipse.core.runtime,
 			org.eclipse.core.jobs,
 			org.eclipse.osgi,
 			org.modeldriven.alf.eclipse,
@@ -31,6 +32,9 @@
 			org.eclipse.papyrus.moka.fuml.standardlibrary,
 			org.eclipse.papyrus.moka.service,
 			org.eclipse.papyrus.moka.utils,
+			org.eclipse.papyrus.infra.core,
+			org.eclipse.papyrus.infra.core.log,
+			org.eclipse.papyrus.uml.tools.utils,
 			org.aspectj.runtime,
 		</eclipse.uberJar.dependencies>
 	</properties>
