@@ -2,15 +2,6 @@
 <?pde version="3.8"?>
 <?pde version="3.6"?><target includeMode="feature" name="alf-ri">
     <locations>
-        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <unit id="org.eclipse.equinox.executable.feature.group" version="0.0.0"/>
-            <unit id="org.eclipse.platform.feature.group" version="0.0.0"/>
-            <repository location="http://download.eclipse.org/eclipse/updates/4.7/R-4.7.3a-201803300640"/>
-        </location>
-        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <unit id="org.eclipse.uml2.sdk.feature.group" version="0.0.0"/>
-            <repository location="http://download.eclipse.org/releases/oxygen/201804111000"/>
-        </location>
         <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="org.apache.commons.logging" version="0.0.0"/>
             <unit id="org.apache.log4j" version="0.0.0"/>
@@ -27,6 +18,15 @@
 	    <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 		    <repository location="https://download.eclipse.org/modeling/mdt/papyrus/components/moka/oxygen"/>
 		    <unit id="org.eclipse.papyrus.moka.feature.feature.group" version="3.1.0.201710171318"/>
+	    </location>
+	    <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+		    <repository location="http://download.eclipse.org/eclipse/updates/4.16"/>
+		    <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.800.v20200514-1529"/>
+		    <unit id="org.eclipse.platform.ide" version="4.16.0.I20200604-0540"/>
+	    </location>
+	    <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+		    <repository location="http://download.eclipse.org/releases/2020-06"/>
+		    <unit id="org.eclipse.uml2.sdk.feature.group" version="5.5.1.v20200302-1312"/>
 	    </location>
     </locations>
 </target>
