@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2017 Model Driven Solutions, Inc.
+ * Copyright 2011, 2017, 2020 Model Driven Solutions, Inc.
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -257,6 +257,23 @@ public abstract class LeftHandSideImpl extends AssignableElementImpl {
 	        return indexType == null || 
 	                (indexType.getImpl().isInteger() && index.getUpper() <= 1);
 	    }
+	}
+	
+	/**
+	 * If a left-hand side is for a feature reference whose expression is a data type,
+	 * then it must be a legal data value update.
+	 */
+    // Note: This constraint ensures that there will be an
+    // assigned name for an assignment to an attribute of a
+    // data type.
+	// TODO: Add this constraint to the spec.
+	public boolean leftHandSideDataValueUpdateLegality() {
+        FeatureReference feature = this.getFeature();
+        Expression expression = feature == null? null: feature.getExpression();
+        ElementReference expressionType = expression == null? null: expression.getType();
+        return expressionType == null ||
+                !expressionType.getImpl().isDataType() ||
+                this.isDataValueUpdate();
 	}
 	
 	/*

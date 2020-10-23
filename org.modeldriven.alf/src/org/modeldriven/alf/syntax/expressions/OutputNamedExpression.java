@@ -96,6 +96,10 @@ public class OutputNamedExpression extends NamedExpression {
 			violations.add(new ConstraintViolation("outputNamedExpressionForm",
 					this));
 		}
+		LeftHandSide lhs = this.getLeftHandSide();
+		if (lhs != null) {
+			lhs.checkConstraints(violations);
+		}
 	}
 
 	@Override

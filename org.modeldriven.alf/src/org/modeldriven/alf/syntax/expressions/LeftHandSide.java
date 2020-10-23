@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2017 Model Driven Solutions, Inc.
+ * Copyright 2011, 2017, 2020 Model Driven Solutions, Inc.
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -104,6 +104,14 @@ public abstract class LeftHandSide extends SyntaxElement {
 		return this.getImpl().leftHandSideIndexExpression();
 	}
 
+	/**
+	 * If a left-hand side is for a feature reference whose expression is a data type,
+	 * then it must be a legal data value update.
+	 */
+	public boolean leftHandSideDataValueUpdateLegality() {
+        return this.getImpl().leftHandSideDataValueUpdateLegality();
+	}
+	
     @Override
     public void _addExternalReferences(Collection<ExternalElementReference> references) {
         super._addExternalReferences(references);
@@ -131,6 +139,10 @@ public abstract class LeftHandSide extends SyntaxElement {
 		if (!this.leftHandSideIndexExpression()) {
 			violations.add(new ConstraintViolation(
 					"leftHandSideIndexExpression", this));
+		}
+		if (!this.leftHandSideDataValueUpdateLegality()) {
+			violations.add(new ConstraintViolation(
+					"leftHandSideDataValueUpdateLegality", this));
 		}
 		Expression index = this.getIndex();
 		if (index != null) {

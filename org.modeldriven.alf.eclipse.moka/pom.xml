@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.modeldriven.alf</groupId>
+	<artifactId>org.modeldriven.alf.eclipse.moka</artifactId>
+	<packaging>eclipse-plugin</packaging>
+	<parent>
+		<groupId>org.modeldriven.alf</groupId>
+		<artifactId>tycho-parent</artifactId>
+		<version>1.1.0-SNAPSHOT</version>
+		<relativePath>../tycho-parent/pom.xml</relativePath>
+	</parent>
+	<properties>
+		<!--  Redefining placeholders -->
+		<eclipse.uberJar.jarName>fuml-eclipse</eclipse.uberJar.jarName>
+		<eclipse.uberJar.mainClass>org.modeldriven.alf.eclipse.moka.execution.Fuml</eclipse.uberJar.mainClass>
+
+		<!-- Expand on the default dependencies -->
+		<eclipse.uberJar.dependencies>
+			${eclipse.uberJar.default.dependencies},
+			org.eclipse.equinox.common,
+			org.eclipse.core.runtime,
+			org.eclipse.core.jobs,
+			org.eclipse.osgi,
+			org.modeldriven.alf.eclipse,
+			org.eclipse.papyrus.moka,
+			org.eclipse.papyrus.moka.fuml,
+			org.eclipse.papyrus.moka.fuml.interfaces,
+			org.eclipse.papyrus.moka.fuml.standardlibrary,
+			org.eclipse.papyrus.moka.service,
+			org.eclipse.papyrus.moka.utils,
+			org.eclipse.papyrus.infra.core,
+			org.eclipse.papyrus.infra.core.log,
+			org.eclipse.papyrus.uml.tools.utils,
+			org.aspectj.runtime,
+		</eclipse.uberJar.dependencies>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.modeldriven.alf</groupId>
+			<artifactId>org.modeldriven.alf.fuml.impl.bundle</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>unpack-dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>unpack-dependencies</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+</project>

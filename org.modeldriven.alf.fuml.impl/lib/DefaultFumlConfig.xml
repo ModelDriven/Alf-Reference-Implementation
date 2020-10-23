@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!-- TODO-RC this file is already in org.modeldriven:fuml (also seems more up to date as includes UML 2.5) -->
 <cfg:Configuration  
   xmlns:cfg="http://www.modeldriven.org/fuml/config">
   

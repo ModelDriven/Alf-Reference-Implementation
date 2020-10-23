@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.modeldriven.alf</groupId>
+		<artifactId>alf-ri</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+		<relativePath>..</relativePath>
+	</parent>
+
+	<artifactId>org.modeldriven.alf.bundle</artifactId>
+	<packaging>bundle</packaging>
+
+	<properties>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.modeldriven.alf</groupId>
+			<artifactId>org.modeldriven.alf</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-jar-plugin</artifactId>
+					<configuration>
+						<archive>
+							<manifestFile>${manifest-location}/MANIFEST.MF</manifestFile>
+						</archive>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<extensions>true</extensions>
+				<executions>
+					<execution>
+						<id>bundle-manifest</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>manifest</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<manifestLocation>${manifest-location}</manifestLocation>
+					<supportedProjectTypes>
+						<supportedProjectType>jar</supportedProjectType>
+						<supportedProjectType>bundle</supportedProjectType>
+					</supportedProjectTypes>
+					<supportIncrementalBuild>true</supportIncrementalBuild>
+					<instructions>
+						<Bundle-RequiredExecutionEnvironment>JavaSE-1.8
+						</Bundle-RequiredExecutionEnvironment>
+						<Automatic-Module-Name>${project.artifactId}
+						</Automatic-Module-Name>
+						<_snapshot>${osgi.qualifier}</_snapshot>
+						<Embed-Dependency>*;scope=compile;groupId=!org.modeldriven</Embed-Dependency>
+						<_exportcontents>
+							org.modeldriven.alf*
+						</_exportcontents>
+						<Import-Package>!*</Import-Package>
+						<Embed-Transitive>false</Embed-Transitive>
+						<Embed-Directory>jars</Embed-Directory>
+						<_failok>true</_failok>
+						<_nouses>true</_nouses>
+					</instructions>
+				</configuration>
+			</plugin>
+		</plugins>
+
+	</build>
+
+</project>
