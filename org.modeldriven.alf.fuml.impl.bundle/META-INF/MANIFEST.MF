@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Automatic-Module-Name: org.modeldriven.alf.fuml.impl.bundle
-Bnd-LastModified: 1603405266256
+Bnd-LastModified: 1603460603513
 Build-Jdk: 1.8.0_31
 Built-By: seidewitz
 Bundle-ClassPath: .,jars/org.modeldriven.alf-1.0.0-SNAPSHOT.jar,jars/org
@@ -9,7 +9,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.modeldriven.alf.fuml.impl.bundle
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-SymbolicName: org.modeldriven.alf.fuml.impl.bundle
-Bundle-Version: 1.0.0.20201022222050
+Bundle-Version: 1.0.0.20201023134244
 Created-By: Apache Maven Bundle Plugin
 Embed-Dependency: *;scope=compile;groupId=!org.modeldriven
 Embed-Directory: jars

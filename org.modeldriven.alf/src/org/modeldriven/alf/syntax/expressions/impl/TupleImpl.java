@@ -302,6 +302,10 @@ public abstract class TupleImpl extends SyntaxElementImpl {
                 if (lhs != null) {
                     lhs.getImpl().setAssignmentBefore(assignmentsBefore);
                     lhs.getImpl().setCurrentScope(this.currentScope);
+                    
+                    // NOTE: Force recomputation of LHS referent, in case 
+                    // derived LHS already existed.
+                   	lhs.getImpl().setReferent(null);
 
                     ElementReference parameter = 
                             invocation.getImpl().parameterNamed(output.getName(), referent);
