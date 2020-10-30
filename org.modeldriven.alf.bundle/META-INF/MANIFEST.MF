@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Automatic-Module-Name: org.modeldriven.alf.bundle
-Bnd-LastModified: 1603492682298
+Bnd-LastModified: 1604033112555
 Build-Jdk: 1.8.0_31
 Built-By: seidewitz
 Bundle-ClassPath: .,jars/org.modeldriven.alf-1.0.0-SNAPSHOT.jar
@@ -8,7 +8,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.modeldriven.alf.bundle
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-SymbolicName: org.modeldriven.alf.bundle
-Bundle-Version: 1.0.0.20201023223736
+Bundle-Version: 1.0.0.20201030044434
 Created-By: Apache Maven Bundle Plugin
 Embed-Dependency: *;scope=compile;groupId=!org.modeldriven
 Embed-Directory: jars

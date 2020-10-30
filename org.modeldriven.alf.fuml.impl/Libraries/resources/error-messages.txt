@@ -39,7 +39,7 @@ One or more arguments are not compatible (in type and/or multiplicity) with the 
 If the target qualified name does not disambiguate to a feature reference, then each input argument expression must be assignable to its corresponding parameter and each output argument expression must be assignable from its corresponding parameter. (Note that this implies that the type of an argument expression for an inout parameter must be the same as the type of that parameter.)
  
 behaviorInvocationExpressionReferentConstraint
-Behavior or feature reference cannot be resolved.
+Behavior or feature reference cannot be resolved or arguments are not compatible (in type and/or multiplicity) with corresponding parameters.
 If the target qualified name does not disambiguate to a feature reference, then it must resolve to a behavior or an association end. Otherwise it must resolve to a single feature referent according to the overloading resolution rules, unless it is an implicit destructor call (in which case it has no referent).
  
 binaryExpressionOperandAssignments
@@ -166,10 +166,17 @@ invocationExpressionAssignmentsAfter
 Assignments not allowed in tuple of sequence feature invocation.
 If invocation is a sequence feature invocation, then the assignments after the tuple of the invocation expression must be the same as the assignments before.
 
+invocationExpressionReferent
+Feature reference cannot be resolved or arguments are not compatible (in type and/or multiplicity) with corresponding parameters.
+The referent of an invocation cannot be a signal unless it is a signal reception.
 
 isUniqueExpressionExpressionArgument
 Argument must have a multiplicity upper bound of 1.
 The argument of an isUnique expression must have a multiplicity upper bound of 1.
+
+leftHandSideDataValueUpdateLegality
+Illegal data value update.
+If a left-hand side is for a feature reference whose expression is a data type, then it must be a legal data value update.
  
 leftHandSideIndexExpression
 Index expression must have a multiplicity upper bound no greater than 1.
@@ -420,8 +427,12 @@ acceptStatementNewAssignments
 Any name that is unassigned before an accept statement and is assigned in one or more blocks of the accept statement, has, after the accept statement, a type that is is the effective common ancestor of the types of the name in each block in which it is defined, with a multiplicity lower bound that is the minimum of the lower bound for the name in each block (where it is considered to have multiplicity lower bound of zero for blocks in which it is not defined), and a multiplicity upper bound that is the maximum for the name in each block in which it is defined. 
 
 acceptStatementSignals
-Referenced signals must have receptions; signals cannot be referenced in more than one accept block.
-The containing behavior of an accept statement must have receptions for all signals from all accept blocks of the accept statement. No signal may be referenced in more than one accept block of an accept statement.
+Signals cannot be referenced in more than one accept block.
+No signal may be referenced in more than one accept block of an accept statement.
+ 
+acceptStatementReceptions
+Referenced signals must have receptions.
+The containing behavior of an accept statement must have receptions for all signals from all accept blocks of the accept statement.
  
 acceptStatementSimpleAcceptLocalName
 
