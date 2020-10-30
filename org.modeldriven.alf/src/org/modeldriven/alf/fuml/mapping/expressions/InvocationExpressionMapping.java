@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2018 Model Driven Solutions, Inc.
+ * Copyright 2011-2020 Model Driven Solutions, Inc.
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -16,12 +16,12 @@ import java.util.Map;
 import org.modeldriven.alf.fuml.mapping.ActivityGraph;
 import org.modeldriven.alf.fuml.mapping.FumlMapping;
 import org.modeldriven.alf.fuml.mapping.common.ElementReferenceMapping;
-import org.modeldriven.alf.fuml.mapping.expressions.ExpressionMapping;
 import org.modeldriven.alf.fuml.mapping.units.ActivityDefinitionMapping;
 import org.modeldriven.alf.fuml.mapping.units.ClassifierDefinitionMapping;
 import org.modeldriven.alf.fuml.mapping.units.OperationDefinitionMapping;
 import org.modeldriven.alf.fuml.mapping.units.PropertyDefinitionMapping;
 import org.modeldriven.alf.fuml.mapping.units.ReceptionDefinitionMapping;
+import org.modeldriven.alf.fuml.mapping.units.SignalDefinitionMapping;
 import org.modeldriven.alf.fuml.mapping.units.SignalReceptionDefinitionMapping;
 import org.modeldriven.alf.mapping.Mapping;
 import org.modeldriven.alf.mapping.MappingError;
@@ -295,7 +295,10 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
                     } else if (mapping instanceof ReceptionDefinitionMapping) {
                         element = ((ReceptionDefinitionMapping) mapping).getReception();
                     } else if (mapping instanceof SignalReceptionDefinitionMapping) {
-                        element = ((SignalReceptionDefinitionMapping) mapping).getReception();                    
+                        element = ((SignalReceptionDefinitionMapping) mapping).getReception();
+                    } else if (mapping instanceof SignalDefinitionMapping) {
+                        // Allow for possible mapping of a signal send without targeting a reception.
+                    	element = ((SignalDefinitionMapping)mapping).getSignal();
                     } else if (mapping instanceof ActivityDefinitionMapping) {
                         element = 
                             ((ActivityDefinitionMapping) mapping).getBehavior();
@@ -303,7 +306,7 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
                         element = 
                             ((PropertyDefinitionMapping) mapping).getProperty();                    
                     } else {
-                        this.throwError("Unknown referent mapping", mapping);
+                        this.throwError("Unknown referent mapping: " + mapping);
                     }
                 }
             }
@@ -313,6 +316,10 @@ public abstract class InvocationExpressionMapping extends ExpressionMapping {
 
             } else if (element instanceof Reception) {
                 action = this.graph.addSendSignalAction(((Reception)element).getSignal());
+                
+            // Allow for possible mapping of a signal send without targeting a reception.
+            } else if (element instanceof Signal) {
+                action = this.graph.addSendSignalAction((Signal)element);
                 
             } else if (element instanceof Behavior) {
                 action = this.graph.addCallBehaviorAction((Behavior)element);

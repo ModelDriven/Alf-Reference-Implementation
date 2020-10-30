@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011, 2018 Model Driven Solutions, Inc.
+ * Copyright 2011, 2018, 2020 Model Driven Solutions, Inc.
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -77,12 +77,18 @@ public class AcceptStatement extends Statement {
 	}
 
 	/**
-	 * The containing behavior of an accept statement must have receptions for
-	 * all signals from all accept blocks of the accept statement. No signal may
-	 * be referenced in more than one accept block of an accept statement.
+	 * No signal may be referenced in more than one accept block of an accept statement.
 	 **/
 	public boolean acceptStatementSignals() {
 		return this.getImpl().acceptStatementSignals();
+	}
+
+	/**
+	 * The containing behavior of an accept statement must have receptions for
+	 * all signals from all accept blocks of the accept statement. 
+	 **/
+	public boolean acceptStatementReceptions() {
+		return this.getImpl().acceptStatementReceptions();
 	}
 
 	/**
@@ -197,6 +203,10 @@ public class AcceptStatement extends Statement {
 		}
 		if (!this.acceptStatementSignals()) {
 			violations.add(new ConstraintViolation("acceptStatementSignals",
+					this));
+		}
+		if (!this.acceptStatementReceptions()) {
+			violations.add(new ConstraintViolation("acceptStatementReceptions",
 					this));
 		}
 		if (!this.acceptStatementNames()) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2017 Model Driven Solutions, Inc.
+ * Copyright 2011-2020 Model Driven Solutions, Inc.
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -114,6 +114,9 @@ public class FeatureReferenceImpl extends SyntaxElementImpl {
     	                    referents.add(referent);
     	                }
     	            }
+    	            
+    	            // Allow for the possibility of a signal send without targeting a reception.
+    	            referents.addAll(this.currentScope.getImpl().resolveSignal(name));
     	        }
 	        }
 	    }

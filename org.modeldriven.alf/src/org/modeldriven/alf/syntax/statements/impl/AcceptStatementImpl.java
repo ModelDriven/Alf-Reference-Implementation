@@ -1,7 +1,6 @@
 
 /*******************************************************************************
- * Copyright 2011, 2016 Model Driven Solutions, Inc.
- * Copyright 2013 Ivar Jacobson International
+ * Copyright 2011, 2016, 2020 Model Driven Solutions, Inc.
  * 
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
@@ -181,10 +180,10 @@ public class AcceptStatementImpl extends StatementImpl {
 	}
 
 	/**
-	 * The containing behavior of an accept statement must have receptions for
-	 * all signals from all accept blocks of the accept statement. No signal may
-	 * be referenced in more than one accept block of an accept statement.
+	 * No signal may be referenced in more than one accept block of an accept statement.
 	 **/
+	// NOTE: Checking that there are receptions for the signals has been moved to
+	// the separate acceptStatementReceptions check.
 	public boolean acceptStatementSignals() {
 	    ElementReference behavior = this.getEffectiveBehavior();
 	    behavior = behavior == null? null: behavior.getImpl().getContext();
@@ -195,8 +194,7 @@ public class AcceptStatementImpl extends StatementImpl {
     	    for (AcceptBlock block: this.getSelf().getAcceptBlock()) {
     	        Collection<ElementReference> blockSignals = block.getSignal();
     	        for (ElementReference signal: blockSignals) {
-        	        if (!behavior.getImpl().hasReceptionFor(signal) ||
-        	                signal.getImpl().isContainedIn(signals)) {
+        	        if (signal.getImpl().isContainedIn(signals)) {
         	            return false;
         	        }
     	        }
@@ -206,6 +204,30 @@ public class AcceptStatementImpl extends StatementImpl {
 	    }
 	}
 
+	/**
+	 * The containing behavior of an accept statement must have receptions for
+	 * all signals from all accept blocks of the accept statement.
+	 **/
+	// NOTE: acceptStatementSignals has been separated from acceptStatementReceptions
+	// so that a tool can allow accept statements without requiring receptions by
+	// ignoring violations of this constraint.
+	public boolean acceptStatementReceptions() {
+	    ElementReference behavior = this.getEffectiveBehavior();
+	    behavior = behavior == null? null: behavior.getImpl().getContext();
+	    if (behavior == null) {
+	        return false;
+	    } else {
+    	    for (AcceptBlock block: this.getSelf().getAcceptBlock()) {
+    	        for (ElementReference signal: block.getSignal()) {
+        	        if (!behavior.getImpl().hasReceptionFor(signal)) {
+        	            return false;
+        	        }
+    	        }
+     	    }
+    	    return true;
+	    }
+	}
+	
     /**
 	 * Any name defined in an accept block of an accept statement must be
 	 * unassigned before the accept statement.

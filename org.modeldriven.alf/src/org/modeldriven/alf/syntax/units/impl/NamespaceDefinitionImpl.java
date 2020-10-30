@@ -466,6 +466,17 @@ public abstract class NamespaceDefinitionImpl extends MemberImpl {
         return referents;
     }
     
+    public Collection<ElementReference> resolveSignal(String name) {
+    	Collection<ElementReference> signals = new ArrayList<>();
+    	for (Member member: this.resolve(name, true)) {
+    		ElementReference referent = member.getImpl().getReferent();
+    		if (referent.getImpl().isSignal() && !referent.getImpl().isReception()) {
+    			signals.add(referent);
+    		}
+    	}
+    	return signals;
+    }
+    
     public boolean isModelLibrary() {
         // NOTE: A profile definition is automatically treated as a model library.
         return this.isProfile() || 

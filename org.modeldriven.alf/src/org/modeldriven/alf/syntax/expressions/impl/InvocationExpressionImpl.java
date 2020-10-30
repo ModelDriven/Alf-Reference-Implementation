@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2019 Model Driven Solutions, Inc.
+ * Copyright 2011-2020 Model Driven Solutions, Inc.
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -432,6 +432,18 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
                     tuple.getImpl().getNewAssignments().isEmpty();
         }        
     }
+    
+    /**
+     * The referent of an invocation cannot be a signal unless it is a
+     * signal reception.
+     */
+    // NOTE: By ignoring violations of this constraint, a tool can allow signal
+    // sends that directly target signals without requiring the use of receptions.
+    public boolean invocationExpressionSignalReferent() {
+    	ElementReference referent = this.getSelf().getReferent();
+    	return referent == null || !referent.getImpl().isSignal() ||
+    			referent.getImpl().isReception();
+    }
 
 	/*
 	 * Helper Methods
@@ -554,9 +566,11 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
         List<ElementReference> features = new ArrayList<ElementReference>();
         for (ElementReference referent: referents) {
             if ((referent.getImpl().isOperation() || 
-                    referent.getImpl().isReception()) &&
-               self.getImpl().isCompatibleWith(referent)) {
-                features.add(referent);
+                    referent.getImpl().isReception() ||
+                    // Allow for the possibility of a signal send without targeting a reception.
+                    referent.getImpl().isSignal()) &&
+            	self.getImpl().isCompatibleWith(referent)) {
+            		features.add(referent);
             }
         }
         return selectMostSpecific(features);
@@ -574,10 +588,12 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
                     }
                 }
                 if (isMostSpecific) {
-                    if (selectedFeature != null) {
-                        return null;
+                	if (selectedFeature == null || 
+                			!selectedFeature.getImpl().isFeature() && feature1.getImpl().isFeature()) {
+                		selectedFeature = feature1;
+                	} else if (!selectedFeature.getImpl().isFeature() || feature1.getImpl().isFeature()) {
+                		return null;
                     }
-                    selectedFeature = feature1;
                 }
             }
         }

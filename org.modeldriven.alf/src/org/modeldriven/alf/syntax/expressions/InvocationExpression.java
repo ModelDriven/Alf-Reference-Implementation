@@ -253,6 +253,16 @@ public abstract class InvocationExpression extends Expression {
     }
 
     /**
+     * The referent of an invocation cannot be a signal unless it is a
+     * signal reception.
+     */
+    // NOTE: By ignoring violations of this constraint, a tool can allow signal
+    // sends that directly target signals without requiring the use of receptions.
+    public boolean invocationExpressionReferent() {
+    	return this.getImpl().invocationExpressionSignalReferent();
+    }
+    
+   /**
      * Returns references to the elements that act as the parameters of the
      * referent. If the referent is a behavior or operation, these are the owned
      * parameters, in order. If the referent is an association end, then the
@@ -351,6 +361,9 @@ public abstract class InvocationExpression extends Expression {
         }
         if (!this.invocationExpressionAssignmentsAfter()) {
             violations.add(new ConstraintViolation("invocationExpressionAssignmentsAfter", this));
+        }
+        if (!this.invocationExpressionReferent()) {
+            violations.add(new ConstraintViolation("invocationExpressionReferent", this));
         }
         Tuple tuple = this.getTuple();
         if (tuple != null) {
