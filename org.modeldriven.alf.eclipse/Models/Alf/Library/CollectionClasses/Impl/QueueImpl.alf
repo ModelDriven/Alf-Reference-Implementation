@@ -27,7 +27,7 @@ abstract class QueueImpl specializes CollectionImpl {
   }
   
   protected firstImpl(): any[0..1] {
-    this.content->First();
+    return this.content->First();
   }
  
   protected removeFirstImpl (): any[0..1] {
