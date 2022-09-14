@@ -810,25 +810,6 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
         return false;
     }
     
-    private static final ElementReference[] indexingFunctions = { 
-            RootNamespace.getRootScope().getSequenceFunction("At"),
-            RootNamespace.getRootScope().getSequenceFunction("IncludeAt"),
-            RootNamespace.getRootScope().getSequenceFunction("InsertAt"),
-            RootNamespace.getRootScope().getSequenceFunction("IncludeAllAt"),
-            RootNamespace.getRootScope().getSequenceFunction("ExcludeAt"),
-            RootNamespace.getRootScope().getSequenceFunction("ReplacingAt"),
-            RootNamespace.getRootScope().getCollectionFunction("at"),
-            RootNamespace.getRootScope().getCollectionFunction("includeAt"),
-            RootNamespace.getRootScope().getCollectionFunction("insertAt"),
-            RootNamespace.getRootScope().getCollectionFunction("includeAllAt"),
-            RootNamespace.getRootScope().getCollectionFunction("excludeAt"),
-            RootNamespace.getRootScope().getCollectionFunction("replacingAt"),
-            RootNamespace.getRootScope().getCollectionFunction("addAt"),
-            RootNamespace.getRootScope().getCollectionFunction("addAllAt"),
-            RootNamespace.getRootScope().getCollectionFunction("removeAt"),
-            RootNamespace.getRootScope().getCollectionFunction("replaceAt"),
-    };
-    
     /**
      * Determine whether this is an invocation of a library function the
      * needs adjustment if indexing is from 0.
@@ -837,7 +818,7 @@ public abstract class InvocationExpressionImpl extends ExpressionImpl {
         InvocationExpression self = this.getSelf();
         if (self.getIsBehavior()) {
             ElementReference referent = self.getReferent();
-            for (ElementReference function: indexingFunctions) {
+            for (ElementReference function: RootNamespace.getRootScope().getIndexingFunctions()) {
                 if (referent.getImpl().equals(function)) {
                     return true;
                 }

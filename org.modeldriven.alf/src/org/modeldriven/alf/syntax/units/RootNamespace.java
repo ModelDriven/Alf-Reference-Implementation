@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2017 Model Driven Solutions, Inc.
+ * Copyright 2011-2022 Model Driven Solutions, Inc.
  * All rights reserved worldwide. This program and the accompanying materials
  * are made available for use under the terms of the GNU General Public License 
  * (GPL) version 3 that accompanies this distribution and is available at 
@@ -13,7 +13,6 @@ import java.util.Map;
 
 import org.modeldriven.alf.syntax.common.ElementReference;
 import org.modeldriven.alf.syntax.expressions.QualifiedName;
-import org.modeldriven.alf.syntax.units.NamespaceDefinition;
 import org.modeldriven.alf.syntax.units.impl.ModelNamespaceImpl;
 
 public class RootNamespace extends ModelNamespace {
@@ -117,6 +116,8 @@ public class RootNamespace extends ModelNamespace {
     private ElementReference collectionFunctionsPackage = null;
     private ElementReference collectionClassesPackage = null;
     
+    private ElementReference[] indexingFunctions = null;
+    
     private QualifiedName listFunctions = null;
     
     private ElementReference listFunctionGet = null;
@@ -137,7 +138,7 @@ public class RootNamespace extends ModelNamespace {
     public QualifiedName getAlfStandardLibrary() {
         if (alfStandardLibrary == null) {
             alfStandardLibrary = getAlfStandardLibraryName();
-            alfStandardLibrary.getImpl().setCurrentScope(getRootScope());
+            alfStandardLibrary.getImpl().setCurrentScope(this);
         }
         return alfStandardLibrary;
     }
@@ -312,6 +313,30 @@ public class RootNamespace extends ModelNamespace {
         return collectionClassesPackage;
     }
     
+    public ElementReference[] getIndexingFunctions() {
+    	if (indexingFunctions == null) {
+	    	indexingFunctions = new ElementReference[] {
+	            getSequenceFunction("At"),
+	            getSequenceFunction("IncludeAt"),
+	            getSequenceFunction("InsertAt"),
+	            getSequenceFunction("IncludeAllAt"),
+	            getSequenceFunction("ExcludeAt"),
+	            getSequenceFunction("ReplacingAt"),
+	            getCollectionFunction("at"),
+	            getCollectionFunction("includeAt"),
+	            getCollectionFunction("insertAt"),
+	            getCollectionFunction("includeAllAt"),
+	            getCollectionFunction("excludeAt"),
+	            getCollectionFunction("replacingAt"),
+	            getCollectionFunction("addAt"),
+	            getCollectionFunction("addAllAt"),
+	            getCollectionFunction("removeAt"),
+	            getCollectionFunction("replaceAt")
+	    	};
+    	}
+    	return indexingFunctions;
+    }
+    
     protected QualifiedName getFoundationalModelLibraryName() {
         return new QualifiedName().getImpl().addName("FoundationalModelLibrary");
     }
@@ -319,7 +344,7 @@ public class RootNamespace extends ModelNamespace {
     public QualifiedName getListFunctions() {
         if (listFunctions == null) {
             QualifiedName foundationalModelLibraryName = getFoundationalModelLibraryName();
-            foundationalModelLibraryName.getImpl().setCurrentScope(getRootScope());
+            foundationalModelLibraryName.getImpl().setCurrentScope(this);
             listFunctions = foundationalModelLibraryName.getImpl().
                 addName("PrimitiveBehaviors").getImpl().addName("ListFunctions");
         }
@@ -346,7 +371,7 @@ public class RootNamespace extends ModelNamespace {
         if (booleanFunctions == null) {
             booleanFunctions = getPrimitiveBehaviors().getImpl().copy().
                 addName("BooleanFunctions");
-            booleanFunctions.getImpl().setCurrentScope(getRootScope());
+            booleanFunctions.getImpl().setCurrentScope(this);
         }
         return booleanFunctions;
     }
@@ -373,7 +398,7 @@ public class RootNamespace extends ModelNamespace {
         if (integerFunctions == null) {
             integerFunctions = getPrimitiveBehaviors().getImpl().copy().
                 addName("IntegerFunctions");
-            integerFunctions.getImpl().setCurrentScope(getRootScope());
+            integerFunctions.getImpl().setCurrentScope(this);
         }
         return integerFunctions;
     }
@@ -416,7 +441,7 @@ public class RootNamespace extends ModelNamespace {
         if (stringFunctions == null) {
             stringFunctions = getPrimitiveBehaviors().getImpl().copy().
                 addName("StringFunctions");
-            stringFunctions.getImpl().setCurrentScope(getRootScope());
+            stringFunctions.getImpl().setCurrentScope(this);
         }
         return stringFunctions;
     }
@@ -435,7 +460,7 @@ public class RootNamespace extends ModelNamespace {
         if (unlimitedNaturalFunctions == null) {
             unlimitedNaturalFunctions = getPrimitiveBehaviors().getImpl().copy().
                 addName("UnlimitedNaturalFunctions");
-            unlimitedNaturalFunctions.getImpl().setCurrentScope(getRootScope());
+            unlimitedNaturalFunctions.getImpl().setCurrentScope(this);
         }
         return unlimitedNaturalFunctions;
     }
@@ -444,7 +469,7 @@ public class RootNamespace extends ModelNamespace {
         if (realFunctions == null) {
             realFunctions = getPrimitiveBehaviors().getImpl().copy().
                 addName("RealFunctions");
-            realFunctions.getImpl().setCurrentScope(getRootScope());
+            realFunctions.getImpl().setCurrentScope(this);
         }
         return realFunctions;
     }
@@ -494,7 +519,7 @@ public class RootNamespace extends ModelNamespace {
         if (bitStringFunctions == null) {
             bitStringFunctions = getPrimitiveBehaviors().getImpl().copy().
                 addName("BitStringFunctions");
-            bitStringFunctions.getImpl().setCurrentScope(getRootScope());
+            bitStringFunctions.getImpl().setCurrentScope(this);
         }
         return bitStringFunctions;
     }
@@ -528,7 +553,7 @@ public class RootNamespace extends ModelNamespace {
     public ElementReference getStandardProfile() {
         if (standardProfile == null) {
             QualifiedName standardProfileName = getStandardProfileName();
-            standardProfileName.getImpl().setCurrentScope(getRootScope());
+            standardProfileName.getImpl().setCurrentScope(this);
             ElementReference namespace = standardProfileName.getImpl().getNamespaceReferent();
             if (namespace != null && namespace.getImpl().isProfile()) {
                 standardProfile = namespace;
