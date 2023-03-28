@@ -60,6 +60,10 @@ public class Fuml {
 	}
 
 	public void setUmlDirectory(String umlDirectory) {
+//		int i = umlDirectory.indexOf(':');
+//		if (i > 0) {
+//			umlDirectory = "/" + umlDirectory;
+//		}
 		this.umlDirectory = umlDirectory;
 	}
 
